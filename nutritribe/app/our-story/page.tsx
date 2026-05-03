@@ -1,0 +1,788 @@
+'use client';
+
+import { useRef } from 'react';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
+import Image from 'next/image';
+import BiharMap from '@/components/illustrations/BiharMap';
+import MakhanaScene from '@/components/illustrations/MakhanaScene';
+import HarvestStoryScene from '@/components/illustrations/HarvestStoryScene';
+
+/* ── Makhana orb ── */
+function MkOrb({ size = 16, opacity = 0.7 }: { size?: number; opacity?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 30 30" fill="none" style={{ opacity }}>
+      <defs>
+        <radialGradient id="mkorb2" cx="33%" cy="28%" r="70%">
+          <stop offset="0%" stopColor="#fdfbf7" />
+          <stop offset="60%" stopColor="#e8d4a8" />
+          <stop offset="100%" stopColor="#b8916a" />
+        </radialGradient>
+      </defs>
+      <circle cx="15" cy="15" r="13" fill="url(#mkorb2)" />
+      <circle cx="10" cy="10" r="2.5" fill="#7a5c30" opacity="0.4" />
+      <ellipse cx="10" cy="10" rx="4" ry="2.5" fill="white" opacity="0.3" transform="rotate(-20 10 10)" />
+    </svg>
+  );
+}
+
+
+/* ── Pull quote ── */
+function PullQuote({ quote, author, accentColor = '#f3a213' }: { quote: string; author?: string; accentColor?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
+  return (
+    <div ref={ref} className="relative max-w-4xl mx-auto text-center px-6 py-24 md:py-32">
+      <motion.div
+        initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
+        transition={{ duration: 0.8 }}
+        className="h-px w-24 mx-auto mb-10"
+        style={{ background: accentColor, originX: 0.5 }}
+      />
+      <motion.p
+        initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.9, delay: 0.2 }}
+        className="font-display font-bold italic leading-[1.15]"
+        style={{ fontSize: 'clamp(26px, 4.5vw, 58px)', color: '#fdfbf7' }}
+      >
+        &ldquo;{quote}&rdquo;
+      </motion.p>
+      {author && (
+        <motion.p
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.7, delay: 0.6 }}
+          className="font-body text-sm mt-6 tracking-[0.2em] uppercase"
+          style={{ color: accentColor }}
+        >
+          — {author}
+        </motion.p>
+      )}
+      <motion.div
+        initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.8 }}
+        className="h-px w-16 mx-auto mt-10"
+        style={{ background: accentColor, opacity: 0.4, originX: 0.5 }}
+      />
+    </div>
+  );
+}
+
+/* ── Stat card ── */
+function StatCard({ value, label, sub, color, index }: {
+  value: string; label: string; sub: string; color: string; index: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40, scale: 0.95 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 0.7, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      className="relative rounded-2xl p-8 overflow-hidden"
+      style={{ background: `linear-gradient(135deg, ${color}14, ${color}06)`, border: `1px solid ${color}25` }}
+    >
+      <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-500"
+        style={{ background: `radial-gradient(circle at 50% 50%, ${color}12, transparent 70%)` }} />
+      <motion.div
+        initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
+        transition={{ duration: 0.6, delay: index * 0.12 + 0.3 }}
+        className="absolute top-0 left-0 right-0 h-0.5"
+        style={{ background: `linear-gradient(to right, ${color}, transparent)`, originX: 0 }}
+      />
+      <p className="font-display font-bold mb-1" style={{ fontSize: 'clamp(32px, 4vw, 52px)', color }}>{value}</p>
+      <p className="font-body font-bold text-sm mb-1" style={{ color: '#fdfbf7' }}>{label}</p>
+      <p className="font-body text-xs leading-relaxed" style={{ color: 'rgba(253,251,247,0.4)' }}>{sub}</p>
+    </motion.div>
+  );
+}
+
+/* ── Story beat (new chapter style) ── */
+function StoryBeat({
+  chapter, overline, headline, quote, body, accentColor, side = 'left', bg, dark = false, visual,
+}: {
+  chapter: string; overline: string; headline: string; quote?: string; body: string[];
+  accentColor: string; side?: 'left' | 'right'; bg: string; dark?: boolean;
+  visual: React.ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const yText = useTransform(scrollYProgress, [0, 1], ['4%', '-4%']);
+
+  const tc = dark ? '#fdfbf7' : '#1a0e0a';
+  const sc = dark ? 'rgba(253,251,247,0.55)' : 'rgba(26,14,10,0.6)';
+
+  return (
+    <section ref={ref} className="relative overflow-hidden" style={{ background: bg }}>
+      {/* Subtle chapter number watermark */}
+      <div
+        className="absolute pointer-events-none select-none"
+        style={{
+          [side === 'left' ? 'right' : 'left']: '-2vw',
+          top: '50%', transform: 'translateY(-50%)',
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 'clamp(120px, 20vw, 280px)',
+          fontWeight: 900, fontStyle: 'italic',
+          color: dark ? 'rgba(243,162,19,0.04)' : 'rgba(26,14,10,0.04)',
+          lineHeight: 1, userSelect: 'none',
+        }}
+        aria-hidden
+      >
+        {chapter}
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-24 md:py-36 relative z-10">
+        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${side === 'right' ? '' : ''}`}>
+
+          {/* Text side */}
+          <motion.div
+            style={{ y: yText }}
+            className={side === 'right' ? 'lg:order-2' : ''}
+            initial={{ opacity: 0, x: side === 'right' ? 50 : -50 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {/* Chapter badge */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }} animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6 }}
+              className="flex items-center gap-3 mb-7"
+            >
+              <div
+                className="font-body font-bold text-[10px] px-3 py-1 rounded-full tracking-[0.3em] uppercase"
+                style={{ background: `${accentColor}20`, border: `1px solid ${accentColor}40`, color: accentColor }}
+              >
+                Chapter {chapter}
+              </div>
+              <div className="h-px flex-1 max-w-16" style={{ background: `${accentColor}35` }} />
+              <span style={{ color: accentColor, fontSize: 12 }}>✦</span>
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.5, delay: 0.05 }}
+              className="font-body font-bold text-[10px] tracking-[0.35em] uppercase mb-3"
+              style={{ color: accentColor }}
+            >
+              {overline}
+            </motion.p>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 28 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="font-display font-bold leading-[1.05] mb-6"
+              style={{ fontSize: 'clamp(34px, 4.5vw, 62px)', color: tc }}
+            >
+              {headline}
+            </motion.h2>
+
+            {quote && (
+              <motion.blockquote
+                initial={{ opacity: 0, x: -12 }} animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="font-display italic text-lg md:text-xl mb-7 pl-5"
+                style={{ color: accentColor, borderLeft: `3px solid ${accentColor}60` }}
+              >
+                &ldquo;{quote}&rdquo;
+              </motion.blockquote>
+            )}
+
+            <div className="space-y-4">
+              {body.map((para, i) => (
+                <motion.p
+                  key={i}
+                  initial={{ opacity: 0, y: 14 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.7, delay: 0.25 + i * 0.08 }}
+                  className="font-body text-base leading-[1.95]"
+                  style={{ color: sc }}
+                >
+                  {para}
+                </motion.p>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Visual side */}
+          <motion.div
+            className={side === 'right' ? 'lg:order-1' : ''}
+            initial={{ opacity: 0, y: 40, scale: 0.94 }}
+            animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+          >
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{
+                border: `1px solid ${accentColor}20`,
+                boxShadow: dark
+                  ? `0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px ${accentColor}10`
+                  : `0 32px 80px rgba(26,14,10,0.14)`,
+              }}
+            >
+              {visual}
+            </div>
+          </motion.div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Timeline item ── */
+function TimelineBeat({ year, title, body, color, index, isLast }: {
+  year: string; title: string; body: string; color: string; index: number; isLast: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -30 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.8, delay: index * 0.08 }}
+      className="relative flex gap-6 md:gap-10"
+    >
+      {/* Spine */}
+      <div className="flex flex-col items-center shrink-0 w-16">
+        <motion.div
+          className="w-16 h-16 rounded-full flex flex-col items-center justify-center shrink-0 z-10"
+          style={{ background: `linear-gradient(135deg, ${color}, ${color}88)`, boxShadow: `0 0 0 4px ${color}20, 0 8px 24px ${color}30` }}
+          initial={{ scale: 0, rotate: -20 }}
+          animate={inView ? { scale: 1, rotate: 0 } : {}}
+          transition={{ duration: 0.5, delay: index * 0.08 + 0.15, type: 'spring', stiffness: 300 }}
+        >
+          <span className="font-display font-bold text-[11px] text-[#050100] leading-none">{year.slice(0, 2)}</span>
+          <span className="font-display font-bold text-[11px] text-[#050100] leading-none">{year.slice(2)}</span>
+        </motion.div>
+        {!isLast && (
+          <motion.div
+            className="flex-1 w-0.5 mt-2"
+            style={{ background: `linear-gradient(to bottom, ${color}50, ${color}08)` }}
+            initial={{ scaleY: 0, originY: 0 }}
+            animate={inView ? { scaleY: 1 } : {}}
+            transition={{ duration: 0.7, delay: index * 0.08 + 0.3 }}
+          />
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="pb-14 pt-3">
+        <p className="font-display font-bold text-3xl leading-none mb-1" style={{ color }}>{year}</p>
+        <p className="font-body font-bold text-sm mb-2" style={{ color: '#1a0e0a' }}>{title}</p>
+        <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(26,14,10,0.6)' }}>{body}</p>
+      </div>
+    </motion.div>
+  );
+}
+
+
+const timeline = [
+  { year: '2020', title: 'The Seed is Planted', body: 'NutriTribe founded in a home kitchen in Patna — a dream to bring makhana to the world, without compromise.', color: '#f3a213' },
+  { year: '2021', title: 'First Batch. First Love.', body: 'Our first plain makhana launch sold out in 3 days. The tribe had spoken — and we knew this was real.', color: '#009846' },
+  { year: '2022', title: 'Bold Flavours. Real Partnerships.', body: 'Expanded to 3 flavours. Signed direct-trade agreements with 500+ Mallah farming families — fair wages, guaranteed.', color: '#7a4dff' },
+  { year: '2023', title: '10,000 Happy Customers', body: 'Launched our D2C platform. Crossed 10,000 customers across India — all without a single distributor middleman.', color: '#f3a213' },
+  { year: '2024', title: 'Premium Cookies Launch', body: 'Introduced our makhana cookie range. Pan-India shipping activated. The superfood goes mainstream.', color: '#009846' },
+  { year: '2025', title: "India's Most Loved Makhana Brand", body: "The movement grows. The tribe expands. And Bihar's finest superfood finally takes its rightful place.", color: '#7a4dff' },
+];
+
+export default function OurStoryPage() {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const harvestRef = useRef<HTMLDivElement>(null);
+  const harvestInView = useInView(harvestRef, { once: true, amount: 0.2 });
+  const { scrollYProgress: heroScroll } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroY = useTransform(heroScroll, [0, 1], ['0%', '35%']);
+  const heroOpacity = useTransform(heroScroll, [0, 0.65], [1, 0]);
+  const heroScale = useTransform(heroScroll, [0, 0.6], [1, 0.96]);
+
+  return (
+    <>
+      {/* ════════════════════════════════════════
+          CINEMATIC HERO
+          ════════════════════════════════════════ */}
+      <section
+        ref={heroRef}
+        className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #120601 0%, #0a0200 50%, #020100 100%)' }}
+      >
+        {/* Grain */}
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E\")" }} />
+
+        {/* Atmospheric glows */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div style={{ position: 'absolute', left: '25%', top: '15%', width: '50vw', height: '50vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(243,162,19,0.07) 0%, transparent 65%)' }} />
+          <div style={{ position: 'absolute', right: '10%', bottom: '20%', width: '30vw', height: '30vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,152,70,0.05) 0%, transparent 65%)' }} />
+        </div>
+
+        {/* Floating makhana orbs */}
+        {[
+          { top: '15%', left: '6%', size: 55, dur: 3.8 },
+          { top: '75%', left: '4%', size: 36, dur: 5.2 },
+          { top: '22%', right: '6%', size: 48, dur: 4.4 },
+          { top: '70%', right: '8%', size: 62, dur: 3.6 },
+          { top: '48%', left: '1%', size: 28, dur: 6.0 },
+          { top: '42%', right: '1%', size: 32, dur: 5.5 },
+        ].map((pos, i) => (
+          <motion.div key={i} className="absolute pointer-events-none" style={pos}
+            animate={{ y: [0, -16, 0] }}
+            transition={{ duration: pos.dur, repeat: Infinity, delay: i * 0.5, ease: 'easeInOut' }}>
+            <MkOrb size={pos.size} opacity={0.1} />
+          </motion.div>
+        ))}
+
+        <motion.div style={{ y: heroY, opacity: heroOpacity, scale: heroScale }} className="relative z-10 text-center px-6 pt-36 pb-28 max-w-5xl mx-auto">
+          {/* Logo */}
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
+            className="flex justify-center mb-10">
+            <div className="relative" style={{ width: 170, height: 46 }}>
+              <Image src="/logo.png" alt="NutriTribe" fill className="object-contain" style={{ filter: 'brightness(0) invert(1)' }} priority />
+            </div>
+          </motion.div>
+
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
+            className="font-body font-bold text-[10px] tracking-[0.5em] uppercase mb-6"
+            style={{ color: 'rgba(243,162,19,0.55)' }}>
+            Est. in the Wetlands of Bihar · Since 2020
+          </motion.p>
+
+          <motion.h1 initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="font-display font-bold leading-[0.98] mb-8"
+            style={{ fontSize: 'clamp(52px, 9vw, 120px)', color: '#fdfbf7', letterSpacing: '-0.02em' }}>
+            A Story Born<br />
+            <em className="not-italic" style={{ color: '#f3a213' }}>in Lotus</em><br />
+            <em className="not-italic" style={{ color: 'rgba(253,251,247,0.7)', fontSize: '0.75em' }}>Water.</em>
+          </motion.h1>
+
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4 }}
+            className="font-body text-lg max-w-xl mx-auto leading-relaxed mb-12"
+            style={{ color: 'rgba(253,251,247,0.4)' }}>
+            From the sacred wetlands of Mithila to your hands — 2,500 years of heritage, one bold snack.
+          </motion.p>
+
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.55 }}
+            className="flex flex-wrap gap-4 justify-center">
+            <a href="#story">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}
+                className="font-body font-bold text-sm px-9 py-4 rounded-full"
+                style={{ background: '#f3a213', color: '#050100', boxShadow: '0 8px 32px rgba(243,162,19,0.4)' }}>
+                Enter the Story ↓
+              </motion.div>
+            </a>
+            <Link href="/products">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}
+                className="font-body font-bold text-sm px-9 py-4 rounded-full"
+                style={{ border: '1px solid rgba(243,162,19,0.25)', color: 'rgba(253,251,247,0.65)' }}>
+                Shop Now →
+              </motion.div>
+            </Link>
+          </motion.div>
+
+          {/* Hero stats */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, delay: 0.85 }}
+            className="grid grid-cols-3 gap-8 mt-20 pt-10 max-w-lg mx-auto"
+            style={{ borderTop: '1px solid rgba(243,162,19,0.1)' }}>
+            {[['10K+', 'Farmers'], ['2,500', 'Yr Heritage'], ['100%', 'Direct Trade']].map(([v, l]) => (
+              <div key={l} className="text-center">
+                <p className="font-display font-bold text-xl md:text-2xl" style={{ color: '#f3a213' }}>{v}</p>
+                <p className="font-body text-[9px] tracking-[0.2em] uppercase mt-1" style={{ color: 'rgba(253,251,247,0.28)' }}>{l}</p>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll hint */}
+        <motion.div
+          className="absolute bottom-12 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <svg width="20" height="32" viewBox="0 0 20 32" fill="none">
+            <rect x="1" y="1" width="18" height="30" rx="9" stroke="rgba(243,162,19,0.3)" strokeWidth="1.5" />
+            <motion.rect x="8.5" y="6" width="3" height="8" rx="1.5" fill="#f3a213" fillOpacity="0.7"
+              animate={{ y: [0, 10, 0], opacity: [0.7, 0.2, 0.7] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
+          </svg>
+        </motion.div>
+
+        {/* Bottom wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 80" fill="none" preserveAspectRatio="none" className="w-full" style={{ height: 80 }}>
+            <path d="M0 80 Q360 30 720 55 Q1080 80 1440 30 L1440 80 Z" fill="#fdf6e8" />
+          </svg>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
+          CHAPTER 01 — THE LAND
+          ════════════════════════════════════════ */}
+      <div id="story">
+        <StoryBeat
+          chapter="01"
+          overline="The Origin"
+          headline={<>Where the World&apos;s<br />Finest Makhana<br /><em className="not-italic" style={{ color: '#f3a213' }}>Grows.</em></> as unknown as string}
+          quote="The water is ancient. The knowledge is older."
+          body={[
+            "The Mithila wetlands of North Bihar stretch across 25,000 hectares of mineral-rich floodplain fed by Himalayan runoff. This is not farmland — it is a living ecosystem that has produced makhana for over 2,500 years.",
+            "India produces 90% of the world's makhana. Bihar alone accounts for 80% of that. And within Bihar, the Mithila region — our home — grows the finest grade: the 4-suta, the premium lotus seed prized by chefs and nutritionists alike.",
+            "The water here has a character. A mineral profile. A story. And that story ends up in every single seed we pack.",
+          ]}
+          accentColor="#f3a213"
+          side="left"
+          bg="#fdf6e8"
+          visual={
+            <div className="p-6 bg-[#fdf6e8]">
+              <BiharMap className="w-full" />
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                {[['25,000 ha', 'Wetland Area'], ['90%', 'World Supply'], ['4-Suta', 'Premium Grade']].map(([v, l]) => (
+                  <div key={l} className="text-center py-3 rounded-xl" style={{ background: 'rgba(243,162,19,0.08)', border: '1px solid rgba(243,162,19,0.15)' }}>
+                    <p className="font-display font-bold text-lg" style={{ color: '#f3a213' }}>{v}</p>
+                    <p className="font-body text-[9px] tracking-[0.15em] uppercase mt-0.5" style={{ color: 'rgba(26,14,10,0.5)' }}>{l}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          }
+        />
+      </div>
+
+      {/* ════════════════════════════════════════
+          FULL-BLEED QUOTE #1
+          ════════════════════════════════════════ */}
+      <section style={{ background: 'linear-gradient(155deg, #0d0703 0%, #12080a 100%)' }}>
+        <PullQuote
+          quote="They wake before the sun. They enter water before it is warm. They do it because their fathers did, and their fathers' fathers did — and because the seed is worth it."
+          author="The Mallah Community of Mithila"
+          accentColor="#f3a213"
+        />
+      </section>
+
+      {/* ════════════════════════════════════════
+          THE HARVEST FILM STRIP — "video" section
+          ════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden py-24 md:py-36"
+        style={{ background: 'linear-gradient(160deg, #0d1208 0%, #071009 100%)' }}
+      >
+        {/* Atmospheric */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div style={{ position: 'absolute', left: '20%', top: '20%', width: '60%', height: '60%', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,152,70,0.05) 0%, transparent 70%)' }} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          {/* Section header */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <p className="font-body font-bold text-[10px] tracking-[0.45em] uppercase mb-4" style={{ color: 'rgba(0,152,70,0.7)' }}>
+              The Harvest Story
+            </p>
+            <h2 className="font-display font-bold leading-tight" style={{ fontSize: 'clamp(32px, 5vw, 64px)', color: '#fdfbf7' }}>
+              From Pond Floor<br />
+              <em className="not-italic" style={{ color: '#009846' }}>to Your Hands</em>
+            </h2>
+            <p className="font-body text-base mt-4 max-w-lg mx-auto" style={{ color: 'rgba(253,251,247,0.35)' }}>
+              Every seed you eat was handpicked by a Mallah diver in Bihar. This is their story, in four acts.
+            </p>
+          </motion.div>
+
+          {/* Film strip wrapper */}
+          <div ref={harvestRef}>
+            <HarvestStoryScene inView={harvestInView} className="w-full" />
+          </div>
+
+          {/* Below film: the 4 acts described */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+            {[
+              { num: '01', title: 'Before Dawn', body: 'The Mallah community wakes at 4 AM. No alarm needed — the pond does not wait.', color: '#f3a213' },
+              { num: '02', title: 'Into the Water', body: 'Men wade waist-deep into lotus ponds. The cold water. The lotus stems. The ancient ritual begins.', color: '#009846' },
+              { num: '03', title: 'The Dive', body: 'Skilled divers hold their breath and sink to the pond floor, collecting seeds by feel alone.', color: '#7a4dff' },
+              { num: '04', title: 'The Harvest', body: 'At sunrise, baskets overflow. The Mallah emerge with the seeds that will become your makhana.', color: '#f3a213' },
+            ].map((act, i) => (
+              <motion.div
+                key={act.num}
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="rounded-xl p-5"
+                style={{ background: `linear-gradient(135deg, ${act.color}10, ${act.color}05)`, border: `1px solid ${act.color}20` }}
+              >
+                <p className="font-display font-bold text-3xl mb-2" style={{ color: act.color, opacity: 0.35 }}>{act.num}</p>
+                <p className="font-body font-bold text-sm mb-2" style={{ color: '#fdfbf7' }}>{act.title}</p>
+                <p className="font-body text-xs leading-relaxed" style={{ color: 'rgba(253,251,247,0.45)' }}>{act.body}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
+          CHAPTER 02 — THE PEOPLE
+          ════════════════════════════════════════ */}
+      <StoryBeat
+        chapter="02"
+        overline="The Custodians"
+        headline={<>The Hands That<br /><em className="not-italic" style={{ color: '#009846' }}>Hold the Story.</em></> as unknown as string}
+        quote="No machine can replicate it. No algorithm can copy the instinct."
+        body={[
+          "The Mallah community has harvested makhana for generations. This is not a job — it is an identity. The fathers teach the sons to read the water. The mothers teach the daughters to read the heat of the pan.",
+          "When you open a pack of NutriTribe, the hands of a Mallah farmer are in it. Not metaphorically — literally. Every seed was touched, sorted, and inspected by human hands before it reached your bag.",
+          "We pay fair wages. We skip the middleman. Every product you buy directly improves the livelihood of a Mithila farming family. That is the NutriTribe promise — and it will never change.",
+        ]}
+        accentColor="#009846"
+        side="right"
+        bg="linear-gradient(160deg, #0d1f14 0%, #071209 100%)"
+        dark
+        visual={
+          <div style={{ background: '#060e08', padding: '1.5rem' }}>
+            {/* Community stats */}
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              {[
+                { v: '10,000+', l: 'Mallah Families', c: '#009846' },
+                { v: '100%', l: 'Direct Trade', c: '#f3a213' },
+                { v: '₹Fair', l: 'Guaranteed Wage', c: '#009846' },
+                { v: '3rd Gen', l: 'Knowledge Keepers', c: '#f3a213' },
+              ].map((s) => (
+                <div key={s.l} className="rounded-xl p-4 text-center"
+                  style={{ background: `${s.c}10`, border: `1px solid ${s.c}20` }}>
+                  <p className="font-display font-bold text-2xl" style={{ color: s.c }}>{s.v}</p>
+                  <p className="font-body text-[9px] tracking-[0.15em] uppercase mt-1" style={{ color: 'rgba(253,251,247,0.4)' }}>{s.l}</p>
+                </div>
+              ))}
+            </div>
+            {/* Community quote card */}
+            <div className="rounded-xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,152,70,0.15)' }}>
+              <p className="font-display italic text-base leading-relaxed" style={{ color: 'rgba(253,251,247,0.7)' }}>
+                &ldquo;When NutriTribe came to us, they did not bargain. They asked what we needed. That is different.&rdquo;
+              </p>
+              <p className="font-body text-[10px] mt-3 tracking-widest uppercase" style={{ color: '#009846' }}>
+                — Ramesh Mallah, Darbhanga Farmer
+              </p>
+            </div>
+          </div>
+        }
+      />
+
+      {/* ════════════════════════════════════════
+          FULL-BLEED QUOTE #2
+          ════════════════════════════════════════ */}
+      <section style={{ background: 'linear-gradient(155deg, #fdf6e8 0%, #f5ede0 100%)' }}>
+        <PullQuote
+          quote="Ancient divers. Ancient seeds. Ancient fire. And yet the world only just discovered makhana. We are here to fix that."
+          author="NutriTribe Founders"
+          accentColor="#7a4dff"
+        />
+      </section>
+
+      {/* ════════════════════════════════════════
+          CHAPTER 03 — THE VISION
+          ════════════════════════════════════════ */}
+      <StoryBeat
+        chapter="03"
+        overline="The NutriTribe Mission"
+        headline={<>Ancient Grain.<br /><em className="not-italic" style={{ color: '#7a4dff' }}>Modern Stage.</em></> as unknown as string}
+        body={[
+          "NutriTribe was born from a single question: why is India's most nutritious traditional food still unknown to most of the world?",
+          "We set out to change that. Not by compromising on what makes makhana special — but by giving it the branding, the storytelling, and the quality control it always deserved.",
+          "We work directly with the Mallah community, pay wages above market rate, reinvest in sustainable pond management, and refuse every shortcut that would make our product cheaper but less honest.",
+        ]}
+        accentColor="#7a4dff"
+        side="left"
+        bg="#f8f4ff"
+        visual={
+          <div className="p-6 bg-[#f8f4ff]">
+            <MakhanaScene className="w-full" />
+            <div className="mt-4 text-center">
+              <p className="font-body font-bold text-[9px] tracking-[0.25em] uppercase" style={{ color: '#7a4dff' }}>
+                Euryale ferox · Bihar&apos;s Sacred Lotus Seed
+              </p>
+            </div>
+          </div>
+        }
+      />
+
+      {/* ════════════════════════════════════════
+          IMPACT STATS
+          ════════════════════════════════════════ */}
+      <section
+        className="relative py-28 overflow-hidden"
+        style={{ background: 'linear-gradient(155deg, #100600 0%, #0a0200 100%)' }}
+      >
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden" aria-hidden>
+          <div className="relative" style={{ width: '65vw', height: '30vw', maxWidth: 750, opacity: 0.04 }}>
+            <Image src="/logo.png" alt="" fill className="object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.8 }}
+            className="text-center mb-16">
+            <p className="font-body font-bold text-[10px] tracking-[0.4em] uppercase mb-3" style={{ color: 'rgba(243,162,19,0.55)' }}>
+              Our Impact
+            </p>
+            <h2 className="font-display font-bold" style={{ fontSize: 'clamp(30px, 4.5vw, 60px)', color: '#fdfbf7' }}>
+              Numbers That<br />
+              <em className="not-italic" style={{ color: '#f3a213' }}>Matter.</em>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <StatCard value="10,000+" label="Farming Families Supported" sub="Mallah community of Mithila — direct beneficiaries of every sale." color="#f3a213" index={0} />
+            <StatCard value="₹0" label="Middlemen in Our Supply Chain" sub="Farmer to factory to you. No distributor tax. More money where it belongs." color="#009846" index={1} />
+            <StatCard value="2,500 yr" label="Tradition Preserved" sub="Ancient harvesting techniques kept alive and fairly compensated." color="#7a4dff" index={2} />
+            <StatCard value="90%" label="of India's Makhana" sub="Comes from Bihar. We work exclusively with premium Mithila-grade." color="#f3a213" index={3} />
+            <StatCard value="0mg" label="Artificial Additives" sub="No MSG. No preservatives. No artificial flavours. Non-negotiable." color="#009846" index={4} />
+            <StatCard value="10,000+" label="Happy Tribe Members" sub="And growing. Across every pin code in India." color="#7a4dff" index={5} />
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
+          TIMELINE
+          ════════════════════════════════════════ */}
+      <section className="relative py-28 overflow-hidden" style={{ background: '#fff' }}>
+        {/* Large decorative text */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden" aria-hidden>
+          <span className="font-display font-bold italic"
+            style={{ fontSize: 'clamp(100px, 18vw, 240px)', color: 'rgba(243,162,19,0.04)', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
+            Journey
+          </span>
+        </div>
+
+        <div className="max-w-3xl mx-auto px-6 relative z-10">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.8 }}
+            className="text-center mb-20">
+            <p className="font-body font-bold text-[10px] tracking-[0.4em] uppercase mb-3" style={{ color: '#f3a213' }}>
+              Our Journey
+            </p>
+            <h2 className="font-display font-bold leading-tight" style={{ fontSize: 'clamp(30px, 4.5vw, 60px)', color: '#1a0e0a' }}>
+              From Seed<br />to Stage
+            </h2>
+          </motion.div>
+
+          <div className="space-y-0">
+            {timeline.map((item, i) => (
+              <TimelineBeat
+                key={item.year}
+                year={item.year}
+                title={item.title}
+                body={item.body}
+                color={item.color}
+                index={i}
+                isLast={i === timeline.length - 1}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
+          MISSION / VISION / VALUES
+          ════════════════════════════════════════ */}
+      <section
+        className="relative py-28 overflow-hidden"
+        style={{ background: 'linear-gradient(155deg, #0d0703 0%, #1a0e0a 100%)' }}
+      >
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.8 }}
+            className="text-center mb-16">
+            <p className="font-body font-bold text-[10px] tracking-[0.4em] uppercase mb-3" style={{ color: 'rgba(243,162,19,0.55)' }}>
+              Who We Are
+            </p>
+            <h2 className="font-display font-bold" style={{ fontSize: 'clamp(30px, 4.5vw, 60px)', color: '#fdfbf7' }}>
+              Purpose-Driven.<br />
+              <em className="not-italic" style={{ color: '#f3a213' }}>Mithila-Rooted.</em>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              { label: 'Mission', num: '01', color: '#f3a213', icon: '🎯', text: "To become the world's most trusted Indian-origin healthy snack brand and make makhana a globally celebrated superfood." },
+              { label: 'Vision', num: '02', color: '#009846', icon: '🌿', text: "To revive India's indigenous superfoods by creating clean, premium snacks while empowering farming communities through ethical sourcing." },
+              { label: 'Values', num: '03', color: '#7a4dff', icon: '💎', text: 'Authenticity. Health First. Innovation. Community Impact. Quality & Trust. Rooted in Bihar. Built for the world.' },
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.1 }}
+                whileHover={{ y: -6 }}
+                className="relative rounded-2xl p-8 overflow-hidden"
+                style={{ background: `linear-gradient(135deg, ${item.color}12, ${item.color}06)`, border: `1px solid ${item.color}25` }}
+              >
+                <motion.div
+                  className="absolute top-0 left-0 right-0 h-0.5"
+                  style={{ background: `linear-gradient(to right, ${item.color}, transparent)` }}
+                  initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 + 0.2 }}
+                />
+                <div className="text-3xl mb-4">{item.icon}</div>
+                <h3 className="font-display font-bold text-2xl mb-3" style={{ color: '#fdfbf7' }}>{item.label}</h3>
+                <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(253,251,247,0.55)' }}>{item.text}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
+          FINAL CTA
+          ════════════════════════════════════════ */}
+      <section
+        className="relative py-32 text-center overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #e08a10 0%, #f3a213 50%, #D4AF37 100%)' }}
+      >
+        <div className="absolute inset-0 pointer-events-none">
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 60%)' }} />
+          {/* Floating makhana in CTA */}
+          {[{ top: '20%', left: '8%', size: 48 }, { top: '65%', right: '6%', size: 36 }, { top: '30%', right: '12%', size: 28 }].map((pos, i) => (
+            <motion.div key={i} className="absolute pointer-events-none" style={pos}
+              animate={{ y: [0, -12, 0] }} transition={{ duration: 4 + i, repeat: Infinity, delay: i * 0.7 }}>
+              <MkOrb size={pos.size} opacity={0.2} />
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="flex justify-center mb-8 relative z-10">
+          <div className="relative" style={{ width: 160, height: 44 }}>
+            <Image src="/logo.png" alt="NutriTribe" fill className="object-contain" style={{ filter: 'brightness(0)' }} />
+          </div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} transition={{ duration: 0.7 }}
+          className="max-w-2xl mx-auto px-6 relative z-10"
+        >
+          <h2 className="font-display font-bold italic leading-[1.05] mb-4 text-[#050100]"
+            style={{ fontSize: 'clamp(36px, 6vw, 72px)' }}>
+            Ready to join<br />the Tribe?
+          </h2>
+          <p className="font-body text-base mb-10" style={{ color: 'rgba(5,1,0,0.6)' }}>
+            Every pack is a handshake with the farmers of Bihar.<br />
+            Every bite is 2,500 years of tradition — in your hands.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link href="/products">
+              <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.97 }}
+                className="font-body font-bold text-sm px-10 py-4 rounded-full tracking-wide"
+                style={{ background: '#050100', color: '#f3a213', boxShadow: '0 8px 32px rgba(5,1,0,0.3)' }}>
+                Shop Now →
+              </motion.div>
+            </Link>
+            <Link href="/makhana">
+              <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.97 }}
+                className="font-body font-bold text-sm px-10 py-4 rounded-full tracking-wide"
+                style={{ background: 'rgba(5,1,0,0.12)', color: '#050100', border: '1.5px solid rgba(5,1,0,0.25)' }}>
+                Learn About Makhana →
+              </motion.div>
+            </Link>
+          </div>
+        </motion.div>
+      </section>
+    </>
+  );
+}
