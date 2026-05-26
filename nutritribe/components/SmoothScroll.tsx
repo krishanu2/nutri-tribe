@@ -8,10 +8,13 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: 1.8,
+      // Quartic ease-out — smooth glide with snappy stop
+      easing: (t: number) => 1 - Math.pow(1 - t, 4),
       orientation: 'vertical',
       smoothWheel: true,
+      wheelMultiplier: 0.85,
+      touchMultiplier: 1.2,
     });
 
     lenisRef.current = lenis;

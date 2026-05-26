@@ -223,12 +223,12 @@ function JourneyCard({ step, index }: { step: typeof journeyStepsData[0]; index:
 }
 
 const journeyStepsData = [
-  { step: '01', title: 'Lotus Ponds', desc: 'Seeds grow inside lotus flowers in shallow Bihar wetlands, submerged in clean, mineral-rich Himalayan water.', color: '#009846', icon: '🪷' },
+  { step: '01', title: 'Water Lily Ponds', desc: 'Makhana seeds grow inside the Euryale ferox water lily in shallow Bihar wetlands, submerged in clean, mineral-rich water.', color: '#009846', icon: '🪷' },
   { step: '02', title: 'Underwater Harvest', desc: 'Skilled divers from the Mallah community collect seeds from the pond floor. Harvest season lasts just a few months.', color: '#f3a213', icon: '🌊' },
   { step: '03', title: 'Sun Drying', desc: 'Seeds are laid out in the sun for days until perfectly dried. This ancient technique requires patience, not machines.', color: '#7d3627', icon: '☀️' },
   { step: '04', title: 'Roasting', desc: 'Seeds are roasted in clay pots over low heat until they "pop" — transforming into the light, crunchy makhana we love.', color: '#7a4dff', icon: '🔥' },
   { step: '05', title: 'Flavouring', desc: 'At NutriTribe, we coat each batch in carefully crafted spice blends — no artificial flavours, no MSG. Just real ingredients.', color: '#f3a213', icon: '✨' },
-  { step: '06', title: 'Your Pack', desc: "Sealed fresh, shipped with care. From Mithila's lotus ponds to your hands — every pack tells this story.", color: '#009846', icon: '📦' },
+  { step: '06', title: 'Your Pack', desc: "Sealed fresh, shipped with care. From Mithila's water lily ponds to your hands — every pack tells this story.", color: '#009846', icon: '📦' },
 ];
 
 export default function MakhanaPage() {

@@ -47,7 +47,7 @@ function LotusFlower({ x, y, size = 1 }: { x: number; y: number; size?: number }
   return (
     <g transform={`translate(${x},${y}) scale(${size})`}>
       {[0, 45, 90, 135, 180, 225, 270, 315].map((a, i) => (
-        <ellipse key={i} cx="0" cy="-10" rx="4" ry="9" fill="#ffb8d0" opacity="0.7"
+        <ellipse key={i} cx="0" cy="-10" rx="4" ry="9" fill="#9b59b6" opacity="0.7"
           transform={`rotate(${a})`} />
       ))}
       <circle cx="0" cy="0" r="5" fill="#f3a213" />
@@ -304,7 +304,7 @@ export default function IntroAnimation() {
                   style={{ color: 'rgba(243,162,19,0.6)' }}
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.9, duration: 0.6 }}>
-                  From the Lotus Ponds of Mithila, Bihar
+                  From the Water Lily Ponds of Mithila, Bihar
                 </motion.p>
 
                 <div className="overflow-hidden mb-2">

@@ -4,6 +4,7 @@ import "./globals.css";
 import dynamic from 'next/dynamic';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FloatingCTA from "@/components/FloatingCTA";
 import MarqueeTicker from "@/components/MarqueeTicker";
 import Cursor from "@/components/Cursor";
 
@@ -44,6 +45,7 @@ export default function RootLayout({
         <ScrollProgress />
         <IntroAnimation />
         <Cursor />
+        <FloatingCTA />
         <MarqueeTicker />
         <Navbar />
         <SmoothScroll>

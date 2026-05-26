@@ -233,15 +233,23 @@ export default function ProductsPage() {
                   onClick={() => setActiveCategory(cat)}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="relative font-body font-bold text-xs px-5 py-2 rounded-full transition-all duration-300"
+                  className="relative font-body font-bold text-xs px-5 py-2 rounded-full"
                   style={{
-                    background: active ? m.accent : 'rgba(255,255,255,0.07)',
                     color: active ? '#050100' : 'rgba(253,251,247,0.5)',
-                    border: `1px solid ${active ? m.accent : 'rgba(255,255,255,0.1)'}`,
-                    boxShadow: active ? `0 4px 16px ${m.accent}40` : 'none',
+                    border: `1px solid ${active ? 'transparent' : 'rgba(255,255,255,0.1)'}`,
+                    background: active ? 'transparent' : 'rgba(255,255,255,0.07)',
                   }}
                 >
-                  {m.glyph} {cat}
+                  {/* Sliding pill — shared layoutId creates smooth movement */}
+                  {active && (
+                    <motion.div
+                      layoutId="cat-active-pill"
+                      className="absolute inset-0 rounded-full"
+                      style={{ background: m.accent, boxShadow: `0 4px 18px ${m.accent}50` }}
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{m.glyph} {cat}</span>
                 </motion.button>
               );
             })}

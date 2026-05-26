@@ -12,6 +12,7 @@ function CountUp({ end, suffix = '' }: { end: number; suffix?: string }) {
 
   useEffect(() => {
     if (!inView) return;
+    if (end === 0) { setCount(0); return; }
     let current = 0;
     const step = end / 60;
     const timer = setInterval(() => {
@@ -96,7 +97,7 @@ export default function MakhanaSpotlight() {
               Born in the
             </h2>
             <h2 className="font-display font-bold italic text-4xl md:text-5xl text-sun-harvest leading-tight mb-6">
-              Lotus Ponds of Bihar
+              Water Lily Ponds of Bihar
             </h2>
 
             <Divider />

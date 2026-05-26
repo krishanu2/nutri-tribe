@@ -4,7 +4,12 @@ import { useRef, useCallback } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, useInView } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
-import MakhanaScene from '@/components/illustrations/MakhanaScene';
+import dynamic from 'next/dynamic';
+
+const MakhanaScene3D = dynamic(
+  () => import('@/components/illustrations/MakhanaScene3D'),
+  { ssr: false, loading: () => <div className="w-full" style={{ aspectRatio: '1/1' }} /> },
+);
 
 /* ── Magnetic CTA ─────────────────────────────────────────── */
 function MagneticLink({ children, href, primary }: { children: React.ReactNode; href: string; primary?: boolean }) {
@@ -116,6 +121,14 @@ export default function HeroSection() {
   const rotX = useSpring(useTransform(mouseY,[0,1],[5,-5]), { stiffness: 55, damping: 18 });
   const rotY = useSpring(useTransform(mouseX,[0,1],[-6,6]), { stiffness: 55, damping: 18 });
 
+  /* Multi-layer parallax — different speeds per layer */
+  /* Background layer: 0.02× (slowest) */
+  const bgX = useSpring(useTransform(mouseX,[0,1],[-9,9]),  { stiffness: 28, damping: 20 });
+  const bgY = useSpring(useTransform(mouseY,[0,1],[-6,6]),  { stiffness: 28, damping: 20 });
+  /* Orbit ring layer: 0.04× */
+  const ringX = useSpring(useTransform(mouseX,[0,1],[-18,18]), { stiffness: 36, damping: 16 });
+  const ringY = useSpring(useTransform(mouseY,[0,1],[-12,12]), { stiffness: 36, damping: 16 });
+
   const onMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const r = ref.current?.getBoundingClientRect(); if (!r) return;
     mouseX.set((e.clientX - r.left) / r.width);
@@ -216,7 +229,7 @@ export default function HeroSection() {
               </svg>
               <span className="font-body font-bold text-[10px] tracking-[0.28em] uppercase"
                 style={{ color:'rgba(243,162,19,0.75)' }}>
-                From the Lotus Ponds of Mithila, Bihar
+                From the Water Lily Ponds of Mithila, Bihar
               </span>
             </motion.div>
 
@@ -286,7 +299,7 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* ── RIGHT: 3D illustration ── */}
+          {/* ── RIGHT: 3D illustration with multi-layer parallax ── */}
           <motion.div
             initial={{ opacity:0, scale:0.88, y:24 }}
             animate={isInView?{opacity:1,scale:1,y:0}:{}}
@@ -294,27 +307,42 @@ export default function HeroSection() {
             className="relative flex items-center justify-center"
             style={{ perspective:900 }}
           >
-            {/* Decorative ring */}
-            <div className="absolute rounded-full" style={{ width:'88%', aspectRatio:'1', border:'1px solid rgba(243,162,19,0.08)' }} />
-            <div className="absolute rounded-full" style={{ width:'70%', aspectRatio:'1', border:'1px solid rgba(243,162,19,0.05)' }} />
+            {/* ── BACKGROUND LAYER (slowest parallax: 0.02×) ── */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{ x: bgX, y: bgY }}
+            >
+              <div className="absolute rounded-full" style={{ width:'92%', aspectRatio:'1', top:'4%', left:'4%', border:'1px solid rgba(243,162,19,0.06)' }} />
+            </motion.div>
 
-            {/* Glow */}
+            {/* ── ORBIT RING LAYER (medium slow: rotates + parallax 0.04×) ── */}
+            <motion.div
+              className="absolute pointer-events-none"
+              style={{ width:'88%', aspectRatio:'1', x: ringX, y: ringY }}
+            >
+              <motion.div
+                style={{ width:'100%', height:'100%' }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+              >
+                <div style={{ width:'100%', height:'100%', borderRadius:'50%', border:'1px solid rgba(243,162,19,0.10)',
+                  background:'conic-gradient(from 0deg, transparent 0%, rgba(243,162,19,0.06) 30%, transparent 60%)' }} />
+              </motion.div>
+            </motion.div>
+
+            {/* Inner static glow ring */}
+            <div className="absolute rounded-full" style={{ width:'70%', aspectRatio:'1', border:'1px solid rgba(243,162,19,0.05)' }} />
             <div className="absolute rounded-full" style={{ width:'75%', aspectRatio:'1',
               background:'radial-gradient(circle, rgba(243,162,19,0.11) 0%, transparent 72%)' }} />
 
-            {/* 3D tilt wrapper */}
+            {/* ── BOWL LAYER (mid parallax: 0.05× via rotateX/rotateY) ── */}
             <motion.div
               style={{ rotateX:rotX, rotateY:rotY, transformStyle:'preserve-3d' }}
               className="relative w-full flex items-center justify-center"
             >
-              <motion.div
-                animate={{ y:[0,-12,0] }}
-                transition={{ repeat:Infinity, duration:4.5, ease:'easeInOut' }}
-                className="w-full max-w-[500px] mx-auto"
-                style={{ transformStyle:'preserve-3d', transform:'translateZ(28px)' }}
-              >
-                <MakhanaScene className="w-full h-full drop-shadow-2xl" />
-              </motion.div>
+              <div className="w-full max-w-[500px] mx-auto" style={{ transformStyle:'preserve-3d', transform:'translateZ(28px)' }}>
+                <MakhanaScene3D className="w-full drop-shadow-2xl" />
+              </div>
 
               {/* Stat chips */}
               <motion.div

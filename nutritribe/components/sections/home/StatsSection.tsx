@@ -100,38 +100,62 @@ export default function StatsSection() {
           </motion.div>
         </div>
 
-        {/* Stats */}
+        {/* Stats with circular progress rings */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-4">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.15 + i * 0.12, duration: 0.7, ease: 'easeOut' }}
-              className="text-center group relative"
-            >
-              {/* Decorative circle behind number */}
-              <div className="w-20 h-20 rounded-full border border-sun-harvest/10 mx-auto mb-4 flex items-center justify-center"
-                style={{ background: 'radial-gradient(circle, rgba(243,162,19,0.06) 0%, transparent 70%)' }}>
-                <div className="w-2 h-2 rounded-full bg-sun-harvest/30" />
-              </div>
-
-              <div className="font-display font-bold text-5xl md:text-6xl lg:text-7xl text-sun-harvest mb-2 leading-none group-hover:scale-110 transition-transform duration-300">
-                <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-              </div>
-              <div className="font-body font-bold text-sm text-ivory-grain tracking-wide mb-1">{stat.label}</div>
-              <div className="font-body text-xs text-ivory-grain/35 italic">{stat.desc}</div>
-
-              {/* Bottom ornament */}
+          {stats.map((stat, i) => {
+            const r = 44;
+            const circ = 2 * Math.PI * r;
+            const numericVal = parseInt(stat.value.replace(/\D/g, ''), 10);
+            const hasRing = !isNaN(numericVal) && numericVal <= 100;
+            const ringPct = hasRing ? numericVal / 100 : 1;
+            return (
               <motion.div
-                initial={{ width: 0 }}
-                animate={isInView ? { width: '48px' } : {}}
-                transition={{ delay: 0.5 + i * 0.12, duration: 0.5 }}
-                className="h-px bg-sun-harvest/30 mx-auto mt-4"
-                style={{ width: 0 }}
-              />
-            </motion.div>
-          ))}
+                key={stat.label}
+                initial={{ opacity: 0, y: 50 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.15 + i * 0.12, duration: 0.7, ease: 'easeOut' }}
+                className="text-center group relative"
+              >
+                {/* Circular progress ring */}
+                <div className="relative w-24 h-24 mx-auto mb-4">
+                  <svg width="96" height="96" viewBox="0 0 96 96" style={{ transform: 'rotate(-90deg)' }}>
+                    {/* Track */}
+                    <circle cx="48" cy="48" r={r} fill="none"
+                      stroke="rgba(243,162,19,0.10)" strokeWidth="3" />
+                    {/* Progress */}
+                    <motion.circle cx="48" cy="48" r={r} fill="none"
+                      stroke="#f3a213" strokeWidth="3" strokeLinecap="round"
+                      strokeDasharray={circ}
+                      initial={{ strokeDashoffset: circ }}
+                      animate={isInView ? { strokeDashoffset: circ * (1 - ringPct) } : { strokeDashoffset: circ }}
+                      transition={{ duration: 1.4, delay: 0.4 + i * 0.12, ease: 'easeOut' }}
+                    />
+                    {/* Inner glow ring */}
+                    <circle cx="48" cy="48" r={r - 6} fill="none"
+                      stroke="rgba(243,162,19,0.04)" strokeWidth="8" />
+                  </svg>
+                  {/* Center dot */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-2.5 h-2.5 rounded-full bg-sun-harvest/40" />
+                  </div>
+                </div>
+
+                <div className="font-display font-bold text-5xl md:text-6xl lg:text-7xl text-sun-harvest mb-2 leading-none group-hover:scale-110 transition-transform duration-300">
+                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                </div>
+                <div className="font-body font-bold text-sm text-ivory-grain tracking-wide mb-1">{stat.label}</div>
+                <div className="font-body text-xs text-ivory-grain/35 italic">{stat.desc}</div>
+
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={isInView ? { width: '48px' } : {}}
+                  transition={{ delay: 0.5 + i * 0.12, duration: 0.5 }}
+                  className="h-px bg-sun-harvest/30 mx-auto mt-4"
+                  style={{ width: 0 }}
+                />
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

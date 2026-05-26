@@ -275,7 +275,7 @@ export default function HarvestStoryScene({ inView = true, className = '' }: Har
 
         {/* Lotus flowers on water */}
         <Lotus cx={280} cy={214} s={0.9} color="#e8a0c0" />
-        <Lotus cx={348} cy={210} s={1.1} color="#ffb8d0" />
+        <Lotus cx={348} cy={210} s={1.1} color="#9b59b6" />
         <Lotus cx={418} cy={215} s={0.85} color="#e89ab8" />
 
         {/* ── FARMER WAIST DEEP — proper warm figure ── */}
@@ -457,7 +457,7 @@ export default function HarvestStoryScene({ inView = true, className = '' }: Har
 
         {/* Lotus flowers at water's edge */}
         <Lotus cx={738} cy={254} s={0.75} color="#e8a0c0" />
-        <Lotus cx={770} cy={250} s={0.65} color="#ffb8d0" />
+        <Lotus cx={770} cy={250} s={0.65} color="#9b59b6" />
 
         {/* ── FARMER STANDING PROUD — holding basket ── */}
         {/* Legs */}

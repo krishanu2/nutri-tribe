@@ -143,9 +143,9 @@ export default function MakhanaScene({ className = '' }: { className?: string })
       <ellipse cx="474" cy="418" rx="32" ry="18" fill="#009846" opacity="0.75" transform="rotate(-25 474 418)" />
       <ellipse cx="455" cy="375" rx="22" ry="12" fill="#009846" opacity="0.6" transform="rotate(20 455 375)" />
       {/* Petals */}
-      <ellipse cx="442" cy="318" rx="13" ry="32" fill="#ffb8d0" opacity="0.9" transform="rotate(-22 442 318)" />
-      <ellipse cx="455" cy="311" rx="13" ry="32" fill="#ff9ab8" opacity="0.9" transform="rotate(-5 455 311)" />
-      <ellipse cx="468" cy="318" rx="13" ry="32" fill="#ffb8d0" opacity="0.9" transform="rotate(22 468 318)" />
+      <ellipse cx="442" cy="318" rx="13" ry="32" fill="#9b59b6" opacity="0.9" transform="rotate(-22 442 318)" />
+      <ellipse cx="455" cy="311" rx="13" ry="32" fill="#7c3aed" opacity="0.9" transform="rotate(-5 455 311)" />
+      <ellipse cx="468" cy="318" rx="13" ry="32" fill="#9b59b6" opacity="0.9" transform="rotate(22 468 318)" />
       <ellipse cx="432" cy="328" rx="11" ry="26" fill="#ffd0e4" opacity="0.75" transform="rotate(-42 432 328)" />
       <ellipse cx="478" cy="328" rx="11" ry="26" fill="#ffd0e4" opacity="0.75" transform="rotate(42 478 328)" />
       {/* Lotus center */}

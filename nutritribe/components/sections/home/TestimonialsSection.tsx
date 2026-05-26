@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
 
@@ -88,14 +88,42 @@ function MakhanaBall({ size = 18, opacity = 0.25 }: { size?: number; opacity?: n
   );
 }
 
+const AUTO_INTERVAL = 5000; // ms per slide
+
 export default function TestimonialsSection() {
   const [current, setCurrent] = useState(0);
+  const [paused, setPaused]   = useState(false);
+  const [progress, setProgress] = useState(0); // 0–1
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.05 });
+  const startRef = useRef<number>(Date.now());
 
-  const prev = () => setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length);
-  const next = () => setCurrent((c) => (c + 1) % testimonials.length);
+  const goTo = (i: number) => {
+    setCurrent(i);
+    setProgress(0);
+    startRef.current = Date.now();
+  };
+  const prev = () => goTo((current - 1 + testimonials.length) % testimonials.length);
+  const next = () => goTo((current + 1) % testimonials.length);
   const t = testimonials[current];
+
+  /* Auto-advance + progress tracking */
+  useEffect(() => {
+    if (paused || !isInView) return;
+    startRef.current = Date.now();
+    const raf = requestAnimationFrame(function tick() {
+      const elapsed = Date.now() - startRef.current;
+      const p = Math.min(elapsed / AUTO_INTERVAL, 1);
+      setProgress(p);
+      if (p >= 1) {
+        setCurrent(c => (c + 1) % testimonials.length);
+        startRef.current = Date.now();
+        setProgress(0);
+      }
+      requestAnimationFrame(tick);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [paused, isInView, current]);
 
   return (
     <section
@@ -207,6 +235,8 @@ export default function TestimonialsSection() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -16, scale: 0.98 }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              onMouseEnter={() => setPaused(true)}
+              onMouseLeave={() => setPaused(false)}
               className="relative rounded-3xl overflow-hidden"
               style={{
                 background: '#fff',
@@ -299,22 +329,46 @@ export default function TestimonialsSection() {
               <ChevronLeft size={18} />
             </motion.button>
 
-            {/* Dot indicators */}
-            <div className="flex items-center gap-2.5">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrent(i)}
-                  className="rounded-full transition-all duration-400"
-                  style={{
-                    width: i === current ? 28 : 8,
-                    height: 8,
-                    background: i === current ? '#f3a213' : 'rgba(243,162,19,0.2)',
-                    transition: 'all 0.35s ease',
-                  }}
-                  aria-label={`Testimonial ${i + 1}`}
-                />
-              ))}
+            {/* Circular progress ring indicators */}
+            <div className="flex items-center gap-3">
+              {testimonials.map((_, i) => {
+                const isActive = i === current;
+                const r = 10;
+                const circ = 2 * Math.PI * r;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i)}
+                    aria-label={`Testimonial ${i + 1}`}
+                    className="relative flex items-center justify-center"
+                    style={{ width: 28, height: 28 }}
+                  >
+                    <svg width="28" height="28" viewBox="0 0 28 28" style={{ transform: 'rotate(-90deg)' }}>
+                      {/* Track ring */}
+                      <circle cx="14" cy="14" r={r} fill="none" stroke="rgba(243,162,19,0.15)" strokeWidth="2.5" />
+                      {/* Progress ring — only on active */}
+                      {isActive && (
+                        <circle cx="14" cy="14" r={r} fill="none"
+                          stroke="#f3a213" strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeDasharray={circ}
+                          strokeDashoffset={circ * (1 - progress)}
+                          style={{ transition: 'stroke-dashoffset 0.05s linear' }}
+                        />
+                      )}
+                    </svg>
+                    {/* Center dot */}
+                    <div className="absolute rounded-full"
+                      style={{
+                        width: isActive ? 8 : 6,
+                        height: isActive ? 8 : 6,
+                        background: isActive ? '#f3a213' : 'rgba(243,162,19,0.3)',
+                        transition: 'all 0.3s ease',
+                      }}
+                    />
+                  </button>
+                );
+              })}
             </div>
 
             <motion.button

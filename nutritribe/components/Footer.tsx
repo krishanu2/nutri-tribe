@@ -114,7 +114,7 @@ export default function Footer() {
           className="font-body font-bold text-[10px] tracking-[0.4em] uppercase mt-4"
           style={{ color: 'rgba(243,162,19,0.5)' }}
         >
-          Mithila, Bihar · Est. 2024 · Snack Bold. Live Rooted.
+          Mithila, Bihar · Est. 2020 · Snack Bold. Live Rooted.
         </motion.p>
       </div>
 
@@ -148,12 +148,10 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.15, y: -2 }}
+                  whileHover={{ scale: 1.15, y: -2, background: '#f3a213', borderColor: '#f3a213' }}
                   whileTap={{ scale: 0.92 }}
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors duration-200"
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-white"
                   style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#f3a213'; (e.currentTarget as HTMLElement).style.borderColor = '#f3a213'; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)'; }}
                 >
                   <Icon size={16} />
                 </motion.a>

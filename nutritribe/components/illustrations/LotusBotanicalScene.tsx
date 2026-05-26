@@ -140,7 +140,7 @@ export default function LotusBotanicalScene({ inView = false, className = '' }: 
           cy={128}
           rx={5}
           ry={4}
-          fill={i % 2 === 0 ? '#ffb8d0' : '#ff9ab8'}
+          fill={i % 2 === 0 ? '#9b59b6' : '#7c3aed'}
           stroke="#e0708a"
           strokeWidth="0.5"
           style={{
