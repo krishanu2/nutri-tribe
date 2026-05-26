@@ -77,10 +77,11 @@ function IndiaMap() {
           // Handle both TopoJSON (.objects) and plain GeoJSON (.features)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           let geojson: any;
-          if ((data as any).objects) {
-            const key = Object.keys((data as any).objects)[0];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            geojson = topoFeature(data as any, (data as any).objects[key]);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const topoData = data as any;
+          if (topoData.objects) {
+            const key = Object.keys(topoData.objects)[0];
+            geojson = topoFeature(topoData, topoData.objects[key]);
           } else {
             geojson = data;
           }
