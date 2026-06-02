@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Star, ShoppingCart, Zap, ChevronDown, ChevronUp, ArrowLeft, Leaf, Award, Shield } from 'lucide-react';
@@ -9,6 +9,7 @@ import { products, getProductBySlug } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import Badge from '@/components/ui/Badge';
 import MakhanaScene from '@/components/illustrations/MakhanaScene';
+import { useCart } from '@/lib/cartContext';
 
 interface PageProps {
   params: { slug: string };
@@ -56,6 +57,8 @@ function Accordion({ title, children }: { title: string; children: React.ReactNo
 
 export default function ProductDetailPage({ params }: PageProps) {
   const product = getProductBySlug(params.slug);
+  const router = useRouter();
+  const { addToCart } = useCart();
 
   const [selectedWeight, setSelectedWeight] = useState(product?.weights[0] ?? '50g');
   const [quantity, setQuantity] = useState(1);
@@ -66,8 +69,30 @@ export default function ProductDetailPage({ params }: PageProps) {
   const related = products.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 3);
 
   const handleAddToCart = () => {
+    addToCart({
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      weight: selectedWeight,
+      price: product.price,
+      color: product.color,
+      category: product.category,
+    }, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
+  };
+
+  const handleBuyNow = () => {
+    addToCart({
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      weight: selectedWeight,
+      price: product.price,
+      color: product.color,
+      category: product.category,
+    }, quantity);
+    router.push('/checkout');
   };
 
   return (
@@ -233,6 +258,7 @@ export default function ProductDetailPage({ params }: PageProps) {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={handleBuyNow}
                   className="w-full flex items-center justify-center gap-3 bg-earthen-rust text-white font-body font-bold text-sm py-4 rounded-2xl hover:bg-earthen-rust/90 transition-all tracking-wide uppercase"
                 >
                   <Zap size={18} />

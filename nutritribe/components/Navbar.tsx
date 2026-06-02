@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, X, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import { useCart } from '@/lib/cartContext';
 
 const NAV = [
   { label: 'Home',        href: '/',          short: 'Home'    },
@@ -40,6 +41,7 @@ export default function Navbar() {
   const [visited, setVisited]         = useState<Set<string>>(new Set());
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname  = usePathname();
+  const { totalItems, openCart } = useCart();
 
   /* track visited pages — gamification */
   useEffect(() => {
@@ -158,11 +160,26 @@ export default function Navbar() {
 
               {/* Right */}
               <div className="hidden md:flex items-center gap-3 shrink-0">
-                <div className="flex items-center gap-1.5 px-3 py-2 rounded-full"
-                  style={{ background: 'rgba(243,162,19,0.07)', border: '1px solid rgba(243,162,19,0.14)' }}>
+                <button
+                  onClick={openCart}
+                  className="relative flex items-center gap-1.5 px-3 py-2 rounded-full transition-all hover:brightness-110"
+                  style={{ background: 'rgba(243,162,19,0.07)', border: '1px solid rgba(243,162,19,0.14)' }}
+                >
                   <ShoppingBag size={13} style={{ color: '#f3a213' }} />
-                  <span className="font-body text-[11px] font-semibold" style={{ color: 'rgba(243,162,19,0.7)' }}>0</span>
-                </div>
+                  <span className="font-body text-[11px] font-semibold" style={{ color: 'rgba(243,162,19,0.7)' }}>
+                    {totalItems}
+                  </span>
+                  {totalItems > 0 && (
+                    <motion.span
+                      key={totalItems}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-sun-harvest flex items-center justify-center font-body font-bold text-[9px] text-white"
+                    >
+                      {totalItems > 9 ? '9+' : totalItems}
+                    </motion.span>
+                  )}
+                </button>
                 <Link href="/products">
                   <motion.div
                     className="relative overflow-hidden flex items-center gap-2 px-5 py-2.5 rounded-full font-body font-bold text-[12px] tracking-wide cursor-none"
@@ -336,6 +353,22 @@ export default function Navbar() {
 
                 <div className="w-px h-4 shrink-0" style={{ background: 'rgba(243,162,19,0.15)' }} />
 
+                {/* Cart button in pill */}
+                <button onClick={openCart} className="relative p-2 rounded-full" style={{ background: 'rgba(243,162,19,0.1)' }}>
+                  <ShoppingBag size={13} style={{ color: '#f3a213' }} />
+                  {totalItems > 0 && (
+                    <motion.span
+                      key={totalItems}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center font-body font-bold text-[9px] text-white"
+                      style={{ background: '#f3a213' }}
+                    >
+                      {totalItems > 9 ? '9+' : totalItems}
+                    </motion.span>
+                  )}
+                </button>
+
                 {/* Shop CTA */}
                 <Link href="/products">
                   <motion.div
@@ -344,7 +377,6 @@ export default function Navbar() {
                     whileHover={{ scale: 1.07 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <ShoppingBag size={11} />
                     <span>Shop</span>
                     <motion.div className="absolute inset-0"
                       style={{ background: 'linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)' }}

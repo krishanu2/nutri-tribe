@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useState } from 'react';
 import { motion, useInView, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
 import Link from 'next/link';
-import { ShoppingCart, Eye } from 'lucide-react';
+import { ShoppingCart, Eye, Check } from 'lucide-react';
 import { Product } from '@/lib/products';
 import Badge from '@/components/ui/Badge';
+import { useCart } from '@/lib/cartContext';
 
 interface ProductCardProps {
   product: Product;
@@ -136,6 +137,23 @@ function MakhanaBowlIllustration({ color }: { color: string }) {
 export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.05 });
+  const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
+
+  const handleAddToCart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    addToCart({
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      weight: product.weights[0],
+      price: product.price,
+      color: product.color,
+      category: product.category,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  }, [addToCart, product]);
 
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
@@ -250,13 +268,18 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             <motion.button
               whileHover={{ scale: 1.12 }}
               whileTap={{ scale: 0.95 }}
-              className="w-9 h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200 hover:text-white"
-              style={{ borderColor: product.color + '40', color: product.color }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = product.color; (e.currentTarget as HTMLElement).style.color = '#fff'; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = ''; (e.currentTarget as HTMLElement).style.color = product.color; }}
+              onClick={handleAddToCart}
+              className="w-9 h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200"
+              style={{
+                borderColor: added ? '#009846' : product.color + '40',
+                backgroundColor: added ? '#009846' : '',
+                color: added ? '#fff' : product.color,
+              }}
+              onMouseEnter={(e) => { if (!added) { (e.currentTarget as HTMLElement).style.backgroundColor = product.color; (e.currentTarget as HTMLElement).style.color = '#fff'; } }}
+              onMouseLeave={(e) => { if (!added) { (e.currentTarget as HTMLElement).style.backgroundColor = ''; (e.currentTarget as HTMLElement).style.color = product.color; } }}
               aria-label="Add to cart"
             >
-              <ShoppingCart size={14} />
+              {added ? <Check size={13} /> : <ShoppingCart size={14} />}
             </motion.button>
             <Link href={`/products/${product.slug}`}>
               <motion.div

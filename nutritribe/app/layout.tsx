@@ -7,6 +7,8 @@ import Footer from "@/components/Footer";
 import FloatingCTA from "@/components/FloatingCTA";
 import MarqueeTicker from "@/components/MarqueeTicker";
 import Cursor from "@/components/Cursor";
+import CartDrawer from "@/components/CartDrawer";
+import { CartProvider } from "@/lib/cartContext";
 
 const IntroAnimation  = dynamic(() => import('@/components/IntroAnimation'),  { ssr: false });
 const SmoothScroll    = dynamic(() => import('@/components/SmoothScroll'),    { ssr: false });
@@ -42,16 +44,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${poppins.variable}`}>
       <body className="font-body bg-ivory-grain text-earthen-rust antialiased">
-        <ScrollProgress />
-        <IntroAnimation />
-        <Cursor />
-        <FloatingCTA />
-        <MarqueeTicker />
-        <Navbar />
-        <SmoothScroll>
-          <main>{children}</main>
-          <Footer />
-        </SmoothScroll>
+        <CartProvider>
+          <ScrollProgress />
+          <IntroAnimation />
+          <Cursor />
+          <FloatingCTA />
+          <MarqueeTicker />
+          <Navbar />
+          <CartDrawer />
+          <SmoothScroll>
+            <main>{children}</main>
+            <Footer />
+          </SmoothScroll>
+        </CartProvider>
       </body>
     </html>
   );
