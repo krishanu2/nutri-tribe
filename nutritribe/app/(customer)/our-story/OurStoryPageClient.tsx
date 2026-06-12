@@ -29,7 +29,7 @@ function MkOrb({ size = 16, opacity = 0.7 }: { size?: number; opacity?: number }
 
 
 /* ── Pull quote ── */
-function PullQuote({ quote, author, accentColor = '#f3a213' }: { quote: string; author?: string; accentColor?: string }) {
+function PullQuote({ quote, author, accentColor = '#f3a213', dark = true }: { quote: string; author?: string; accentColor?: string; dark?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
   return (
@@ -44,7 +44,7 @@ function PullQuote({ quote, author, accentColor = '#f3a213' }: { quote: string; 
         initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.9, delay: 0.2 }}
         className="font-display font-bold italic leading-[1.15]"
-        style={{ fontSize: 'clamp(26px, 4.5vw, 58px)', color: '#fdfbf7' }}
+        style={{ fontSize: 'clamp(26px, 4.5vw, 58px)', color: dark ? '#fdfbf7' : '#1a0e0a' }}
       >
         &ldquo;{quote}&rdquo;
       </motion.p>
@@ -945,6 +945,7 @@ export default function OurStoryPage() {
           quote="Ancient divers. Ancient seeds. Ancient fire. And yet the world only just discovered makhana. We are here to fix that."
           author="NutriTribe Founders"
           accentColor="#7a4dff"
+          dark={false}
         />
       </section>
 
