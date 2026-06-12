@@ -186,7 +186,7 @@ function NutritionCard({ fact, index }: { fact: typeof nutritionFacts[0]; index:
 }
 
 const nutritionFacts = [
-  { label: 'Protein', value: '9–15g', unit: 'per 100g', icon: Zap, color: '#f3a213', desc: 'Complete plant protein, ideal for muscle repair and sustained energy.' },
+  { label: 'Protein', value: '10g', unit: 'per 100g', icon: Zap, color: '#f3a213', desc: 'Complete plant protein, ideal for muscle repair and sustained energy.' },
   { label: 'Low GI', value: '<55', unit: 'glycemic index', icon: Heart, color: '#009846', desc: 'Slow-release energy. No sugar spikes. Perfect for diabetics.' },
   { label: 'Magnesium', value: '67mg', unit: 'per 100g', icon: Shield, color: '#7a4dff', desc: 'Supports bone health, nerve function, and quality sleep.' },
   { label: 'Antioxidants', value: 'High', unit: 'flavonoids', icon: Leaf, color: '#7d3627', desc: 'Kaempferol-rich — fights inflammation and premature aging.' },
@@ -327,7 +327,7 @@ export default function MakhanaPage() {
                     className="font-body text-base leading-[1.9] mb-8 max-w-lg"
                     style={{ color: 'rgba(253,251,247,0.5)' }}
                   >
-                    Makhana (Euryale ferox) — a lotus seed from Bihar&apos;s sacred wetlands. Revered by Ayurveda for millennia, now backed by modern nutrition science. This is the snack the world has been waiting for.
+                    Makhana (Euryale ferox) — a lily seed from Bihar&apos;s sacred wetlands. Revered by Ayurveda for millennia, now backed by modern nutrition science. This is the snack the world has been waiting for.
                   </motion.p>
 
                   <motion.div
@@ -335,7 +335,7 @@ export default function MakhanaPage() {
                     transition={{ duration: 0.6, delay: 0.55 }}
                     className="flex flex-wrap gap-3 mb-8"
                   >
-                    {[['9–15g', 'Protein/100g', '#f3a213'], ['<55', 'Low GI', '#009846'], ['0mg', 'Cholesterol', '#7a4dff']].map(([v, l, c]) => (
+                    {[['10g', 'Protein/100g', '#f3a213'], ['<55', 'Low GI', '#009846'], ['0mg', 'Cholesterol', '#7a4dff']].map(([v, l, c]) => (
                       <div key={l}
                         className="rounded-xl px-4 py-3 flex items-baseline gap-2"
                         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
@@ -372,7 +372,7 @@ export default function MakhanaPage() {
                     style={{ background: '#f3a213', color: '#050100', boxShadow: '0 8px 24px rgba(243,162,19,0.4)' }}
                     animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 3 }}
                   >
-                    9–15g Protein
+                    10g Protein
                   </motion.div>
                   <motion.div
                     className="absolute bottom-8 left-0 lg:-left-4 px-5 py-2.5 rounded-full font-body font-bold text-sm text-white"
@@ -423,7 +423,7 @@ export default function MakhanaPage() {
                       <em className="not-italic" style={{ color: '#f3a213' }}>Fox Nut</em>
                     </h2>
                     <div className="space-y-4 font-body text-base leading-[1.9]" style={{ color: 'rgba(26,14,10,0.65)' }}>
-                      <p>Makhana — also called fox nut or lotus seed — is the popped seed of the Euryale ferox plant, a giant water lily found in the wetlands of Bihar, Manipur, and parts of Japan and Korea.</p>
+                      <p>Makhana — also called fox nut or prickly lily seed — is the popped seed of the Euryale ferox plant, a giant water lily found in the wetlands of Bihar, Manipur, and parts of Japan and Korea.</p>
                       <p>India produces over 90% of the world&apos;s makhana, and Bihar alone accounts for 80% of that. The Mithila region, with its mineral-rich wetland ecosystem, produces the finest grade.</p>
                       <p>Unlike most snacks which are manufactured, makhana is <em className="font-semibold not-italic" style={{ color: '#1a0e0a' }}>harvested</em> — making it one of the most natural, minimally processed foods on Earth.</p>
                     </div>
@@ -532,7 +532,7 @@ export default function MakhanaPage() {
                     <em className="not-italic" style={{ color: '#f3a213' }}>Human Hands</em>
                   </h2>
                   <div className="space-y-4 font-body text-base leading-[1.9] mb-8" style={{ color: 'rgba(26,14,10,0.65)' }}>
-                    <p>The Mallah community of Bihar has mastered this harvest over generations. Men wade into lotus ponds at dawn, diving to collect seeds from the pond floor.</p>
+                    <p>The Mallah Community of Mithila has mastered this harvest over generations. Men wade into traditional lily ponds at dawn, diving to collect seeds from the pond floor.</p>
                     <p>Women roast seeds in clay pots with sand over wood fires — a precise technique passed from mother to daughter. Each &ldquo;pop&rdquo; is a moment of artistry.</p>
                   </div>
                   <Link href="/our-story">

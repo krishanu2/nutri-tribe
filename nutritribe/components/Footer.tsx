@@ -135,7 +135,7 @@ export default function Footer() {
               />
             </div>
             <p className="font-body text-sm text-white/65 leading-relaxed mb-6">
-              From Mithila&apos;s lotus ponds to your palate — India&apos;s ancient superfood, reimagined for the bold.
+              From Mithila&apos;s lily ponds to your palate — India&apos;s ancient superfood, reimagined for the bold.
             </p>
             <div className="flex gap-3">
               {[

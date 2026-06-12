@@ -315,7 +315,7 @@ export default function LotusBotanicalScene({ inView = false, className = '' }: 
         transition={{ duration: 0.6, delay: 2.2 }}
       >
         <line x1={255} y1={132} x2={310} y2={118} stroke="#f3a213" strokeWidth="0.8" opacity="0.7" strokeDasharray="3,2" />
-        <text x={313} y={117} {...labelStyle}>Lotus Blossom</text>
+        <text x={313} y={117} {...labelStyle}>Lily Blossom</text>
       </motion.g>
 
       {/* Label: Makhana Seed */}
@@ -345,7 +345,7 @@ export default function LotusBotanicalScene({ inView = false, className = '' }: 
         transition={{ duration: 0.6, delay: 3.2 }}
       >
         <line x1={370} y1={402} x2={400} y2={418} stroke="#f3a213" strokeWidth="0.8" opacity="0.7" strokeDasharray="3,2" />
-        <text x={290} y={433} {...labelStyle}>Lotus Root (Rhizome)</text>
+        <text x={290} y={433} {...labelStyle}>Lily Root (Rhizome)</text>
       </motion.g>
 
       {/* ── Madhubani border bottom ── */}

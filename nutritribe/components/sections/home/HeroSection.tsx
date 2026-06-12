@@ -289,7 +289,7 @@ export default function HeroSection() {
               transition={{ duration:0.8, delay:1.35 }}
               className="flex flex-wrap gap-x-7 gap-y-2.5"
             >
-              {['100% Natural','No Preservatives','15g Protein / 100g','Gluten Free'].map(tag=>(
+              {['100% Natural','No Preservatives','10g Protein / 100g','Gluten Free'].map(tag=>(
                 <div key={tag} className="flex items-center gap-2">
                   <div className="w-1 h-1 rounded-full" style={{ background:'#f3a213' }} />
                   <span className="font-body text-[10px] font-semibold tracking-[0.2em] uppercase"
@@ -351,7 +351,7 @@ export default function HeroSection() {
                 className="absolute top-4 right-0 lg:-right-6 px-4 py-3 rounded-2xl"
                 style={{ background:'rgba(7,1,0,0.85)', border:'1px solid rgba(243,162,19,0.2)', backdropFilter:'blur(16px)', transform:'translateZ(50px)' }}
               >
-                <p className="font-display font-bold text-2xl leading-none" style={{ color:'#f3a213' }}>15g</p>
+                <p className="font-display font-bold text-2xl leading-none" style={{ color:'#f3a213' }}>10g</p>
                 <p className="font-body text-[10px] mt-0.5 tracking-wide" style={{ color:'rgba(253,251,247,0.45)' }}>Protein / 100g</p>
               </motion.div>
 

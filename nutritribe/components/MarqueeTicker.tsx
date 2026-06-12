@@ -7,8 +7,8 @@ const FACTS = [
   { tag: 'DID YOU KNOW', text: "90% of India's Makhana grows in the ponds of Bihar" },
   { tag: 'OFFER', text: 'Free Shipping on all orders above ₹499' },
   { tag: 'PROMISE', text: '100% Natural — Zero Preservatives. Zero Compromise.' },
-  { tag: 'FROM BIHAR', text: 'Handpicked by Mallah fishermen from sacred lotus ponds' },
-  { tag: 'NUTRITION', text: '15g Protein · Low Calorie · Gluten Free · Guilt-Free Snacking' },
+  { tag: 'FROM BIHAR', text: 'Handpicked by Mallah fishermen from sacred lily ponds' },
+  { tag: 'NUTRITION', text: '10g Protein · Low Calorie · Gluten Free · Guilt-Free Snacking' },
   { tag: 'HERITAGE', text: '2,500 years of makhana wisdom — now in your hands' },
 ];
 

@@ -482,7 +482,7 @@ export default function ContactPage() {
           <div className="relative">
             <p className="font-body font-bold text-[9px] tracking-[0.45em] uppercase text-center mb-4"
               style={{ color: 'rgba(243,162,19,0.35)' }}>
-              From the Lotus Ponds of Bihar
+              From the Lily Ponds of Bihar
             </p>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(243,162,19,0.1)' }}>
               <ContactScene inView className="w-full" />

@@ -320,7 +320,7 @@ export default function ProductsPage() {
             {[
               { icon: '🔥', label: 'Roasted Not Fried' },
               { icon: '🌿', label: 'No Preservatives' },
-              { icon: '💪', label: '15g Protein / 100g' },
+              { icon: '💪', label: '10g Protein / 100g' },
               { icon: '✓', label: 'Gluten-Free' },
               { icon: '🌾', label: 'Direct from Bihar' },
               { icon: '🧪', label: 'No MSG' },

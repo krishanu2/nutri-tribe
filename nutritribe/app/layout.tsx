@@ -19,7 +19,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "NutriTribe",
-  description: "Premium makhana from the lotus ponds of Mithila, Bihar.",
+  description: "Premium makhana from the lily ponds of Mithila, Bihar.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

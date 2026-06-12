@@ -15,7 +15,7 @@ const ScrollProgress = dynamic(() => import('@/components/ScrollProgress'), { ss
 export const metadata: Metadata = {
   title: "NutriTribe — Snack Bold. Live Rooted.",
   description:
-    "Premium makhana (fox nuts) sourced from the lotus ponds of Mithila, Bihar. India's ancient superfood, reimagined for the modern palate.",
+    "Premium makhana (fox nuts) sourced from the lily ponds of Mithila, Bihar. India's ancient superfood, reimagined for the modern palate.",
   keywords: "makhana, fox nuts, healthy snacks, Bihar, Mithila, superfood, NutriTribe",
 };
 

@@ -7,6 +7,7 @@ import Image from 'next/image';
 import BiharMap from '@/components/illustrations/BiharMap';
 import MakhanaScene from '@/components/illustrations/MakhanaScene';
 import HarvestStoryScene from '@/components/illustrations/HarvestStoryScene';
+import MithilaArtBorder from '@/components/illustrations/MithilaArtBorder';
 
 /* ── Makhana orb ── */
 function MkOrb({ size = 16, opacity = 0.7 }: { size?: number; opacity?: number }) {
@@ -280,10 +281,10 @@ function TimelineBeat({ year, title, body, color, index, isLast }: {
 
 /* ── Auto-advancing Harvest Act Cards ── */
 const HARVEST_ACTS = [
-  { num: '01', title: 'Before Dawn',    body: 'The Mallah community wakes at 4 AM. No alarm needed — the pond does not wait.', color: '#f3a213' },
-  { num: '02', title: 'Into the Water', body: 'Men wade waist-deep into lily ponds. The cold water. The stems. The ancient ritual begins.', color: '#009846' },
+  { num: '01', title: 'Before Dawn',    body: 'The Mallah Community of Mithila wakes at 4 AM. No alarm needed — the traditional ponds do not wait.', color: '#f3a213' },
+  { num: '02', title: 'Into the Water', body: 'Men wade waist-deep into traditional lily ponds. The cold water. The stems. The ancient ritual begins.', color: '#009846' },
   { num: '03', title: 'The Dive',       body: 'Skilled divers hold their breath and sink to the pond floor, collecting seeds by feel alone.', color: '#7a4dff' },
-  { num: '04', title: 'The Harvest',    body: 'At sunrise, baskets overflow. The Mallah emerge with the seeds that will become your makhana.', color: '#f3a213' },
+  { num: '04', title: 'The Harvest',    body: 'At sunrise, baskets overflow. The Mallah Community emerges with the seeds that will become your makhana.', color: '#f3a213' },
 ];
 
 function HarvestActCards() {
@@ -359,10 +360,26 @@ function HarvestActCards() {
 const timeline = [
   { year: '2020', title: 'The Seed is Planted', body: 'NutriTribe founded in a home kitchen in Patna — a dream to bring makhana to the world, without compromise.', color: '#f3a213' },
   { year: '2021', title: 'First Batch. First Love.', body: 'Our first plain makhana launch sold out in 3 days. The tribe had spoken — and we knew this was real.', color: '#009846' },
-  { year: '2022', title: 'Bold Flavours. Real Partnerships.', body: 'Expanded to 3 flavours. Signed direct-trade agreements with 500+ Mallah farming families — fair wages, guaranteed.', color: '#7a4dff' },
+  { year: '2022', title: 'Bold Flavours. Real Partnerships.', body: 'Expanded to 3 flavours. Signed direct-trade agreements with 250+ Mallah families — fair wages, guaranteed.', color: '#7a4dff' },
   { year: '2023', title: '10,000 Happy Customers', body: 'Launched our D2C platform. Crossed 10,000 customers across India — all without a single distributor middleman.', color: '#f3a213' },
   { year: '2024', title: 'Premium Cookies Launch', body: 'Introduced our makhana cookie range. Pan-India shipping activated. The superfood goes mainstream.', color: '#009846' },
   { year: '2025', title: "India's Most Loved Makhana Brand", body: "The movement grows. The tribe expands. And Bihar's finest superfood finally takes its rightful place.", color: '#7a4dff' },
+];
+
+/* ── Meet the Founders — placeholder roster (replace with real names/bios/photos) ── */
+const FOUNDERS = [
+  {
+    name: '[Founder Name]',
+    role: 'Co-Founder & CEO',
+    bio: '[Placeholder bio — replace with a short founder story: background, why NutriTribe was started, and what drives the mission.]',
+    photo: 'https://picsum.photos/seed/nutritribe-founder-1/320/320',
+  },
+  {
+    name: '[Founder Name]',
+    role: 'Co-Founder & Operations',
+    bio: '[Placeholder bio — replace with a short founder story: background, why NutriTribe was started, and what drives the mission.]',
+    photo: 'https://picsum.photos/seed/nutritribe-founder-2/320/320',
+  },
 ];
 
 export default function OurStoryPage() {
@@ -429,7 +446,7 @@ export default function OurStoryPage() {
             className="font-display font-bold leading-[0.98] mb-8"
             style={{ fontSize: 'clamp(52px, 9vw, 120px)', color: '#fdfbf7', letterSpacing: '-0.02em' }}>
             A Story Born<br />
-            <em className="not-italic" style={{ color: '#f3a213' }}>in Lotus</em><br />
+            <em className="not-italic" style={{ color: '#f3a213' }}>in Lily</em><br />
             <em className="not-italic" style={{ color: 'rgba(253,251,247,0.7)', fontSize: '0.75em' }}>Water.</em>
           </motion.h1>
 
@@ -461,7 +478,7 @@ export default function OurStoryPage() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, delay: 0.85 }}
             className="grid grid-cols-3 gap-8 mt-20 pt-10 max-w-lg mx-auto"
             style={{ borderTop: '1px solid rgba(243,162,19,0.1)' }}>
-            {[['10K+', 'Farmers'], ['2,500', 'Yr Heritage'], ['100%', 'Direct Trade']].map(([v, l]) => (
+            {[['250+', 'Families'], ['2,500', 'Yr Heritage'], ['100%', 'Direct Trade']].map(([v, l]) => (
               <div key={l} className="text-center">
                 <p className="font-display font-bold text-xl md:text-2xl" style={{ color: '#f3a213' }}>{v}</p>
                 <p className="font-body text-[9px] tracking-[0.2em] uppercase mt-1" style={{ color: 'rgba(253,251,247,0.28)' }}>{l}</p>
@@ -525,8 +542,8 @@ export default function OurStoryPage() {
           {/* Typewriter-style narrative */}
           {[
             "The alarm does not ring. It never needs to.",
-            "The Mallah family of Darbhanga has woken before 4 AM for four hundred years — before electric light, before roads, before anyone in the city had heard the word makhana.",
-            "They wade into cold water. Their hands know the pond floor by feel alone.",
+            "A Mallah family of the Mithila Community in Darbhanga has woken before 4 AM for four hundred years — before electric light, before roads, before anyone in the city had heard the word makhana.",
+            "They wade into the traditional ponds, cold water rising to the waist. Their hands know the pond floor by feel alone.",
             "By 9 AM, they have harvested enough to feed a nation.",
           ].map((para, i) => (
             <motion.p
@@ -651,9 +668,10 @@ export default function OurStoryPage() {
           headline={<>Where the World&apos;s<br />Finest Makhana<br /><em className="not-italic" style={{ color: '#f3a213' }}>Grows.</em></>}
           quote="The water is ancient. The knowledge is older."
           body={[
-            "The Mithila wetlands of North Bihar stretch across 25,000 hectares of mineral-rich floodplain fed by Himalayan runoff. This is not farmland — it is a living ecosystem that has produced makhana for over 2,500 years.",
-            "India produces 90% of the world's makhana. Bihar alone accounts for 80% of that. And within Bihar, the Mithila region — our home — grows the finest grade: the 4-suta, the premium lotus seed prized by chefs and nutritionists alike.",
+            "The Mithila wetlands of North Bihar stretch across more than 25,000 hectares of mineral-rich floodplain fed by Himalayan runoff. This is not farmland — it is a living ecosystem that has produced makhana for over 2,500 years.",
+            "India produces 90% of the world's makhana. Bihar alone accounts for 80% of that. And within Bihar, the Mithila region — our home — grows the finest grade: the 6-suta, the premium lily seed prized by chefs and nutritionists alike.",
             "The water here has a character. A mineral profile. A story. And that story ends up in every single seed we pack.",
+            "Mithila is also revered as the birthplace of Mata Sita — a land where devotion runs as deep as the wetlands themselves. This is the same soil that gave the world Mithila Art (Madhubani painting), the centuries-old folk tradition of bold lines, natural pigments and sacred motifs passed down through generations of women artists.",
           ]}
           accentColor="#f3a213"
           side="left"
@@ -662,7 +680,7 @@ export default function OurStoryPage() {
             <div className="p-6 bg-[#fdf6e8]">
               <BiharMap className="w-full" />
               <div className="mt-4 grid grid-cols-3 gap-3">
-                {[['25,000 ha', 'Wetland Area'], ['90%', 'World Supply'], ['4-Suta', 'Premium Grade']].map(([v, l]) => (
+                {[['25,000+ ha', 'Wetland Area'], ['90%', 'World Supply'], ['6-Suta', 'Premium Grade']].map(([v, l]) => (
                   <div key={l} className="text-center py-3 rounded-xl" style={{ background: 'rgba(243,162,19,0.08)', border: '1px solid rgba(243,162,19,0.15)' }}>
                     <p className="font-display font-bold text-lg" style={{ color: '#f3a213' }}>{v}</p>
                     <p className="font-body text-[9px] tracking-[0.15em] uppercase mt-0.5" style={{ color: 'rgba(26,14,10,0.5)' }}>{l}</p>
@@ -672,6 +690,9 @@ export default function OurStoryPage() {
             </div>
           }
         />
+        <div className="px-6 md:px-12 pb-10 md:pb-14" style={{ background: '#fdf6e8' }}>
+          <MithilaArtBorder className="max-w-3xl mx-auto" color="#f3a213" />
+        </div>
       </div>
 
       {/* ════════════════════════════════════════
@@ -712,7 +733,7 @@ export default function OurStoryPage() {
               <em className="not-italic" style={{ color: '#009846' }}>to Your Hands</em>
             </h2>
             <p className="font-body text-base mt-4 max-w-lg mx-auto" style={{ color: 'rgba(253,251,247,0.35)' }}>
-              Every seed you eat was handpicked by a Mallah diver in Bihar. This is their story, in four acts.
+              Every seed you eat was handpicked by a diver from the Mallah Community of Mithila. This is their story, in four acts.
             </p>
           </motion.div>
 
@@ -756,7 +777,7 @@ export default function OurStoryPage() {
                 { time:'6:00 AM', title:'Baskets Fill', body:'The sun rises. Baskets overflow. The makhana seeds glisten with pond water and morning light.', color:'#f3a213' },
                 { time:'7:30 AM', title:'The Dry', body:'Seeds spread on bamboo mats in the sun. Hours of patient watching. Wind and warmth do the rest.', color:'#7a4dff' },
                 { time:'2:00 PM', title:'The Roast', body:'The village smells of warmth. Seeds pop in the kadhai. Every pop is a small act of alchemy.', color:'#009846' },
-                { time:'5:00 PM', title:'Sorting', body:'Grade by grade, by hand. No machine can feel the difference between 4-suta and 3-suta.', color:'#f3a213' },
+                { time:'5:00 PM', title:'Sorting', body:'Grade by grade, by hand. No machine can feel the difference between 6-suta and lower grades.', color:'#f3a213' },
                 { time:'Dusk', title:'The Rest', body:'The family gathers. The work is done. Tomorrow, before 4 AM, it begins again.', color:'#7a4dff' },
               ].map((item, i) => (
                 <motion.div key={item.time}
@@ -787,7 +808,7 @@ export default function OurStoryPage() {
         headline={<>The Hands That<br /><em className="not-italic" style={{ color: '#009846' }}>Hold the Story.</em></>}
         quote="No machine can replicate it. No algorithm can copy the instinct."
         body={[
-          "The Mallah community has harvested makhana for generations. This is not a job — it is an identity. The fathers teach the sons to read the water. The mothers teach the daughters to read the heat of the pan.",
+          "The Mallah Community of Mithila has harvested makhana from these traditional ponds for generations. This is not a job — it is an identity. The fathers teach the sons to read the water. The mothers teach the daughters to read the heat of the pan.",
           "When you open a pack of NutriTribe, the hands of a Mallah farmer are in it. Not metaphorically — literally. Every seed was touched, sorted, and inspected by human hands before it reached your bag.",
           "We pay fair wages. We skip the middleman. Every product you buy directly improves the livelihood of a Mithila farming family. That is the NutriTribe promise — and it will never change.",
         ]}
@@ -800,7 +821,7 @@ export default function OurStoryPage() {
             {/* Community stats */}
             <div className="grid grid-cols-2 gap-3 mb-4">
               {[
-                { v: '10,000+', l: 'Mallah Families', c: '#009846' },
+                { v: '250+', l: 'Mallah Families', c: '#009846' },
                 { v: '100%', l: 'Direct Trade', c: '#f3a213' },
                 { v: '₹Fair', l: 'Guaranteed Wage', c: '#009846' },
                 { v: '3rd Gen', l: 'Knowledge Keepers', c: '#f3a213' },
@@ -862,6 +883,16 @@ export default function OurStoryPage() {
                 color: '#7a4dff',
                 quote: 'The first crop I sold to NutriTribe, I bought new tools. The second, I fixed my roof. The third, I felt like a businessman.',
               },
+              {
+                name: 'Krishna Sahni', village: 'Darbhanga', gen: '3rd Generation',
+                color: '#f3a213',
+                quote: '[Placeholder quote — replace with real testimonial]',
+              },
+              {
+                name: 'Ramesh Sahni', village: 'Madhubani', gen: '2nd Generation',
+                color: '#009846',
+                quote: '[Placeholder quote — replace with real testimonial]',
+              },
             ].map((f, i) => (
               <motion.div key={f.name}
                 initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
@@ -918,6 +949,56 @@ export default function OurStoryPage() {
       </section>
 
       {/* ════════════════════════════════════════
+          MEET THE FOUNDERS
+          ════════════════════════════════════════ */}
+      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #1a0e0a 0%, #0a0500 100%)' }}>
+        <div className="max-w-5xl mx-auto px-6 py-24 md:py-36 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <p className="font-body font-bold text-[10px] tracking-[0.45em] uppercase mb-4" style={{ color: '#f3a213' }}>
+              The People Behind NutriTribe
+            </p>
+            <h2 className="font-display font-bold leading-tight" style={{ fontSize: 'clamp(32px, 5vw, 64px)', color: '#fdfbf7' }}>
+              Meet the<br />
+              <em className="not-italic" style={{ color: '#f3a213' }}>Founders.</em>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {FOUNDERS.map((f, i) => (
+              <motion.div key={f.name + i}
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.12 }}
+                className="relative rounded-2xl p-8 overflow-hidden text-center"
+                style={{ background: 'linear-gradient(135deg, rgba(243,162,19,0.10), rgba(243,162,19,0.03))', border: '1px solid rgba(243,162,19,0.22)' }}
+              >
+                <motion.div className="absolute top-0 left-0 right-0 h-0.5"
+                  style={{ background: 'linear-gradient(to right, #f3a213, transparent)' }}
+                  initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.12 + 0.2 }} />
+
+                <div className="relative w-28 h-28 rounded-full overflow-hidden mx-auto mb-5"
+                  style={{ border: '2px solid rgba(243,162,19,0.35)' }}>
+                  <Image src={f.photo} alt={f.name} fill sizes="112px" className="object-cover" />
+                </div>
+
+                <p className="font-display font-bold text-xl mb-1" style={{ color: '#fdfbf7' }}>{f.name}</p>
+                <p className="font-body text-[10px] tracking-[0.3em] uppercase mb-4" style={{ color: '#f3a213' }}>{f.role}</p>
+                <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(253,251,247,0.5)' }}>{f.bio}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <p className="text-center mt-10 font-body text-[10px] tracking-[0.2em] uppercase" style={{ color: 'rgba(253,251,247,0.25)' }}>
+            [Placeholder content — to be replaced with real founder names, roles, bios and photos]
+          </p>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
           CHAPTER 03 — THE VISION
           ════════════════════════════════════════ */}
       <StoryBeat
@@ -937,7 +1018,7 @@ export default function OurStoryPage() {
             <MakhanaScene className="w-full" />
             <div className="mt-4 text-center">
               <p className="font-body font-bold text-[9px] tracking-[0.25em] uppercase" style={{ color: '#7a4dff' }}>
-                Euryale ferox · Bihar&apos;s Sacred Lotus Seed
+                Euryale ferox · Bihar&apos;s Sacred Lily Seed
               </p>
             </div>
           </div>
@@ -971,7 +1052,7 @@ export default function OurStoryPage() {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            <StatCard value="10,000+" label="Farming Families Supported" sub="Mallah community of Mithila — direct beneficiaries of every sale." color="#f3a213" index={0} />
+            <StatCard value="250+" label="Farming Families Supported" sub="Mallah community of Mithila — direct beneficiaries of every sale." color="#f3a213" index={0} />
             <StatCard value="₹0" label="Middlemen in Our Supply Chain" sub="Farmer to factory to you. No distributor tax. More money where it belongs." color="#009846" index={1} />
             <StatCard value="2,500 yr" label="Tradition Preserved" sub="Ancient harvesting techniques kept alive and fairly compensated." color="#7a4dff" index={2} />
             <StatCard value="90%" label="of India's Makhana" sub="Comes from Bihar. We work exclusively with premium Mithila-grade." color="#f3a213" index={3} />

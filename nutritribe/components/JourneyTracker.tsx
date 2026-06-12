@@ -13,19 +13,19 @@ const QUESTIONS = [
     q: 'Where does 90% of India\'s makhana come from?',
     opts: ['Rajasthan', 'Bihar', 'Kerala', 'Punjab'],
     ans: 1,
-    fact: 'Bihar\'s lotus ponds, especially in Mithila, produce almost all of India\'s makhana.',
+    fact: 'Bihar\'s lily ponds, especially in Mithila, produce almost all of India\'s makhana.',
   },
   {
     q: 'What plant does makhana come from?',
-    opts: ['Water chestnut', 'Lotus flower', 'Water lily', 'Bamboo'],
+    opts: ['Water chestnut', 'Prickly Lily', 'Water lily', 'Bamboo'],
     ans: 1,
-    fact: 'Makhana are the seeds of the Euryale ferox — a prickly lotus plant.',
+    fact: 'Makhana are the seeds of the Euryale ferox — also known as the Prickly Lily.',
   },
   {
     q: 'How much protein does makhana have per 100g?',
-    opts: ['5g', '9g', '15g', '22g'],
-    ans: 2,
-    fact: '15g of protein per 100g — more than most nuts, less fat too.',
+    opts: ['5g', '10g', '15g', '22g'],
+    ans: 1,
+    fact: '10g of protein per 100g — more than most nuts, less fat too.',
   },
 ];
 

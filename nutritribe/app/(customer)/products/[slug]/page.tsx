@@ -293,7 +293,7 @@ export default function ProductDetailPage({ params }: PageProps) {
 
                 <Accordion title="Ingredients & Nutrition">
                   <p>Fox Nuts (Makhana), natural spices and seasonings (variant-specific), rock salt. No artificial preservatives, no added MSG, no artificial colours.</p>
-                  <p className="mt-2 font-semibold text-earthen-rust">Per 100g: Protein 9–15g | Fat 0.1g | Carbs 77g | Calories 347 kcal</p>
+                  <p className="mt-2 font-semibold text-earthen-rust">Per 100g: Protein 10g | Fat 0.1g | Carbs 77g | Calories 347 kcal</p>
                 </Accordion>
 
                 <Accordion title="Storage Tips">

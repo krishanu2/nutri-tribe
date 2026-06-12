@@ -17,11 +17,11 @@ const TRACK_1 = [
 ];
 
 const TRACK_2 = [
-  '15g Protein / 100g', '0mg Cholesterol', '347 Kcal / 100g', 'Triple Hand-Sorted',
-  '80% World Makhana from Bihar', 'Small-Batch Roasted', '10,000+ Farmers Supported',
+  '10g Protein / 100g', '0mg Cholesterol', '347 Kcal / 100g', 'Triple Hand-Sorted',
+  '80% World Makhana from Bihar', 'Small-Batch Roasted', '250+ Families Supported',
   'Antioxidant Rich', 'Low Glycemic Index', 'Ayurvedic Superfood', 'Vegan Friendly', 'Keto Friendly',
-  '15g Protein / 100g', '0mg Cholesterol', '347 Kcal / 100g', 'Triple Hand-Sorted',
-  '80% World Makhana from Bihar', 'Small-Batch Roasted', '10,000+ Farmers Supported',
+  '10g Protein / 100g', '0mg Cholesterol', '347 Kcal / 100g', 'Triple Hand-Sorted',
+  '80% World Makhana from Bihar', 'Small-Batch Roasted', '250+ Families Supported',
   'Antioxidant Rich', 'Low Glycemic Index', 'Ayurvedic Superfood', 'Vegan Friendly', 'Keto Friendly',
 ];
 

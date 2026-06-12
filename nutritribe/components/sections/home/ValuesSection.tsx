@@ -15,11 +15,11 @@ const R_HUB = 46;
 
 /* ─── Values ─── */
 const VALUES = [
-  { title: 'Authenticity', desc: 'Every kernel is traced back to Mithila\'s ancient lotus ponds — where makhana has been harvested for over 2,000 years. No shortcuts. No substitutes. Just the real thing.', icon: '🪷', color: '#f3a213', angle: -90 },
+  { title: 'Authenticity', desc: 'Every kernel is traced back to Mithila\'s ancient lily ponds — where makhana has been harvested for over 2,000 years. No shortcuts. No substitutes. Just the real thing.', icon: '🪷', color: '#f3a213', angle: -90 },
   { title: 'Health First', desc: 'Roasted, never fried. Zero MSG, zero artificial colours, zero compromise. Makhana is nature\'s answer to the snack aisle — and we keep it that way.', icon: '🌿', color: '#009846', angle: -18 },
   { title: 'Innovation', desc: 'Ancient grain, bold modern cravings. We fuse 2,500 years of Mithila tradition with globally-inspired flavours that make your taste buds sit up and pay attention.', icon: '⚡', color: '#7a4dff', angle: 54 },
   { title: 'Community', desc: 'Every pouch you open puts money directly in the hands of a Mithila farmer. We source transparently, pay fairly, and celebrate the people behind every harvest.', icon: '🤝', color: '#e06030', angle: 126 },
-  { title: 'Quality', desc: 'Triple-sorted by hand. Roasted in small batches. Sealed at peak freshness. Obsessive care from lotus pond to sealed pouch — that\'s the NutriTribe promise.', icon: '★', color: '#D4AF37', angle: 198 },
+  { title: 'Quality', desc: 'Triple-sorted by hand. Roasted in small batches. Sealed at peak freshness. Obsessive care from lily pond to sealed pouch — that\'s the NutriTribe promise.', icon: '★', color: '#D4AF37', angle: 198 },
 ];
 
 /* ─── Arc segment path helper ─── */

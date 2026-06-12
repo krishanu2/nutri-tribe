@@ -10,7 +10,7 @@ import { InstagramIcon } from '@/components/SocialIcons';
    ───────────────────────────────────────────────────────────────────── */
 
 const tiles = [
-  { label: 'Lotus Harvest', sub: 'Bihar, Mithila', color: '#f3a213', icon: '🌸' },
+  { label: 'Lily Harvest', sub: 'Bihar, Mithila', color: '#f3a213', icon: '🌸' },
   { label: 'Mithila Ponds', sub: 'Dawn at the wetlands', color: '#7d3627', icon: '🌊' },
   { label: 'Pure Makhana', sub: 'From pod to pouch', color: '#009846', icon: '🌿' },
   { label: 'Roast Session', sub: 'Small-batch perfection', color: '#1c0a02', icon: '🔥' },
@@ -122,7 +122,7 @@ export default function InstagramTeaser() {
             className="font-body text-base mt-4 max-w-md mx-auto"
             style={{ color: 'rgba(253,251,247,0.45)' }}
           >
-            Daily snack inspo, recipes, and behind-the-scenes from the lotus ponds of Bihar.
+            Daily snack inspo, recipes, and behind-the-scenes from the lily ponds of Bihar.
           </motion.p>
         </div>
 

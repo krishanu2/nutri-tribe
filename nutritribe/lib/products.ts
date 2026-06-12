@@ -24,7 +24,7 @@ export const products: Product[] = [
     color: "#009846",
     price: 199,
     weights: ["50g", "90g"],
-    description: "Premium fox nuts sourced directly from the lotus ponds of Mithila, Bihar. Hand-roasted in small batches to preserve maximum nutrition and crunch.",
+    description: "Premium fox nuts sourced directly from the lily ponds of Mithila, Bihar. Hand-roasted in small batches to preserve maximum nutrition and crunch.",
     features: ["100% Natural", "No Preservatives", "High Protein", "Gluten Free", "Ayurvedic Superfood"],
     badge: "BESTSELLER",
     image: "https://picsum.photos/seed/plain-makhana/600/600",

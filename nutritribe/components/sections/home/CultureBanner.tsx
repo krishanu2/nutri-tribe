@@ -743,7 +743,7 @@ export default function CultureBanner() {
               Read Our Story
             </Link>
             <div className="flex gap-8 mt-12 pt-8 border-t border-white/10">
-              {[{val:'10,000+',label:'Farmers'},{val:'100%',label:'Direct Trade'},{val:'₹ Fair',label:'Wages'}].map(s=>(
+              {[{val:'250+',label:'Families'},{val:'100%',label:'Direct Trade'},{val:'₹ Fair',label:'Wages'}].map(s=>(
                 <div key={s.label}>
                   <p className="font-display font-bold text-2xl text-sun-harvest">{s.val}</p>
                   <p className="font-body text-xs text-ivory-grain/50 tracking-widest uppercase mt-0.5">{s.label}</p>
