@@ -4,6 +4,7 @@ export interface Product {
   name: string;
   tagline: string;
   category: string;
+  mainCategory: 'Makhana (Fox Nuts)' | 'Premium Cookies';
   color: string;
   price: number;
   weights: string[];
@@ -20,7 +21,8 @@ export const products: Product[] = [
     slug: "plain-makhana",
     name: "Plain Makhana",
     tagline: "Pure. Natural. Timeless.",
-    category: "Plain Makhana",
+    category: "Raw / Premium 6-Suta",
+    mainCategory: "Makhana (Fox Nuts)",
     color: "#009846",
     price: 199,
     weights: ["50g", "90g"],
@@ -39,7 +41,8 @@ export const products: Product[] = [
     slug: "peri-peri-makhana",
     name: "Peri Peri Makhana",
     tagline: "Fiery. Bold. Unstoppable.",
-    category: "Flavoured Makhana",
+    category: "Roasted Flavours",
+    mainCategory: "Makhana (Fox Nuts)",
     color: "#7a4dff",
     price: 219,
     weights: ["50g", "90g"],
@@ -57,7 +60,8 @@ export const products: Product[] = [
     slug: "cream-onion-makhana",
     name: "Cream & Onion",
     tagline: "Creamy. Crunchy. Addictive.",
-    category: "Flavoured Makhana",
+    category: "Roasted Flavours",
+    mainCategory: "Makhana (Fox Nuts)",
     color: "#7a4dff",
     price: 219,
     weights: ["50g", "90g"],
@@ -74,7 +78,8 @@ export const products: Product[] = [
     slug: "tangy-cheese-makhana",
     name: "Tangy Cheese",
     tagline: "Cheesy. Tangy. Irresistible.",
-    category: "Flavoured Makhana",
+    category: "Roasted Flavours",
+    mainCategory: "Makhana (Fox Nuts)",
     color: "#7a4dff",
     price: 219,
     weights: ["50g", "90g"],
@@ -92,7 +97,8 @@ export const products: Product[] = [
     slug: "salt-pepper-makhana",
     name: "Salt & Pepper",
     tagline: "Classic. Clean. Crunchy.",
-    category: "Plain Makhana",
+    category: "Raw / Premium 6-Suta",
+    mainCategory: "Makhana (Fox Nuts)",
     color: "#009846",
     price: 199,
     weights: ["50g", "90g"],
@@ -110,6 +116,7 @@ export const products: Product[] = [
     name: "Premium Cookies",
     tagline: "Guilt-Free Indulgence.",
     category: "Premium Cookies",
+    mainCategory: "Premium Cookies",
     color: "#7d3627",
     price: 249,
     weights: ["100g"],
@@ -128,4 +135,4 @@ export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
 
-export const categories = ["All", "Plain Makhana", "Flavoured Makhana", "Premium Cookies"];
+export const categories = ["All", "Roasted Flavours", "Raw / Premium 6-Suta", "Premium Cookies"];

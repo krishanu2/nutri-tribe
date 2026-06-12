@@ -3,6 +3,7 @@ const nextConfig = {
   transpilePackages: ['three', '@react-three/fiber', '@react-three/drei'],
   experimental: { serverComponentsExternalPackages: ['@prisma/client', 'prisma'] },
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',

@@ -4,17 +4,130 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, X, ArrowRight } from 'lucide-react';
+import { ShoppingBag, X, ArrowRight, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import { useCart } from '@/lib/cartContext';
 
-const NAV = [
+interface NavChild {
+  label: string;
+  href: string;
+  desc?: string;
+  soon?: boolean;
+}
+
+interface NavGroup {
+  heading: string;
+  items: NavChild[];
+}
+
+interface NavLink {
+  label: string;
+  href: string;
+  short: string;
+  megaMenu?: NavGroup[];
+}
+
+const NAV: NavLink[] = [
   { label: 'Home',        href: '/',          short: 'Home'    },
-  { label: 'Products',    href: '/products',  short: 'Shop'    },
+  {
+    label: 'Products', href: '/products', short: 'Shop',
+    megaMenu: [
+      {
+        heading: 'Makhana (Fox Nuts)',
+        items: [
+          { label: 'Roasted Flavours',     href: '/products?category=Roasted%20Flavours',          desc: 'Bold, spiced, never fried' },
+          { label: 'Raw / Premium 6-Suta', href: '/products?category=Raw%20%2F%20Premium%206-Suta', desc: 'Pure, traditional, minimal' },
+        ],
+      },
+      {
+        heading: 'More from NutriTribe',
+        items: [
+          { label: 'Premium Cookies',   href: '/products?category=Premium%20Cookies', desc: 'Guilt-free indulgence' },
+          { label: 'Seeds & Nuts',       href: '/coming-soon?cat=seeds-nuts',          desc: 'Coming soon', soon: true },
+          { label: 'Healthy Beverages',  href: '/coming-soon?cat=healthy-beverages',   desc: 'Coming soon', soon: true },
+        ],
+      },
+    ],
+  },
   { label: 'Our Story',   href: '/our-story', short: 'Story'   },
-  { label: 'The Makhana', href: '/makhana',   short: 'Learn'   },
+  {
+    label: 'The Makhana', href: '/makhana', short: 'Learn',
+    megaMenu: [
+      {
+        heading: 'Learn & Discover',
+        items: [
+          { label: 'The Makhana Story', href: '/makhana', desc: 'Heritage, harvest & nutrition' },
+          { label: 'Journal',           href: '/blog',    desc: 'Stories, health & wellness' },
+          { label: 'Recipes',           href: '/recipes', desc: 'Cook with makhana' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'For Business', href: '/b2b', short: 'Business',
+    megaMenu: [
+      {
+        heading: 'Partner With Us',
+        items: [
+          { label: 'B2B & Bulk Orders',  href: '/b2b',                desc: 'Wholesale pricing & private labeling' },
+          { label: 'Corporate Gifting',  href: '/corporate-gifting',  desc: 'Premium hampers for teams & clients' },
+        ],
+      },
+    ],
+  },
   { label: 'Contact',     href: '/contact',   short: 'Contact' },
 ];
+
+/* Mega-menu dropdown panel — shared by full bar + pill */
+function MegaPanel({ groups, compact = false }: { groups: NavGroup[]; compact?: boolean }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 8, scale: 0.98 }}
+      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+      className={`absolute left-1/2 -translate-x-1/2 top-full ${compact ? 'mt-2' : 'mt-3'} z-50 flex flex-wrap gap-8 p-6 rounded-2xl`}
+      style={{
+        background: 'rgba(7,1,0,0.96)',
+        backdropFilter: 'blur(28px)',
+        border: '1px solid rgba(243,162,19,0.16)',
+        boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
+        minWidth: 420,
+      }}
+    >
+      {groups.map((group) => (
+        <div key={group.heading} className="min-w-[170px]">
+          <p className="font-body font-bold text-[9px] tracking-[0.3em] uppercase mb-3" style={{ color: 'rgba(243,162,19,0.5)' }}>
+            {group.heading}
+          </p>
+          <div className="flex flex-col gap-2.5">
+            {group.items.map((item) => (
+              <Link key={item.href} href={item.href} className="group/item flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-body font-semibold text-[13px] transition-colors duration-150 group-hover/item:text-[#f3a213]"
+                    style={{ color: item.soon ? 'rgba(253,251,247,0.35)' : 'rgba(253,251,247,0.8)' }}>
+                    {item.label}
+                  </p>
+                  {item.desc && (
+                    <p className="font-body text-[10px] mt-0.5" style={{ color: 'rgba(253,251,247,0.3)' }}>
+                      {item.desc}
+                    </p>
+                  )}
+                </div>
+                {item.soon && (
+                  <span className="font-body font-bold text-[8px] tracking-[0.2em] uppercase px-2 py-0.5 rounded-full shrink-0"
+                    style={{ background: 'rgba(243,162,19,0.1)', color: 'rgba(243,162,19,0.6)' }}>
+                    Soon
+                  </span>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+      ))}
+    </motion.div>
+  );
+}
 
 /* tiny makhana ball for gamification dots */
 function MakhBall({ size = 8 }: { size?: number }) {
@@ -39,6 +152,8 @@ export default function Navbar() {
   const [pillHover, setPillHover]     = useState(false);
   const [mobileOpen, setMobileOpen]   = useState(false);
   const [visited, setVisited]         = useState<Set<string>>(new Set());
+  const [openMenu, setOpenMenu]       = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname  = usePathname();
   const { totalItems, openCart } = useCart();
@@ -134,26 +249,40 @@ export default function Navbar() {
                 {NAV.map((link) => {
                   const active = pathname === link.href;
                   const seen   = visited.has(link.href);
+                  const hasMenu = !!link.megaMenu;
                   return (
-                    <Link key={link.href} href={link.href} className="relative px-4 py-1.5 rounded-full group">
-                      {active && (
-                        <motion.div layoutId="full-active" className="absolute inset-0 rounded-full"
-                          style={{ background: 'rgba(243,162,19,0.12)', border: '1px solid rgba(243,162,19,0.2)' }}
-                          transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
-                      )}
-                      <span className="relative z-10 font-body font-medium text-[13px] tracking-wide transition-colors duration-200"
-                        style={{ color: active ? '#f3a213' : 'rgba(253,251,247,0.58)' }}>
-                        {link.label}
-                      </span>
-                      {/* Visited dot gamification */}
-                      {seen && !active && (
-                        <motion.div className="absolute -bottom-1 left-1/2 -translate-x-1/2"
-                          initial={{ scale: 0 }} animate={{ scale: 1 }}
-                          transition={{ type: 'spring', stiffness: 500, damping: 20 }}>
-                          <div className="w-1 h-1 rounded-full" style={{ background: '#f3a213', opacity: 0.5 }} />
-                        </motion.div>
-                      )}
-                    </Link>
+                    <div key={link.href} className="relative"
+                      onMouseEnter={() => hasMenu && setOpenMenu(link.href)}
+                      onMouseLeave={() => hasMenu && setOpenMenu(null)}>
+                      <Link href={link.href} className="relative px-4 py-1.5 rounded-full group flex items-center gap-1">
+                        {active && (
+                          <motion.div layoutId="full-active" className="absolute inset-0 rounded-full"
+                            style={{ background: 'rgba(243,162,19,0.12)', border: '1px solid rgba(243,162,19,0.2)' }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
+                        )}
+                        <span className="relative z-10 font-body font-medium text-[13px] tracking-wide transition-colors duration-200"
+                          style={{ color: active ? '#f3a213' : 'rgba(253,251,247,0.58)' }}>
+                          {link.label}
+                        </span>
+                        {hasMenu && (
+                          <ChevronDown size={12} className="relative z-10 transition-transform duration-200"
+                            style={{ color: active ? '#f3a213' : 'rgba(253,251,247,0.4)', transform: openMenu === link.href ? 'rotate(180deg)' : 'none' }} />
+                        )}
+                        {/* Visited dot gamification */}
+                        {seen && !active && (
+                          <motion.div className="absolute -bottom-1 left-1/2 -translate-x-1/2"
+                            initial={{ scale: 0 }} animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 500, damping: 20 }}>
+                            <div className="w-1 h-1 rounded-full" style={{ background: '#f3a213', opacity: 0.5 }} />
+                          </motion.div>
+                        )}
+                      </Link>
+                      <AnimatePresence>
+                        {hasMenu && openMenu === link.href && (
+                          <MegaPanel groups={link.megaMenu!} />
+                        )}
+                      </AnimatePresence>
+                    </div>
                   );
                 })}
               </div>
@@ -309,45 +438,59 @@ export default function Navbar() {
                 {NAV.map((link) => {
                   const active = pathname === link.href;
                   const seen   = visited.has(link.href);
+                  const hasMenu = !!link.megaMenu;
                   return (
-                    <Link key={link.href} href={link.href} className="relative group">
-                      <motion.div
-                        className="relative px-3 py-1.5 rounded-full flex flex-col items-center"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        {active && (
-                          <motion.div layoutId="pill-active"
-                            className="absolute inset-0 rounded-full"
-                            style={{ background: 'rgba(243,162,19,0.12)', border: '1px solid rgba(243,162,19,0.25)' }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
-                        )}
-                        <span className="relative z-10 font-body font-medium text-[12px] whitespace-nowrap transition-colors duration-150"
-                          style={{ color: active ? '#f3a213' : 'rgba(253,251,247,0.6)' }}>
-                          {link.short}
-                        </span>
-                        {/* Gamification: makhana ball for visited pages */}
-                        {seen && (
-                          <motion.div
-                            className="absolute -bottom-0.5 left-1/2 -translate-x-1/2"
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ type: 'spring', stiffness: 500, damping: 20, delay: 0.1 }}
-                          >
-                            <MakhBall size={5} />
-                          </motion.div>
-                        )}
-                        {/* Hover: mini makhana pops up */}
+                    <div key={link.href} className="relative"
+                      onMouseEnter={() => hasMenu && setOpenMenu(link.href)}
+                      onMouseLeave={() => hasMenu && setOpenMenu(null)}>
+                      <Link href={link.href} className="relative group">
                         <motion.div
-                          className="absolute -top-5 left-1/2 -translate-x-1/2 pointer-events-none"
-                          initial={{ opacity: 0, y: 4, scale: 0.5 }}
-                          whileHover={{ opacity: 1, y: 0, scale: 1 }}
-                          transition={{ duration: 0.2 }}
+                          className="relative px-3 py-1.5 rounded-full flex flex-col items-center"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
                         >
-                          <MakhBall size={10} />
+                          {active && (
+                            <motion.div layoutId="pill-active"
+                              className="absolute inset-0 rounded-full"
+                              style={{ background: 'rgba(243,162,19,0.12)', border: '1px solid rgba(243,162,19,0.25)' }}
+                              transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
+                          )}
+                          <span className="relative z-10 font-body font-medium text-[12px] whitespace-nowrap transition-colors duration-150 flex items-center gap-0.5"
+                            style={{ color: active ? '#f3a213' : 'rgba(253,251,247,0.6)' }}>
+                            {link.short}
+                            {hasMenu && (
+                              <ChevronDown size={10} className="transition-transform duration-200"
+                                style={{ transform: openMenu === link.href ? 'rotate(180deg)' : 'none' }} />
+                            )}
+                          </span>
+                          {/* Gamification: makhana ball for visited pages */}
+                          {seen && (
+                            <motion.div
+                              className="absolute -bottom-0.5 left-1/2 -translate-x-1/2"
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              transition={{ type: 'spring', stiffness: 500, damping: 20, delay: 0.1 }}
+                            >
+                              <MakhBall size={5} />
+                            </motion.div>
+                          )}
+                          {/* Hover: mini makhana pops up */}
+                          <motion.div
+                            className="absolute -top-5 left-1/2 -translate-x-1/2 pointer-events-none"
+                            initial={{ opacity: 0, y: 4, scale: 0.5 }}
+                            whileHover={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <MakhBall size={10} />
+                          </motion.div>
                         </motion.div>
-                      </motion.div>
-                    </Link>
+                      </Link>
+                      <AnimatePresence>
+                        {hasMenu && openMenu === link.href && (
+                          <MegaPanel groups={link.megaMenu!} compact />
+                        )}
+                      </AnimatePresence>
+                    </div>
                   );
                 })}
 
@@ -430,24 +573,82 @@ export default function Navbar() {
                 {NAV.map((link, i) => {
                   const active = pathname === link.href;
                   const seen = visited.has(link.href);
+                  const hasMenu = !!link.megaMenu;
+                  const expanded = mobileExpanded === link.href;
                   return (
                     <motion.div key={link.href}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.06 + i * 0.06 }}>
-                      <Link href={link.href}
-                        className="flex items-center justify-between py-4 border-b group"
-                        style={{ borderColor: 'rgba(243,162,19,0.07)' }}>
-                        <div className="flex items-center gap-3">
-                          {seen && <MakhBall size={8} />}
-                          <span className="font-display text-2xl font-bold"
-                            style={{ color: active ? '#f3a213' : 'rgba(253,251,247,0.75)' }}>
-                            {link.label}
-                          </span>
-                        </div>
-                        <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity"
-                          style={{ color: '#f3a213' }} />
-                      </Link>
+                      {hasMenu ? (
+                        <button
+                          onClick={() => setMobileExpanded(expanded ? null : link.href)}
+                          className="w-full flex items-center justify-between py-4 border-b group"
+                          style={{ borderColor: 'rgba(243,162,19,0.07)' }}>
+                          <div className="flex items-center gap-3">
+                            {seen && <MakhBall size={8} />}
+                            <span className="font-display text-2xl font-bold"
+                              style={{ color: active ? '#f3a213' : 'rgba(253,251,247,0.75)' }}>
+                              {link.label}
+                            </span>
+                          </div>
+                          <ChevronDown size={16} className="transition-transform duration-200"
+                            style={{ color: 'rgba(243,162,19,0.5)', transform: expanded ? 'rotate(180deg)' : 'none' }} />
+                        </button>
+                      ) : (
+                        <Link href={link.href}
+                          className="flex items-center justify-between py-4 border-b group"
+                          style={{ borderColor: 'rgba(243,162,19,0.07)' }}>
+                          <div className="flex items-center gap-3">
+                            {seen && <MakhBall size={8} />}
+                            <span className="font-display text-2xl font-bold"
+                              style={{ color: active ? '#f3a213' : 'rgba(253,251,247,0.75)' }}>
+                              {link.label}
+                            </span>
+                          </div>
+                          <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            style={{ color: '#f3a213' }} />
+                        </Link>
+                      )}
+                      {hasMenu && (
+                        <AnimatePresence>
+                          {expanded && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                              className="overflow-hidden"
+                            >
+                              <div className="pl-4 pb-3 flex flex-col" style={{ borderBottom: '1px solid rgba(243,162,19,0.07)' }}>
+                                {link.megaMenu!.map((group) => (
+                                  <div key={group.heading} className="pt-3">
+                                    <p className="font-body font-bold text-[9px] tracking-[0.3em] uppercase mb-2" style={{ color: 'rgba(243,162,19,0.4)' }}>
+                                      {group.heading}
+                                    </p>
+                                    {group.items.map((item) => (
+                                      <Link key={item.href} href={item.href}
+                                        className="flex items-center justify-between py-2.5"
+                                        onClick={() => setMobileOpen(false)}>
+                                        <span className="font-body text-sm"
+                                          style={{ color: item.soon ? 'rgba(253,251,247,0.35)' : 'rgba(253,251,247,0.7)' }}>
+                                          {item.label}
+                                        </span>
+                                        {item.soon && (
+                                          <span className="font-body font-bold text-[8px] tracking-[0.2em] uppercase px-2 py-0.5 rounded-full"
+                                            style={{ background: 'rgba(243,162,19,0.1)', color: 'rgba(243,162,19,0.6)' }}>
+                                            Soon
+                                          </span>
+                                        )}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      )}
                     </motion.div>
                   );
                 })}

@@ -18,8 +18,23 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "NutriTribe",
-  description: "Premium makhana from the lily ponds of Mithila, Bihar.",
+  metadataBase: new URL("https://www.nutritribe.com"),
+  title: {
+    default: "NutriTribe — Premium Roasted Makhana & Healthy Fox Nuts",
+    template: "%s",
+  },
+  description:
+    "Premium roasted makhana (fox nuts) from the lily ponds of Mithila, Bihar. Gluten-free, healthy Indian snacks — buy phool makhana online from NutriTribe.",
+  openGraph: {
+    siteName: "NutriTribe",
+    type: "website",
+    locale: "en_IN",
+    images: [{ url: "/logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

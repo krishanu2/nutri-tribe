@@ -171,6 +171,10 @@ export default function Footer() {
                 { label: 'Home', href: '/' },
                 { label: 'Our Story', href: '/our-story' },
                 { label: 'The Makhana', href: '/makhana' },
+                { label: 'Journal', href: '/blog' },
+                { label: 'Recipes', href: '/recipes' },
+                { label: 'B2B & Bulk Orders', href: '/b2b' },
+                { label: 'Corporate Gifting', href: '/corporate-gifting' },
                 { label: 'Contact', href: '/contact' },
               ].map((link) => (
                 <li key={link.href}>
@@ -198,12 +202,11 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3">
               {[
-                { label: 'Plain Makhana', href: '/products/plain-makhana' },
-                { label: 'Peri Peri Makhana', href: '/products/peri-peri-makhana' },
-                { label: 'Cream & Onion', href: '/products/cream-onion-makhana' },
-                { label: 'Tangy Cheese', href: '/products/tangy-cheese-makhana' },
-                { label: 'Salt & Pepper', href: '/products/salt-pepper-makhana' },
-                { label: 'Premium Cookies', href: '/products/premium-cookies' },
+                { label: 'Roasted Flavours', href: '/products?category=Roasted%20Flavours' },
+                { label: 'Raw / Premium 6-Suta', href: '/products?category=Raw%20%2F%20Premium%206-Suta' },
+                { label: 'Premium Cookies', href: '/products?category=Premium%20Cookies' },
+                { label: 'Seeds & Nuts', href: '/coming-soon?cat=seeds-nuts', soon: true },
+                { label: 'Healthy Beverages', href: '/coming-soon?cat=healthy-beverages', soon: true },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -215,6 +218,14 @@ export default function Footer() {
                       style={{ background: '#f3a213' }}
                     />
                     {link.label}
+                    {link.soon && (
+                      <span
+                        className="font-body font-bold text-[8px] tracking-[0.2em] uppercase px-2 py-0.5 rounded-full"
+                        style={{ background: 'rgba(243,162,19,0.1)', color: 'rgba(243,162,19,0.6)' }}
+                      >
+                        Soon
+                      </span>
+                    )}
                   </Link>
                 </li>
               ))}

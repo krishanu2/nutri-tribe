@@ -12,9 +12,52 @@ import SectionDivider from '@/components/SectionDivider';
 
 const JourneyTracker = dynamic(() => import('@/components/JourneyTracker'), { ssr: false });
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: "Where does NutriTribe's makhana come from?",
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "NutriTribe's makhana is sourced from the lily ponds of Mithila, Bihar — the region that produces almost all of India's makhana, hand-harvested by local Mallah families.",
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is makhana made from?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Makhana are the seeds of the Euryale ferox plant, also known as the Prickly Lily or fox nut plant, harvested from lily ponds and roasted to create a light, crunchy snack.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How much protein does makhana have?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Makhana contains around 10g of protein per 100g, while being naturally low in fat and gluten-free — making it one of the healthiest Indian snacks available.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: "Is NutriTribe's makhana gluten-free and healthy?",
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. All NutriTribe makhana is 100% natural, gluten-free, roasted not fried, and free from artificial preservatives — a guilt-free snack for every day.',
+      },
+    },
+  ],
+};
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <JourneyTracker />
       <HeroSection />
       <TrustBar />

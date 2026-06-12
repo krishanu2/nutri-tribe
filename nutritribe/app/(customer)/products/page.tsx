@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, Suspense } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { useSearchParams } from 'next/navigation';
 import { products, categories } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import MakhanaRoastScene from '@/components/illustrations/MakhanaRoastScene';
@@ -10,10 +11,10 @@ import Link from 'next/link';
 
 /* ── Category mood config ─────────────────────────────────── */
 const MOODS: Record<string, { bg: string; accent: string; tagline: string; glyph: string }> = {
-  'All':               { bg: 'linear-gradient(135deg, #1a0e0a 0%, #0d0500 100%)', accent: '#f3a213', tagline: 'The full collection. Every bold bite.', glyph: '✦' },
-  'Plain Makhana':     { bg: 'linear-gradient(135deg, #022812 0%, #011a0b 100%)', accent: '#009846', tagline: 'Pure. Rooted. Minimal.', glyph: '🌿' },
-  'Flavoured Makhana': { bg: 'linear-gradient(135deg, #190e40 0%, #0d0624 100%)', accent: '#7a4dff', tagline: 'Bold flavours. Clean ingredients.', glyph: '⚡' },
-  'Premium Cookies':   { bg: 'linear-gradient(135deg, #2a0e05 0%, #180700 100%)', accent: '#7d3627', tagline: 'Guilt-free indulgence redefined.', glyph: '✨' },
+  'All':                  { bg: 'linear-gradient(135deg, #1a0e0a 0%, #0d0500 100%)', accent: '#f3a213', tagline: 'The full collection. Every bold bite.', glyph: '✦' },
+  'Raw / Premium 6-Suta': { bg: 'linear-gradient(135deg, #022812 0%, #011a0b 100%)', accent: '#009846', tagline: 'Pure. Rooted. Minimal.', glyph: '🌿' },
+  'Roasted Flavours':     { bg: 'linear-gradient(135deg, #190e40 0%, #0d0624 100%)', accent: '#7a4dff', tagline: 'Bold flavours. Clean ingredients.', glyph: '⚡' },
+  'Premium Cookies':      { bg: 'linear-gradient(135deg, #2a0e05 0%, #180700 100%)', accent: '#7d3627', tagline: 'Guilt-free indulgence redefined.', glyph: '✨' },
 };
 
 /* ── Floating makhana ball ─────────────────────────────────── */
@@ -117,8 +118,12 @@ function FeaturedProduct({ product }: { product: typeof products[0]; accent?: st
   );
 }
 
-export default function ProductsPage() {
-  const [activeCategory, setActiveCategory] = useState('All');
+function ProductsContent() {
+  const searchParams = useSearchParams();
+  const initialCategory = categories.includes(searchParams.get('category') || '')
+    ? (searchParams.get('category') as string)
+    : 'All';
+  const [activeCategory, setActiveCategory] = useState(initialCategory);
   const mood = MOODS[activeCategory] || MOODS['All'];
 
   const filtered = activeCategory === 'All' ? products : products.filter((p) => p.category === activeCategory);
@@ -336,5 +341,13 @@ export default function ProductsPage() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={null}>
+      <ProductsContent />
+    </Suspense>
   );
 }

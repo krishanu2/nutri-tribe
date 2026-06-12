@@ -15,8 +15,15 @@ const ScrollProgress = dynamic(() => import('@/components/ScrollProgress'), { ss
 export const metadata: Metadata = {
   title: "NutriTribe — Snack Bold. Live Rooted.",
   description:
-    "Premium makhana (fox nuts) sourced from the lily ponds of Mithila, Bihar. India's ancient superfood, reimagined for the modern palate.",
-  keywords: "makhana, fox nuts, healthy snacks, Bihar, Mithila, superfood, NutriTribe",
+    "Premium roasted makhana (fox nuts) sourced from the lily ponds of Mithila, Bihar. Buy phool makhana online — gluten-free, healthy Indian snacks reimagined for the modern palate.",
+  keywords:
+    "makhana, fox nuts, premium roasted makhana, buy phool makhana online, healthy fox nuts, gluten-free indian snacks, 6 suta makhana, Bihar, Mithila, superfood, NutriTribe",
+  openGraph: {
+    title: "NutriTribe — Snack Bold. Live Rooted.",
+    description:
+      "Premium roasted makhana (fox nuts) sourced from the lily ponds of Mithila, Bihar. India's ancient superfood, reimagined for the modern palate.",
+    type: "website",
+  },
 };
 
 export default function CustomerLayout({ children }: { children: React.ReactNode }) {

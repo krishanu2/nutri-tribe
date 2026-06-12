@@ -60,3 +60,70 @@ model OrderItem {
 
   @@index([orderId])
 }
+
+enum LeadType {
+  B2B
+  CORPORATE_GIFTING
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  REJECTED
+}
+
+model Lead {
+  id          String     @id @default(cuid())
+  type        LeadType
+  status      LeadStatus @default(NEW)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  name        String
+  email       String
+  phone       String
+  companyName String
+  details     String
+  message     String
+  adminNote   String?
+
+  @@index([type, status])
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model BlogPost {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  excerpt     String
+  content     String
+  coverImage  String
+  tags        String[]
+  status      PostStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Recipe {
+  id           String     @id @default(cuid())
+  slug         String     @unique
+  title        String
+  description  String
+  coverImage   String
+  prepTime     String
+  servings     String
+  ingredients  String[]
+  steps        String[]
+  relatedSlugs String[]
+  status       PostStatus @default(DRAFT)
+  publishedAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}

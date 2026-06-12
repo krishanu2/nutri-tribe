@@ -99,7 +99,7 @@ function IndiaMap() {
             .attr('d', (d: any) => path(d) || '')
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .attr('fill', (d: any) =>
-              /bihar/i.test(getName(d.properties)) ? '#8B4010' : '#ddd0b8')
+              /bihar/i.test(getName(d.properties)) ? '#7d3627' : '#ddd0b8')
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .attr('fill-opacity', (d: any) =>
               /bihar/i.test(getName(d.properties)) ? 0.92 : 1)
@@ -116,23 +116,25 @@ function IndiaMap() {
             // Outer pulse rings
             [24, 16].forEach((r, i) => {
               svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r)
-                .attr('fill', 'none').attr('stroke', '#EF9F27')
+                .attr('fill', 'none').attr('stroke', '#f3a213')
                 .attr('stroke-width', 1.2).attr('opacity', 0.18 + i * 0.08);
             });
             // Filled dot
             svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 8)
-              .attr('fill', '#EF9F27');
+              .attr('fill', '#f3a213');
             svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4)
               .attr('fill', 'white').attr('opacity', 0.6);
             // Label
             svg.append('text').attr('x', cx + 12).attr('y', cy + 5)
-              .attr('fill', '#EF9F27').attr('font-size', 12).attr('font-weight', 'bold')
-              .attr('font-family', 'sans-serif').text('BIHAR');
+              .attr('fill', '#f3a213').attr('font-size', 12).attr('font-weight', 'bold')
+              .attr('font-family', 'sans-serif').attr('letter-spacing', 1)
+              .attr('paint-order', 'stroke').attr('stroke', '#e8f4f8').attr('stroke-width', 3).attr('stroke-linejoin', 'round')
+              .text('BIHAR');
           }
 
           /* INDIA label */
           svg.append('text').attr('x', W - 10).attr('y', 18).attr('text-anchor', 'end')
-            .attr('fill', '#7a5030').attr('fill-opacity', 0.5)
+            .attr('fill', '#7d3627').attr('fill-opacity', 0.55)
             .attr('font-size', 13).attr('font-weight', 'bold').attr('font-family', 'sans-serif')
             .attr('letter-spacing', 2).text('INDIA');
 
@@ -210,7 +212,7 @@ function BiharStateMap() {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .attr('fill', (d: any) => {
               const n = getName(d.properties).toLowerCase();
-              return MITHILA_DISTRICTS.some(m => n.includes(m)) ? '#4a9e6b' : '#f5ede0';
+              return MITHILA_DISTRICTS.some(m => n.includes(m)) ? '#009846' : '#f5ede0';
             })
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .attr('fill-opacity', (d: any) => {
@@ -229,22 +231,25 @@ function BiharStateMap() {
             const centroid = d3.geoCentroid({ type: 'FeatureCollection', features: mithilaFeats });
             const [mx, my] = proj(centroid) || [W / 2, H * 0.3];
             svg.append('text').attr('x', mx).attr('y', my - 6)
-              .attr('text-anchor', 'middle').attr('fill', '#1a5c38')
-              .attr('font-size', 10).attr('font-weight', 'bold').attr('font-family', 'sans-serif')
+              .attr('text-anchor', 'middle').attr('fill', '#009846')
+              .attr('font-size', 11).attr('font-weight', 'bold').attr('font-family', 'sans-serif')
+              .attr('letter-spacing', 1)
+              .attr('paint-order', 'stroke').attr('stroke', '#fdf8f0').attr('stroke-width', 3).attr('stroke-linejoin', 'round')
               .text('MITHILA');
-            svg.append('text').attr('x', mx).attr('y', my + 7)
-              .attr('text-anchor', 'middle').attr('fill', '#1a5c38')
+            svg.append('text').attr('x', mx).attr('y', my + 8)
+              .attr('text-anchor', 'middle').attr('fill', '#009846')
               .attr('font-size', 8).attr('font-family', 'sans-serif').attr('font-style', 'italic')
+              .attr('paint-order', 'stroke').attr('stroke', '#fdf8f0').attr('stroke-width', 3).attr('stroke-linejoin', 'round')
               .text('REGION');
           }
 
           /* City markers */
           const cities: { name: string; lonlat: [number,number]; color: string; r: number; capital: boolean }[] = [
-            { name: 'Patna', lonlat: [85.1376, 25.5941], color: '#EF9F27', r: 7, capital: true },
-            { name: 'Darbhanga', lonlat: [85.8909, 26.1524], color: '#EF9F27', r: 5, capital: false },
-            { name: 'Muzaffarpur', lonlat: [85.3905, 26.1183], color: '#2d7a4f', r: 4, capital: false },
-            { name: 'Sitamarhi', lonlat: [85.4885, 26.5903], color: '#2d7a4f', r: 4, capital: false },
-            { name: 'Madhubani', lonlat: [86.0714, 26.3522], color: '#2d7a4f', r: 4, capital: false },
+            { name: 'Patna', lonlat: [85.1376, 25.5941], color: '#f3a213', r: 7, capital: true },
+            { name: 'Darbhanga', lonlat: [85.8909, 26.1524], color: '#f3a213', r: 5, capital: false },
+            { name: 'Muzaffarpur', lonlat: [85.3905, 26.1183], color: '#009846', r: 4, capital: false },
+            { name: 'Sitamarhi', lonlat: [85.4885, 26.5903], color: '#009846', r: 4, capital: false },
+            { name: 'Madhubani', lonlat: [86.0714, 26.3522], color: '#009846', r: 4, capital: false },
           ];
 
           cities.forEach(({ name, lonlat, color, r, capital }) => {
@@ -255,10 +260,12 @@ function BiharStateMap() {
               svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r + 4)
                 .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 1.5).attr('opacity', 0.35);
             }
-            svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r).attr('fill', color);
+            svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r).attr('fill', color)
+              .attr('stroke', '#fdf8f0').attr('stroke-width', 1);
             svg.append('text').attr('x', cx + r + 3).attr('y', cy + 4)
               .attr('fill', color).attr('font-size', capital ? 9 : 8)
-              .attr('font-weight', capital ? 'bold' : 'normal').attr('font-family', 'sans-serif')
+              .attr('font-weight', capital ? 'bold' : 600).attr('font-family', 'sans-serif')
+              .attr('paint-order', 'stroke').attr('stroke', '#fdf8f0').attr('stroke-width', 3).attr('stroke-linejoin', 'round')
               .text(name);
           });
 
@@ -273,19 +280,21 @@ function BiharStateMap() {
             const mid = gangaPts[Math.floor(gangaPts.length / 2)];
             svg.append('text').attr('x', mid[0]).attr('y', mid[1] - 8)
               .attr('text-anchor', 'middle').attr('fill', '#60a5fa')
-              .attr('font-size', 8).attr('font-style', 'italic').text('~ Ganga ~');
+              .attr('font-size', 8).attr('font-style', 'italic')
+              .attr('paint-order', 'stroke').attr('stroke', '#fdf8f0').attr('stroke-width', 3).attr('stroke-linejoin', 'round')
+              .text('~ Ganga ~');
           }
 
           /* Neighbour labels */
           svg.append('text').attr('x', W / 2).attr('y', 14).attr('text-anchor', 'middle')
-            .attr('fill', '#7d5030').attr('fill-opacity', 0.45).attr('font-size', 9).attr('font-family', 'sans-serif').text('NEPAL');
+            .attr('fill', '#7d3627').attr('fill-opacity', 0.5).attr('font-size', 9).attr('font-weight', 600).attr('font-family', 'sans-serif').attr('letter-spacing', 1).text('NEPAL');
           svg.append('text').attr('x', W / 2).attr('y', H - 4).attr('text-anchor', 'middle')
-            .attr('fill', '#7d5030').attr('fill-opacity', 0.4).attr('font-size', 8).attr('font-family', 'sans-serif').text('JHARKHAND');
+            .attr('fill', '#7d3627').attr('fill-opacity', 0.45).attr('font-size', 8).attr('font-weight', 600).attr('font-family', 'sans-serif').attr('letter-spacing', 1).text('JHARKHAND');
           svg.append('text').attr('x', 10).attr('y', H / 2).attr('text-anchor', 'middle')
-            .attr('fill', '#7d5030').attr('fill-opacity', 0.4).attr('font-size', 8).attr('font-family', 'sans-serif')
+            .attr('fill', '#7d3627').attr('fill-opacity', 0.45).attr('font-size', 8).attr('font-weight', 600).attr('font-family', 'sans-serif').attr('letter-spacing', 1)
             .attr('transform', `rotate(-90,10,${H / 2})`).text('U.P.');
           svg.append('text').attr('x', W - 6).attr('y', H / 2).attr('text-anchor', 'middle')
-            .attr('fill', '#7d5030').attr('fill-opacity', 0.4).attr('font-size', 8).attr('font-family', 'sans-serif')
+            .attr('fill', '#7d3627').attr('fill-opacity', 0.45).attr('font-size', 8).attr('font-weight', 600).attr('font-family', 'sans-serif').attr('letter-spacing', 1)
             .attr('transform', `rotate(90,${W - 6},${H / 2})`).text('W. BENGAL');
 
           setLoading(false);
@@ -372,7 +381,7 @@ function MithilaMap() {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .attr('fill', (d: any) => {
               const n = getName(d.properties).toLowerCase();
-              if (n.includes('darbhanga')) return '#EF9F27';
+              if (n.includes('darbhanga')) return '#f3a213';
               return '#f5ede0';
             })
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -391,7 +400,7 @@ function MithilaMap() {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .attr('d', (d: any) => path(d) || '')
             .attr('fill', 'none')
-            .attr('stroke', '#4a9e6b').attr('stroke-width', 2.2).attr('stroke-dasharray', '8,4');
+            .attr('stroke', '#009846').attr('stroke-width', 2.2).attr('stroke-dasharray', '8,4');
 
           /* Makhana pond clusters over key districts */
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -402,27 +411,30 @@ function MithilaMap() {
             const [cx, cy] = path.centroid(f as any);
             svg.append('ellipse')
               .attr('cx', cx).attr('cy', cy).attr('rx', 28).attr('ry', 14)
-              .attr('fill', '#7ec8a0').attr('fill-opacity', 0.42)
-              .attr('stroke', '#4a9e6b').attr('stroke-width', 1.2).attr('opacity', 0.85);
+              .attr('fill', '#009846').attr('fill-opacity', 0.28)
+              .attr('stroke', '#009846').attr('stroke-width', 1.2).attr('opacity', 0.85);
           });
 
           /* City markers */
           const cities = [
-            { name: 'Darbhanga', lonlat: [85.8909, 26.1524] as [number, number], color: '#EF9F27', r: 6 },
-            { name: 'Madhubani', lonlat: [86.0714, 26.3522] as [number, number], color: '#2d7a4f', r: 5 },
-            { name: 'Sitamarhi', lonlat: [85.4885, 26.5903] as [number, number], color: '#2d7a4f', r: 5 },
-            { name: 'Muzaffarpur', lonlat: [85.3905, 26.1183] as [number, number], color: '#2d7a4f', r: 4 },
-            { name: 'Supaul', lonlat: [86.6117, 26.1239] as [number, number], color: '#2d7a4f', r: 4 },
+            { name: 'Darbhanga', lonlat: [85.8909, 26.1524] as [number, number], color: '#f3a213', r: 6 },
+            { name: 'Madhubani', lonlat: [86.0714, 26.3522] as [number, number], color: '#009846', r: 5 },
+            { name: 'Sitamarhi', lonlat: [85.4885, 26.5903] as [number, number], color: '#009846', r: 5 },
+            { name: 'Muzaffarpur', lonlat: [85.3905, 26.1183] as [number, number], color: '#009846', r: 4 },
+            { name: 'Supaul', lonlat: [86.6117, 26.1239] as [number, number], color: '#009846', r: 4 },
           ];
 
           cities.forEach(({ name, lonlat, color, r }) => {
             const pt = proj(lonlat);
             if (!pt) return;
             const [cx, cy] = pt;
-            svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r).attr('fill', color);
+            svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', r).attr('fill', color)
+              .attr('stroke', '#fdf8f0').attr('stroke-width', 1);
             svg.append('text').attr('x', cx + r + 4).attr('y', cy + 4)
               .attr('fill', color).attr('font-size', 9).attr('font-weight', 'bold')
-              .attr('font-family', 'sans-serif').text(name);
+              .attr('font-family', 'sans-serif')
+              .attr('paint-order', 'stroke').attr('stroke', '#fdf8f0').attr('stroke-width', 3).attr('stroke-linejoin', 'round')
+              .text(name);
           });
 
           /* Ganga at southern edge */
@@ -432,19 +444,23 @@ function MithilaMap() {
             .attr('fill', 'none').attr('stroke', '#60a5fa').attr('stroke-width', 2.5).attr('opacity', 0.55);
           svg.append('text').attr('x', W / 2).attr('y', gangaY - 13)
             .attr('text-anchor', 'middle').attr('fill', '#60a5fa')
-            .attr('font-size', 9).attr('font-style', 'italic').text('~ Ganga ~');
+            .attr('font-size', 9).attr('font-style', 'italic')
+            .attr('paint-order', 'stroke').attr('stroke', '#fdf8f0').attr('stroke-width', 3).attr('stroke-linejoin', 'round')
+            .text('~ Ganga ~');
 
           /* Title + subtitle */
           svg.append('text').attr('x', W / 2).attr('y', H - 6)
             .attr('text-anchor', 'middle').attr('fill', '#f3a213')
             .attr('font-size', 12).attr('font-weight', 'bold').attr('font-style', 'italic')
-            .attr('font-family', 'serif').text('Mithila — The Makhana Heartland');
+            .attr('font-family', 'serif').attr('letter-spacing', 0.5)
+            .attr('paint-order', 'stroke').attr('stroke', '#fdf8f0').attr('stroke-width', 3).attr('stroke-linejoin', 'round')
+            .text('Mithila — The Makhana Heartland');
 
           /* Neighbour labels */
           svg.append('text').attr('x', W / 2).attr('y', 15).attr('text-anchor', 'middle')
-            .attr('fill', '#7d5030').attr('fill-opacity', 0.4).attr('font-size', 9).text('NEPAL');
+            .attr('fill', '#7d3627').attr('fill-opacity', 0.45).attr('font-size', 9).attr('font-weight', 600).attr('font-family', 'sans-serif').attr('letter-spacing', 1).text('NEPAL');
           svg.append('text').attr('x', W / 2).attr('y', gangaY + 15).attr('text-anchor', 'middle')
-            .attr('fill', '#7d5030').attr('fill-opacity', 0.35).attr('font-size', 8).text('SOUTH BIHAR');
+            .attr('fill', '#7d3627').attr('fill-opacity', 0.4).attr('font-size', 8).attr('font-weight', 600).attr('font-family', 'sans-serif').attr('letter-spacing', 1).text('SOUTH BIHAR');
 
           setLoading(false);
         })
