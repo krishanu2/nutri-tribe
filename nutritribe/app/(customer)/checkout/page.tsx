@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, ShoppingBag, Leaf } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ShoppingBag, Leaf, Loader2, Tag } from 'lucide-react';
 import { useCart } from '@/lib/cartContext';
 
 const FREE_DELIVERY = 499;
@@ -32,12 +32,19 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, totalPrice, totalItems } = useCart();
   const delivery = totalPrice >= FREE_DELIVERY ? 0 : 49;
-  const grandTotal = totalPrice + delivery;
 
   const [form, setForm] = useState<FormData>({
     name: '', email: '', phone: '', address: '', city: '', state: '', pincode: '',
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
+
+  const [couponInput, setCouponInput] = useState('');
+  const [couponStatus, setCouponStatus] = useState<'idle' | 'checking' | 'applied' | 'error'>('idle');
+  const [couponError, setCouponError] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+
+  const discount = appliedCoupon?.discount ?? 0;
+  const grandTotal = Math.max(0, totalPrice + delivery - discount);
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -66,10 +73,45 @@ export default function CheckoutPage() {
       items,
       subtotal: totalPrice,
       delivery,
+      discount,
+      couponCode: appliedCoupon?.code ?? null,
       total: grandTotal,
     };
     sessionStorage.setItem('nt-pending-order', JSON.stringify(pendingOrder));
     router.push('/checkout/payment');
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponInput.trim()) return;
+    setCouponStatus('checking');
+    setCouponError('');
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponInput.trim(), subtotal: totalPrice }),
+      });
+      const data = await res.json();
+      if (!data.valid) {
+        setAppliedCoupon(null);
+        setCouponError(data.error ?? 'Invalid coupon code');
+        setCouponStatus('error');
+        return;
+      }
+      setAppliedCoupon({ code: data.code, discount: data.discount });
+      setCouponStatus('applied');
+    } catch {
+      setAppliedCoupon(null);
+      setCouponError('Could not validate coupon right now');
+      setCouponStatus('error');
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput('');
+    setCouponStatus('idle');
+    setCouponError('');
   };
 
   const Field = ({
@@ -222,10 +264,67 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
+                {/* Coupon */}
+                <div className="px-6 py-4 border-t border-earthen-rust/8">
+                  {appliedCoupon ? (
+                    <div className="flex items-center justify-between bg-sacred-leaf/8 border border-sacred-leaf/20 rounded-xl px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <Tag size={14} className="text-sacred-leaf shrink-0" />
+                        <div>
+                          <p className="font-body font-bold text-xs tracking-widest text-sacred-leaf">{appliedCoupon.code}</p>
+                          <p className="font-body text-[11px] text-sacred-leaf/70">You saved ₹{appliedCoupon.discount}</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRemoveCoupon}
+                        className="font-body text-xs font-semibold text-earthen-rust/50 hover:text-red-500 transition-colors"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block font-body font-semibold text-xs tracking-widest uppercase text-earthen-rust/60 mb-2">
+                        Have a coupon?
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={couponInput}
+                          onChange={e => {
+                            setCouponInput(e.target.value.toUpperCase());
+                            setCouponStatus('idle');
+                            setCouponError('');
+                          }}
+                          placeholder="Enter code"
+                          className="flex-1 font-body font-semibold text-sm tracking-widest text-earthen-rust bg-white border-2 border-earthen-rust/15 rounded-xl px-4 py-2.5 outline-none focus:border-sun-harvest transition-all"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleApplyCoupon}
+                          disabled={couponStatus === 'checking' || !couponInput.trim()}
+                          className="font-body font-semibold text-sm px-5 py-2.5 rounded-xl bg-earthen-rust/8 text-earthen-rust hover:bg-earthen-rust/15 transition-all disabled:opacity-50"
+                        >
+                          {couponStatus === 'checking' ? <Loader2 size={14} className="animate-spin" /> : 'Apply'}
+                        </button>
+                      </div>
+                      {couponStatus === 'error' && couponError && (
+                        <p className="font-body text-xs text-red-500 mt-1.5">{couponError}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="px-6 py-4 border-t border-earthen-rust/8 space-y-2">
                   <div className="flex justify-between font-body text-sm text-earthen-rust/50">
                     <span>Subtotal</span><span>₹{totalPrice}</span>
                   </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between font-body text-sm text-sacred-leaf font-semibold">
+                      <span>Discount</span><span>−₹{discount}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between font-body text-sm text-earthen-rust/50">
                     <span>Delivery</span>
                     <span className={delivery === 0 ? 'text-sacred-leaf font-semibold' : ''}>

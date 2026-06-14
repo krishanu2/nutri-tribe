@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { OrderStatus, Prisma } from '@prisma/client';
+import { sendOrderStatusEmail } from '@/lib/email';
 
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -39,6 +40,15 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       data,
       include: { items: true },
     });
+
+    if (status !== undefined) {
+      try {
+        await sendOrderStatusEmail(order, order.status);
+      } catch (emailErr) {
+        console.error('Order status email failed:', emailErr);
+      }
+    }
+
     return NextResponse.json(order);
   } catch (err) {
     console.error(err);

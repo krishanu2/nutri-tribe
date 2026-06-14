@@ -71,6 +71,11 @@ export default async function OrderDetailPage({ params }: { params: { id: string
               <div className="flex justify-between font-body text-sm text-[#7d3627]/55">
                 <span>Subtotal</span><span>₹{order.subtotal.toLocaleString('en-IN')}</span>
               </div>
+              {order.discount > 0 && (
+                <div className="flex justify-between font-body text-sm text-[#009846] font-semibold">
+                  <span>Discount {order.couponCode ? `(${order.couponCode})` : ''}</span><span>−₹{order.discount.toLocaleString('en-IN')}</span>
+                </div>
+              )}
               <div className="flex justify-between font-body text-sm text-[#7d3627]/55">
                 <span>Delivery</span>
                 <span className={order.delivery === 0 ? 'text-[#009846] font-semibold' : ''}>

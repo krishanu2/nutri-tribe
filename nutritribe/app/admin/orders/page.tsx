@@ -2,7 +2,7 @@ import { db } from '@/lib/db';
 import { OrderStatus } from '@prisma/client';
 import Link from 'next/link';
 import StatusBadge from '../_components/StatusBadge';
-import { Package } from 'lucide-react';
+import { Package, Download } from 'lucide-react';
 
 const TABS: { label: string; value: string }[] = [
   { label: 'All',        value: '' },
@@ -48,9 +48,18 @@ export default async function OrdersPage({ searchParams }: PageProps) {
   return (
     <div className="p-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="font-display font-bold text-3xl text-[#7d3627]">Orders</h1>
-        <p className="font-body text-sm text-[#7d3627]/50 mt-1">{total} total order{total !== 1 ? 's' : ''}</p>
+      <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+        <div>
+          <h1 className="font-display font-bold text-3xl text-[#7d3627]">Orders</h1>
+          <p className="font-body text-sm text-[#7d3627]/50 mt-1">{total} total order{total !== 1 ? 's' : ''}</p>
+        </div>
+        <a
+          href={statusFilter ? `/api/admin/orders/export?status=${statusFilter}` : '/api/admin/orders/export'}
+          className="inline-flex items-center gap-2 font-body font-semibold text-sm px-4 py-2.5 rounded-xl bg-white border border-[#7d3627]/12 text-[#7d3627]/70 hover:border-[#f3a213]/40 transition-all"
+        >
+          <Download size={15} />
+          Export CSV
+        </a>
       </div>
 
       {/* Status filter tabs */}

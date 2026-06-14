@@ -17,6 +17,8 @@ interface PendingOrder {
   items: Array<{ productId: number; name: string; weight: string; price: number; quantity: number; color: string }>;
   subtotal: number;
   delivery: number;
+  discount: number;
+  couponCode: string | null;
   total: number;
 }
 
@@ -378,6 +380,11 @@ export default function PaymentPage() {
                 <div className="flex justify-between font-body text-sm text-earthen-rust/50">
                   <span>Subtotal</span><span>₹{order.subtotal}</span>
                 </div>
+                {order.discount > 0 && (
+                  <div className="flex justify-between font-body text-sm text-sacred-leaf font-semibold">
+                    <span>Discount {order.couponCode ? `(${order.couponCode})` : ''}</span><span>−₹{order.discount}</span>
+                  </div>
+                )}
                 <div className="flex justify-between font-body text-sm text-earthen-rust/50">
                   <span>Delivery</span>
                   <span className={order.delivery === 0 ? 'text-sacred-leaf font-semibold' : ''}>

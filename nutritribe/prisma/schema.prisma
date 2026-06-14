@@ -33,7 +33,9 @@ model Order {
 
   subtotal       Int
   delivery       Int
+  discount       Int         @default(0)
   total          Int
+  couponCode     String?
 
   status         OrderStatus @default(PENDING)
   trackingNumber String?
@@ -151,6 +153,25 @@ model Review {
 enum ProductStatus {
   DRAFT
   PUBLISHED
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+model Coupon {
+  id            String       @id @default(cuid())
+  code          String       @unique
+  type          DiscountType
+  value         Int
+  minOrderValue Int          @default(0)
+  maxUses       Int?
+  usedCount     Int          @default(0)
+  active        Boolean      @default(true)
+  expiresAt     DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model Product {

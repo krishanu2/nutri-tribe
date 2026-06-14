@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const {
       orderId, name, email, phone,
       address, city, state, pincode,
-      items, subtotal, delivery, total,
+      items, subtotal, delivery, discount, couponCode, total,
     } = body;
 
     const orderItems = items as IncomingItem[];
@@ -35,6 +35,22 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    let coupon = null;
+    if (couponCode) {
+      coupon = await db.coupon.findUnique({ where: { code: String(couponCode).trim().toUpperCase() } });
+      const couponStillValid = !!coupon
+        && coupon.active
+        && (!coupon.expiresAt || new Date(coupon.expiresAt) >= new Date())
+        && (coupon.maxUses == null || coupon.usedCount < coupon.maxUses)
+        && subtotal >= coupon.minOrderValue;
+      if (!couponStillValid) {
+        return NextResponse.json(
+          { success: false, error: 'This coupon is no longer valid' },
+          { status: 409 }
+        );
+      }
+    }
+
     await db.$transaction([
       db.order.create({
         data: {
@@ -48,6 +64,8 @@ export async function POST(req: NextRequest) {
           pincode,
           subtotal,
           delivery,
+          discount: discount || 0,
+          couponCode: coupon ? coupon.code : null,
           total,
           items: {
             create: orderItems.map(i => ({
@@ -66,6 +84,7 @@ export async function POST(req: NextRequest) {
           data: { stockQuantity: { decrement: i.quantity } },
         })
       ),
+      ...(coupon ? [db.coupon.update({ where: { id: coupon.id }, data: { usedCount: { increment: 1 } } })] : []),
     ]);
 
     return NextResponse.json({ success: true, orderId });
