@@ -1,15 +1,30 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Heart } from 'lucide-react';
-import { products } from '@/lib/products';
+import { Product } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import { useWishlist } from '@/lib/wishlistContext';
 
 export default function WishlistPage() {
   const { slugs } = useWishlist();
-  const wishlisted = products.filter((p) => slugs.includes(p.slug));
+  const [wishlisted, setWishlisted] = useState<Product[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (slugs.length === 0) {
+      setWishlisted([]);
+      setLoaded(true);
+      return;
+    }
+    fetch(`/api/products?slugs=${slugs.join(',')}`)
+      .then((r) => r.json())
+      .then((data) => setWishlisted(data.products ?? []))
+      .catch(() => setWishlisted([]))
+      .finally(() => setLoaded(true));
+  }, [slugs]);
 
   return (
     <section className="pt-32 pb-20 bg-ivory-grain min-h-screen">
@@ -28,7 +43,7 @@ export default function WishlistPage() {
           </h1>
         </motion.div>
 
-        {wishlisted.length === 0 ? (
+        {loaded && wishlisted.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

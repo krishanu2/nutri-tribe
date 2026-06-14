@@ -2,7 +2,6 @@ import { db } from '@/lib/db';
 import { ReviewStatus } from '@prisma/client';
 import Link from 'next/link';
 import ReviewStatusBadge from '../_components/ReviewStatusBadge';
-import { getProductBySlug } from '@/lib/products';
 import { Star, MessageSquare } from 'lucide-react';
 
 const STATUS_TABS: { label: string; value: string }[] = [
@@ -38,6 +37,12 @@ export default async function ReviewsPage({ searchParams }: PageProps) {
   ]);
 
   const pages = Math.ceil(total / limit);
+
+  const productSlugs = Array.from(new Set(reviews.map((r) => r.productSlug)));
+  const productsBySlug = new Map(
+    (await db.product.findMany({ where: { slug: { in: productSlugs } } }).catch(() => []))
+      .map((p) => [p.slug, p])
+  );
 
   const buildHref = (overrides: { status?: string; page?: number }) => {
     const params = new URLSearchParams();
@@ -98,7 +103,7 @@ export default async function ReviewsPage({ searchParams }: PageProps) {
               </thead>
               <tbody>
                 {reviews.map((r, i) => {
-                  const product = getProductBySlug(r.productSlug);
+                  const product = productsBySlug.get(r.productSlug);
                   return (
                     <tr key={r.id}
                       className={`border-b border-[#7d3627]/5 hover:bg-[#f3a213]/4 transition-colors ${

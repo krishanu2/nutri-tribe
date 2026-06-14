@@ -1,13 +1,16 @@
 import { Metadata } from 'next';
-import { getProductBySlug } from '@/lib/products';
+import { notFound } from 'next/navigation';
+import { db } from '@/lib/db';
 import ProductDetailClient from './ProductDetailClient';
+
+export const revalidate = 60;
 
 interface PageProps {
   params: { slug: string };
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const product = getProductBySlug(params.slug);
+  const product = await db.product.findUnique({ where: { slug: params.slug } }).catch(() => null);
   if (!product) {
     return { title: 'Product Not Found | NutriTribe' };
   }
@@ -26,38 +29,41 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default function ProductDetailPage({ params }: PageProps) {
-  const product = getProductBySlug(params.slug);
+export default async function ProductDetailPage({ params }: PageProps) {
+  const product = await db.product.findUnique({ where: { slug: params.slug } }).catch(() => null);
+  if (!product || product.status !== 'PUBLISHED') return notFound();
 
-  const jsonLd = product
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'Product',
-        name: product.name,
-        image: product.images,
-        description: product.description,
-        brand: {
-          '@type': 'Brand',
-          name: 'NutriTribe',
-        },
-        offers: {
-          '@type': 'Offer',
-          price: product.price,
-          priceCurrency: 'INR',
-          availability: 'https://schema.org/InStock',
-        },
-      }
-    : null;
+  const relatedProducts = await db.product.findMany({
+    where: { category: product.category, slug: { not: product.slug }, status: 'PUBLISHED' },
+    orderBy: { sortOrder: 'asc' },
+    take: 4,
+  }).catch(() => []);
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.images,
+    description: product.description,
+    brand: {
+      '@type': 'Brand',
+      name: 'NutriTribe',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: product.price,
+      priceCurrency: 'INR',
+      availability: 'https://schema.org/InStock',
+    },
+  };
 
   return (
     <>
-      {jsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      )}
-      <ProductDetailClient params={params} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ProductDetailClient product={product} relatedProducts={relatedProducts} />
     </>
   );
 }

@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { notFound, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Star, ShoppingCart, Zap, ChevronDown, ChevronUp, ArrowLeft, Leaf, Award, Shield, Heart, ZoomIn, Loader2, CheckCircle, MessageSquare } from 'lucide-react';
-import { products, getProductBySlug } from '@/lib/products';
+import { Product, getStockStatus } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import Badge from '@/components/ui/Badge';
 import StockBadge from '@/components/ui/StockBadge';
@@ -15,7 +15,8 @@ import { useCart } from '@/lib/cartContext';
 import { useWishlist } from '@/lib/wishlistContext';
 
 interface PageProps {
-  params: { slug: string };
+  product: Product;
+  relatedProducts: Product[];
 }
 
 function StarRating({ count }: { count: number }) {
@@ -283,29 +284,26 @@ function ProductReviews({ productSlug, productColor }: { productSlug: string; pr
   );
 }
 
-export default function ProductDetailPage({ params }: PageProps) {
-  const product = getProductBySlug(params.slug);
+export default function ProductDetailPage({ product, relatedProducts }: PageProps) {
   const router = useRouter();
   const { addToCart } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
 
-  const [selectedWeight, setSelectedWeight] = useState(product?.weights[0] ?? '50g');
+  const [selectedWeight, setSelectedWeight] = useState(product.weights[0] ?? '50g');
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [ratingSummary, setRatingSummary] = useState({ average: 0, count: 0 });
+  const stock = getStockStatus(product.stockQuantity, product.lowStockThreshold);
 
   useEffect(() => {
-    if (!product) return;
     fetch(`/api/reviews?product=${product.slug}`)
       .then((r) => r.json())
       .then((data) => setRatingSummary({ average: data.average ?? 0, count: data.count ?? 0 }))
       .catch(() => {});
-  }, [product?.slug]);
+  }, [product.slug]);
 
-  if (!product) return notFound();
-
-  const related = products.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 3);
+  const related = relatedProducts.slice(0, 3);
 
   const handleAddToCart = () => {
     addToCart({
@@ -469,7 +467,7 @@ export default function ProductDetailPage({ params }: PageProps) {
                     : 'No reviews yet'}
                 </span>
                 <span className="text-earthen-rust/20">|</span>
-                <StockBadge stock={product.stock} />
+                <StockBadge stock={stock} />
               </div>
 
               {/* Price */}
@@ -528,10 +526,10 @@ export default function ProductDetailPage({ params }: PageProps) {
               {/* CTA Buttons */}
               <div className="flex flex-col gap-3">
                 <motion.button
-                  whileHover={product.stock !== 'out' ? { scale: 1.02 } : {}}
-                  whileTap={product.stock !== 'out' ? { scale: 0.98 } : {}}
-                  onClick={product.stock !== 'out' ? handleAddToCart : undefined}
-                  disabled={product.stock === 'out'}
+                  whileHover={stock !== 'out' ? { scale: 1.02 } : {}}
+                  whileTap={stock !== 'out' ? { scale: 0.98 } : {}}
+                  onClick={stock !== 'out' ? handleAddToCart : undefined}
+                  disabled={stock === 'out'}
                   className={`w-full flex items-center justify-center gap-3 font-body font-bold text-sm py-4 rounded-2xl transition-all duration-300 tracking-wide uppercase disabled:opacity-40 disabled:cursor-not-allowed ${
                     added
                       ? 'bg-sacred-leaf text-white'
@@ -544,14 +542,14 @@ export default function ProductDetailPage({ params }: PageProps) {
                   >
                     <ShoppingCart size={18} />
                   </motion.div>
-                  {added ? '✓ Added to Cart!' : product.stock === 'out' ? 'Out of Stock' : 'Add to Cart'}
+                  {added ? '✓ Added to Cart!' : stock === 'out' ? 'Out of Stock' : 'Add to Cart'}
                 </motion.button>
 
                 <motion.button
-                  whileHover={product.stock !== 'out' ? { scale: 1.02 } : {}}
-                  whileTap={product.stock !== 'out' ? { scale: 0.98 } : {}}
-                  onClick={product.stock !== 'out' ? handleBuyNow : undefined}
-                  disabled={product.stock === 'out'}
+                  whileHover={stock !== 'out' ? { scale: 1.02 } : {}}
+                  whileTap={stock !== 'out' ? { scale: 0.98 } : {}}
+                  onClick={stock !== 'out' ? handleBuyNow : undefined}
+                  disabled={stock === 'out'}
                   className="w-full flex items-center justify-center gap-3 bg-earthen-rust text-white font-body font-bold text-sm py-4 rounded-2xl hover:bg-earthen-rust/90 transition-all tracking-wide uppercase disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <Zap size={18} />

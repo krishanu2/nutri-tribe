@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { db } from '@/lib/db';
-import { getProductBySlug } from '@/lib/products';
 import { ArrowLeft, Clock, Users, ArrowRight } from 'lucide-react';
 
 const ACCENT = '#009846';
@@ -34,9 +33,9 @@ export default async function RecipePage({ params }: PageProps) {
   const recipe = await db.recipe.findUnique({ where: { slug: params.slug } });
   if (!recipe || recipe.status !== 'PUBLISHED') return notFound();
 
-  const relatedProducts = recipe.relatedSlugs
-    .map((slug) => getProductBySlug(slug))
-    .filter((p): p is NonNullable<typeof p> => !!p);
+  const relatedProducts = await db.product.findMany({
+    where: { slug: { in: recipe.relatedSlugs }, status: 'PUBLISHED' },
+  }).catch(() => []);
 
   const jsonLd = {
     '@context': 'https://schema.org',

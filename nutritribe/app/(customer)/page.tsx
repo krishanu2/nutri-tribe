@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import { db } from '@/lib/db';
 import HeroSection from '@/components/sections/home/HeroSection';
 import TrustBar from '@/components/sections/home/TrustBar';
 import MakhanaSpotlight from '@/components/sections/home/MakhanaSpotlight';
@@ -51,7 +52,14 @@ const faqJsonLd = {
   ],
 };
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  const products = await db.product.findMany({
+    where: { status: 'PUBLISHED' },
+    orderBy: { sortOrder: 'asc' },
+  }).catch(() => []);
+
   return (
     <>
       <script
@@ -64,7 +72,7 @@ export default function Home() {
       <SectionDivider variant="lotus" />
       <MakhanaSpotlight />
       <SectionDivider variant="makhana" />
-      <ProductShowcase />
+      <ProductShowcase products={products} />
       <SectionDivider variant="logo" darkBg={false} />
       <ValuesSection />
       <SectionDivider variant="lotus" darkBg={true} />

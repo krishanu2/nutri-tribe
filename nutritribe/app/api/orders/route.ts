@@ -18,30 +18,55 @@ export async function POST(req: NextRequest) {
       items, subtotal, delivery, total,
     } = body;
 
-    await db.order.create({
-      data: {
-        orderId,
-        customerName: name,
-        email,
-        phone,
-        address,
-        city,
-        state,
-        pincode,
-        subtotal,
-        delivery,
-        total,
-        items: {
-          create: (items as IncomingItem[]).map(i => ({
-            productId: i.productId,
-            name:      i.name,
-            weight:    i.weight,
-            quantity:  i.quantity,
-            price:     i.price,
-          })),
-        },
-      },
+    const orderItems = items as IncomingItem[];
+
+    const products = await db.product.findMany({
+      where: { id: { in: orderItems.map(i => i.productId) } },
     });
+    const productsById = new Map(products.map(p => [p.id, p]));
+
+    for (const item of orderItems) {
+      const product = productsById.get(item.productId);
+      if (!product || item.quantity > product.stockQuantity) {
+        return NextResponse.json(
+          { success: false, error: `Insufficient stock for ${product?.name ?? item.name}` },
+          { status: 409 }
+        );
+      }
+    }
+
+    await db.$transaction([
+      db.order.create({
+        data: {
+          orderId,
+          customerName: name,
+          email,
+          phone,
+          address,
+          city,
+          state,
+          pincode,
+          subtotal,
+          delivery,
+          total,
+          items: {
+            create: orderItems.map(i => ({
+              productId: i.productId,
+              name:      i.name,
+              weight:    i.weight,
+              quantity:  i.quantity,
+              price:     i.price,
+            })),
+          },
+        },
+      }),
+      ...orderItems.map(i =>
+        db.product.update({
+          where: { id: i.productId },
+          data: { stockQuantity: { decrement: i.quantity } },
+        })
+      ),
+    ]);
 
     return NextResponse.json({ success: true, orderId });
   } catch (err) {

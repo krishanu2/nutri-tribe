@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { Package, TrendingUp, Clock, Truck } from 'lucide-react';
+import { Package, TrendingUp, Clock, Truck, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import StatsCard from './_components/StatsCard';
 import StatusBadge from './_components/StatusBadge';
@@ -20,6 +20,7 @@ export default async function AdminDashboard() {
     shippedToday,
     todayRevenue,
     recentOrders,
+    products,
   ] = await Promise.all([
     db.order.count(),
     db.order.count({ where: { status: 'PENDING' } }),
@@ -34,9 +35,11 @@ export default async function AdminDashboard() {
         _count: { select: { items: true } },
       },
     }),
+    db.product.findMany({ select: { stockQuantity: true, lowStockThreshold: true } }),
   ]);
 
   const revenue = todayRevenue._sum.total ?? 0;
+  const lowStockCount = products.filter(p => p.stockQuantity <= p.lowStockThreshold).length;
 
   return (
     <div className="p-8">
@@ -49,7 +52,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-10">
+      <div className="grid grid-cols-2 xl:grid-cols-5 gap-4 mb-10">
         <StatsCard
           label="Total Orders"
           value={totalOrders}
@@ -78,6 +81,15 @@ export default async function AdminDashboard() {
           accent="#009846"
           icon={<Truck size={20} />}
         />
+        <Link href="/admin/products?status=low-stock">
+          <StatsCard
+            label="Low Stock"
+            value={lowStockCount}
+            sub={lowStockCount > 0 ? 'Restock needed' : 'All stocked up'}
+            accent="#dc2626"
+            icon={<AlertTriangle size={20} />}
+          />
+        </Link>
       </div>
 
       {/* Recent Orders */}

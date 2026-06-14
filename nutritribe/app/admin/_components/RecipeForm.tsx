@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Trash2, Save } from 'lucide-react';
 import type { Recipe } from '@prisma/client';
+import ImageUploadField from './ImageUploadField';
 
 function slugify(input: string) {
   return input
@@ -131,16 +132,12 @@ export default function RecipeForm({ recipe }: Props) {
             />
           </Field>
 
-          <Field label="Cover Image URL" required>
-            <input
-              type="text"
-              required
-              value={coverImage}
-              onChange={e => setCoverImage(e.target.value)}
-              placeholder="https://..."
-              className="w-full font-body text-sm text-[#7d3627] bg-[#fdfbf7] border-2 border-[#7d3627]/15 rounded-xl px-4 py-2.5 outline-none focus:border-[#f3a213] transition-all"
-            />
-          </Field>
+          <ImageUploadField
+            label="Cover Photo"
+            value={coverImage}
+            onChange={setCoverImage}
+            hint="The hero image shown at the top of the recipe page and on the recipe listing"
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Prep Time" required hint="e.g. 30 mins">

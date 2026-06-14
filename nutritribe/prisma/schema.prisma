@@ -147,3 +147,33 @@ model Review {
 
   @@index([productSlug, status])
 }
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Product {
+  id                Int           @id @default(autoincrement())
+  slug              String        @unique
+  name              String
+  tagline           String
+  category          String
+  mainCategory      String
+  color             String
+  price             Int
+  weights           String[]
+  description       String
+  features          String[]
+  badge             String?
+  image             String
+  images            String[]
+  stockQuantity     Int           @default(0)
+  lowStockThreshold Int           @default(10)
+  status            ProductStatus @default(PUBLISHED)
+  sortOrder         Int           @default(0)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([status])
+}

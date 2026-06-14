@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { products } from '@/lib/products';
+import { Product } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import Link from 'next/link';
 
@@ -25,7 +25,7 @@ function MakhanaOrb({ size = 40, opacity = 0.08 }: { size?: number; opacity?: nu
   );
 }
 
-export default function ProductShowcase() {
+export default function ProductShowcase({ products }: { products: Product[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.05 });
 

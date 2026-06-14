@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { ArrowLeft, Package, User, Star, MessageSquare, Calendar } from 'lucide-react';
-import { getProductBySlug } from '@/lib/products';
 import ReviewStatusBadge from '../../_components/ReviewStatusBadge';
 import ReviewStatusPanel from '../../_components/ReviewStatusPanel';
 
@@ -13,7 +12,7 @@ export default async function ReviewDetailPage({ params }: { params: { id: strin
 
   if (!review) return notFound();
 
-  const product = getProductBySlug(review.productSlug);
+  const product = await db.product.findUnique({ where: { slug: review.productSlug } }).catch(() => null);
 
   return (
     <div className="p-8">

@@ -20,7 +20,7 @@ interface PendingOrder {
   total: number;
 }
 
-type PayStatus = 'idle' | 'processing' | 'success';
+type PayStatus = 'idle' | 'processing' | 'success' | 'error';
 
 function generateOrderId() {
   const ts = Date.now().toString(36).toUpperCase();
@@ -44,6 +44,7 @@ export default function PaymentPage() {
 
   const [card, setCard] = useState({ number: '', expiry: '', cvv: '', holder: '' });
   const [errors, setErrors] = useState<Partial<typeof card>>({});
+  const [stockError, setStockError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -69,6 +70,7 @@ export default function PaymentPage() {
   const handlePay = async () => {
     if (!validate() || !order) return;
     setStatus('processing');
+    setStockError(null);
 
     // Simulate payment processing delay
     await new Promise(res => setTimeout(res, 2200));
@@ -83,7 +85,14 @@ export default function PaymentPage() {
         body: JSON.stringify({ ...order, orderId, date: now }),
       });
       const data = await res.json();
-      if (!data.success) throw new Error('API error');
+      if (!data.success) {
+        if (res.status === 409) {
+          setStockError(data.error ?? 'One or more items in your order are out of stock.');
+          setStatus('error');
+          return;
+        }
+        throw new Error('API error');
+      }
     } catch {
       // Still proceed — log failure silently so UX isn't broken
     }
@@ -284,25 +293,32 @@ export default function PaymentPage() {
               </div>
             </div>
 
+            {/* Stock error */}
+            {status === 'error' && stockError && (
+              <p className="mt-4 font-body text-sm text-red-500 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                {stockError}
+              </p>
+            )}
+
             {/* Pay button */}
             <motion.button
               onClick={handlePay}
-              disabled={status !== 'idle'}
-              whileHover={status === 'idle' ? { scale: 1.02 } : {}}
-              whileTap={status === 'idle' ? { scale: 0.98 } : {}}
+              disabled={status === 'processing' || status === 'success'}
+              whileHover={status === 'idle' || status === 'error' ? { scale: 1.02 } : {}}
+              whileTap={status === 'idle' || status === 'error' ? { scale: 0.98 } : {}}
               className="mt-8 w-full flex items-center justify-center gap-3 font-body font-bold text-sm py-4 rounded-2xl transition-all tracking-wide uppercase disabled:cursor-not-allowed"
               style={{
                 background: status === 'success' ? '#009846' : '#f3a213',
                 color: '#050100',
-                opacity: status !== 'idle' ? 0.9 : 1,
+                opacity: status === 'processing' || status === 'success' ? 0.9 : 1,
               }}
             >
               <AnimatePresence mode="wait">
-                {status === 'idle' && (
+                {(status === 'idle' || status === 'error') && (
                   <motion.span key="idle" className="flex items-center gap-2"
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                     <Lock size={15} />
-                    Pay ₹{order.total}
+                    {status === 'error' ? 'Try Again' : `Pay ₹${order.total}`}
                   </motion.span>
                 )}
                 {status === 'processing' && (

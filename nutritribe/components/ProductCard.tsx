@@ -4,7 +4,7 @@ import { useRef, useCallback, useState } from 'react';
 import { motion, useInView, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
 import Link from 'next/link';
 import { ShoppingCart, Eye, Check, Heart } from 'lucide-react';
-import { Product } from '@/lib/products';
+import { Product, getStockStatus } from '@/lib/products';
 import Badge from '@/components/ui/Badge';
 import StockBadge from '@/components/ui/StockBadge';
 import { useCart } from '@/lib/cartContext';
@@ -143,6 +143,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const [added, setAdded] = useState(false);
   const wishlisted = isWishlisted(product.slug);
+  const stock = getStockStatus(product.stockQuantity, product.lowStockThreshold);
 
   const handleToggleWishlist = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -248,7 +249,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             style={{ color: product.color }}>
             {product.category}
           </span>
-          <StockBadge stock={product.stock} />
+          <StockBadge stock={stock} />
         </div>
 
         {/* Name */}
@@ -289,18 +290,18 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           </div>
           <div className="flex gap-2">
             <motion.button
-              whileHover={product.stock !== 'out' ? { scale: 1.12 } : {}}
-              whileTap={product.stock !== 'out' ? { scale: 0.95 } : {}}
-              onClick={product.stock !== 'out' ? handleAddToCart : undefined}
-              disabled={product.stock === 'out'}
+              whileHover={stock !== 'out' ? { scale: 1.12 } : {}}
+              whileTap={stock !== 'out' ? { scale: 0.95 } : {}}
+              onClick={stock !== 'out' ? handleAddToCart : undefined}
+              disabled={stock === 'out'}
               className="w-9 h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
               style={{
                 borderColor: added ? '#009846' : product.color + '40',
                 backgroundColor: added ? '#009846' : '',
                 color: added ? '#fff' : product.color,
               }}
-              onMouseEnter={(e) => { if (!added && product.stock !== 'out') { (e.currentTarget as HTMLElement).style.backgroundColor = product.color; (e.currentTarget as HTMLElement).style.color = '#fff'; } }}
-              onMouseLeave={(e) => { if (!added && product.stock !== 'out') { (e.currentTarget as HTMLElement).style.backgroundColor = ''; (e.currentTarget as HTMLElement).style.color = product.color; } }}
+              onMouseEnter={(e) => { if (!added && stock !== 'out') { (e.currentTarget as HTMLElement).style.backgroundColor = product.color; (e.currentTarget as HTMLElement).style.color = '#fff'; } }}
+              onMouseLeave={(e) => { if (!added && stock !== 'out') { (e.currentTarget as HTMLElement).style.backgroundColor = ''; (e.currentTarget as HTMLElement).style.color = product.color; } }}
               aria-label="Add to cart"
             >
               {added ? <Check size={13} /> : <ShoppingCart size={14} />}
