@@ -27,7 +27,7 @@ function CountUp({ end, suffix = '' }: { end: number; suffix?: string }) {
 }
 
 const stats = [
-  { value: 15, suffix: 'g', label: 'Protein per 100g' },
+  { value: 10, suffix: 'g', label: 'Protein per 100g' },
   { value: 0, suffix: 'mg', label: 'Cholesterol' },
   { value: 100, suffix: '%', label: 'Gluten-Free' },
   { value: 347, suffix: '', label: 'Kcal / 100g' },
