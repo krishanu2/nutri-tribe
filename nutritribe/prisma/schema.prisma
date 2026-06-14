@@ -127,3 +127,23 @@ model Recipe {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 }
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Review {
+  id           String       @id @default(cuid())
+  productSlug  String
+  customerName String
+  rating       Int
+  comment      String
+  status       ReviewStatus @default(PENDING)
+  adminNote    String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([productSlug, status])
+}

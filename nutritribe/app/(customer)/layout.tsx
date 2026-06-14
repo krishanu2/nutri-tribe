@@ -6,7 +6,11 @@ import FloatingCTA from "@/components/FloatingCTA";
 import MarqueeTicker from "@/components/MarqueeTicker";
 import Cursor from "@/components/Cursor";
 import CartDrawer from "@/components/CartDrawer";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import SearchOverlay from "@/components/SearchOverlay";
 import { CartProvider } from "@/lib/cartContext";
+import { WishlistProvider } from "@/lib/wishlistContext";
+import { SearchProvider } from "@/lib/searchContext";
 
 const IntroAnimation = dynamic(() => import('@/components/IntroAnimation'), { ssr: false });
 const SmoothScroll   = dynamic(() => import('@/components/SmoothScroll'),   { ssr: false });
@@ -29,17 +33,23 @@ export const metadata: Metadata = {
 export default function CustomerLayout({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
-      <ScrollProgress />
-      <IntroAnimation />
-      <Cursor />
-      <FloatingCTA />
-      <MarqueeTicker />
-      <Navbar />
-      <CartDrawer />
-      <SmoothScroll>
-        <main>{children}</main>
-        <Footer />
-      </SmoothScroll>
+      <WishlistProvider>
+        <SearchProvider>
+          <ScrollProgress />
+          <IntroAnimation />
+          <Cursor />
+          <FloatingCTA />
+          <MarqueeTicker />
+          <Navbar />
+          <CartDrawer />
+          <SearchOverlay />
+          <SmoothScroll>
+            <main className="pb-16 md:pb-0">{children}</main>
+            <Footer />
+          </SmoothScroll>
+          <MobileBottomNav />
+        </SearchProvider>
+      </WishlistProvider>
     </CartProvider>
   );
 }

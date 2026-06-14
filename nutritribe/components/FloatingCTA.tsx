@@ -22,7 +22,7 @@ export default function FloatingCTA() {
     <AnimatePresence>
       {visible && !isProductsPage && (
         <motion.div
-          className="fixed bottom-6 right-6 z-[9970]"
+          className="fixed bottom-20 md:bottom-6 right-6 z-[9970]"
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}

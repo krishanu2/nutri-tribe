@@ -1,3 +1,5 @@
+export type StockStatus = 'in' | 'low' | 'out';
+
 export interface Product {
   id: number;
   slug: string;
@@ -13,6 +15,7 @@ export interface Product {
   badge?: string;
   image: string;
   images: string[];
+  stock: StockStatus;
 }
 
 export const products: Product[] = [
@@ -35,6 +38,7 @@ export const products: Product[] = [
       "https://picsum.photos/seed/plain-makhana2/600/600",
       "https://picsum.photos/seed/plain-makhana3/600/600",
     ],
+    stock: "in",
   },
   {
     id: 2,
@@ -54,6 +58,7 @@ export const products: Product[] = [
       "https://picsum.photos/seed/peri-peri/600/600",
       "https://picsum.photos/seed/peri-peri2/600/600",
     ],
+    stock: "low",
   },
   {
     id: 3,
@@ -72,6 +77,7 @@ export const products: Product[] = [
       "https://picsum.photos/seed/cream-onion/600/600",
       "https://picsum.photos/seed/cream-onion2/600/600",
     ],
+    stock: "in",
   },
   {
     id: 4,
@@ -91,6 +97,7 @@ export const products: Product[] = [
       "https://picsum.photos/seed/tangy-cheese/600/600",
       "https://picsum.photos/seed/tangy-cheese2/600/600",
     ],
+    stock: "in",
   },
   {
     id: 5,
@@ -109,6 +116,7 @@ export const products: Product[] = [
       "https://picsum.photos/seed/salt-pepper/600/600",
       "https://picsum.photos/seed/salt-pepper2/600/600",
     ],
+    stock: "in",
   },
   {
     id: 6,
@@ -128,6 +136,7 @@ export const products: Product[] = [
       "https://picsum.photos/seed/premium-cookies/600/600",
       "https://picsum.photos/seed/premium-cookies2/600/600",
     ],
+    stock: "in",
   },
 ];
 

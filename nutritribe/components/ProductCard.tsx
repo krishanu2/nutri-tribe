@@ -3,10 +3,12 @@
 import { useRef, useCallback, useState } from 'react';
 import { motion, useInView, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
 import Link from 'next/link';
-import { ShoppingCart, Eye, Check } from 'lucide-react';
+import { ShoppingCart, Eye, Check, Heart } from 'lucide-react';
 import { Product } from '@/lib/products';
 import Badge from '@/components/ui/Badge';
+import StockBadge from '@/components/ui/StockBadge';
 import { useCart } from '@/lib/cartContext';
+import { useWishlist } from '@/lib/wishlistContext';
 
 interface ProductCardProps {
   product: Product;
@@ -138,7 +140,14 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.05 });
   const { addToCart } = useCart();
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const [added, setAdded] = useState(false);
+  const wishlisted = isWishlisted(product.slug);
+
+  const handleToggleWishlist = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    toggleWishlist(product.slug);
+  }, [toggleWishlist, product.slug]);
 
   const handleAddToCart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -198,6 +207,17 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
         </div>
       )}
 
+      {/* Wishlist toggle */}
+      <motion.button
+        whileHover={{ scale: 1.12 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={handleToggleWishlist}
+        className="absolute top-4 left-4 z-20 w-9 h-9 rounded-full flex items-center justify-center bg-white/80 backdrop-blur-sm shadow-sm transition-colors"
+        aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+      >
+        <Heart size={15} className={wishlisted ? 'fill-red-500 text-red-500' : 'text-earthen-rust/40'} />
+      </motion.button>
+
       {/* Image / Illustration section */}
       <div
         className="relative h-56 flex items-center justify-center overflow-hidden"
@@ -222,11 +242,14 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
 
       {/* Content */}
       <div className="flex-1 flex flex-col p-5">
-        {/* Category */}
-        <span className="font-body text-[10px] font-bold tracking-[0.22em] uppercase mb-1.5"
-          style={{ color: product.color }}>
-          {product.category}
-        </span>
+        {/* Category + stock */}
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="font-body text-[10px] font-bold tracking-[0.22em] uppercase"
+            style={{ color: product.color }}>
+            {product.category}
+          </span>
+          <StockBadge stock={product.stock} />
+        </div>
 
         {/* Name */}
         <h3 className="font-display font-bold text-xl text-earthen-rust mb-0.5 leading-tight">
@@ -266,17 +289,18 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           </div>
           <div className="flex gap-2">
             <motion.button
-              whileHover={{ scale: 1.12 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleAddToCart}
-              className="w-9 h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200"
+              whileHover={product.stock !== 'out' ? { scale: 1.12 } : {}}
+              whileTap={product.stock !== 'out' ? { scale: 0.95 } : {}}
+              onClick={product.stock !== 'out' ? handleAddToCart : undefined}
+              disabled={product.stock === 'out'}
+              className="w-9 h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
               style={{
                 borderColor: added ? '#009846' : product.color + '40',
                 backgroundColor: added ? '#009846' : '',
                 color: added ? '#fff' : product.color,
               }}
-              onMouseEnter={(e) => { if (!added) { (e.currentTarget as HTMLElement).style.backgroundColor = product.color; (e.currentTarget as HTMLElement).style.color = '#fff'; } }}
-              onMouseLeave={(e) => { if (!added) { (e.currentTarget as HTMLElement).style.backgroundColor = ''; (e.currentTarget as HTMLElement).style.color = product.color; } }}
+              onMouseEnter={(e) => { if (!added && product.stock !== 'out') { (e.currentTarget as HTMLElement).style.backgroundColor = product.color; (e.currentTarget as HTMLElement).style.color = '#fff'; } }}
+              onMouseLeave={(e) => { if (!added && product.stock !== 'out') { (e.currentTarget as HTMLElement).style.backgroundColor = ''; (e.currentTarget as HTMLElement).style.color = product.color; } }}
               aria-label="Add to cart"
             >
               {added ? <Check size={13} /> : <ShoppingCart size={14} />}

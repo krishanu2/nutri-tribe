@@ -4,9 +4,11 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, X, ArrowRight, ChevronDown } from 'lucide-react';
+import { ShoppingBag, X, ArrowRight, ChevronDown, Heart, Search } from 'lucide-react';
 import Image from 'next/image';
 import { useCart } from '@/lib/cartContext';
+import { useWishlist } from '@/lib/wishlistContext';
+import { useSearch } from '@/lib/searchContext';
 
 interface NavChild {
   label: string;
@@ -157,6 +159,8 @@ export default function Navbar() {
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname  = usePathname();
   const { totalItems, openCart } = useCart();
+  const { slugs: wishlistSlugs } = useWishlist();
+  const { openSearch } = useSearch();
 
   /* track visited pages — gamification */
   useEffect(() => {
@@ -289,6 +293,31 @@ export default function Navbar() {
 
               {/* Right */}
               <div className="hidden md:flex items-center gap-3 shrink-0">
+                <button
+                  onClick={openSearch}
+                  className="flex items-center justify-center p-2 rounded-full transition-all hover:brightness-110"
+                  style={{ background: 'rgba(243,162,19,0.07)', border: '1px solid rgba(243,162,19,0.14)' }}
+                  aria-label="Search"
+                >
+                  <Search size={13} style={{ color: '#f3a213' }} />
+                </button>
+                <Link
+                  href="/wishlist"
+                  className="relative flex items-center gap-1.5 px-3 py-2 rounded-full transition-all hover:brightness-110"
+                  style={{ background: 'rgba(243,162,19,0.07)', border: '1px solid rgba(243,162,19,0.14)' }}
+                >
+                  <Heart size={13} style={{ color: '#f3a213' }} className={wishlistSlugs.length > 0 ? 'fill-[#f3a213]' : ''} />
+                  {wishlistSlugs.length > 0 && (
+                    <motion.span
+                      key={wishlistSlugs.length}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-sun-harvest flex items-center justify-center font-body font-bold text-[9px] text-white"
+                    >
+                      {wishlistSlugs.length > 9 ? '9+' : wishlistSlugs.length}
+                    </motion.span>
+                  )}
+                </Link>
                 <button
                   onClick={openCart}
                   className="relative flex items-center gap-1.5 px-3 py-2 rounded-full transition-all hover:brightness-110"
@@ -496,6 +525,27 @@ export default function Navbar() {
 
                 <div className="w-px h-4 shrink-0" style={{ background: 'rgba(243,162,19,0.15)' }} />
 
+                {/* Search button in pill */}
+                <button onClick={openSearch} className="p-2 rounded-full" style={{ background: 'rgba(243,162,19,0.1)' }} aria-label="Search">
+                  <Search size={13} style={{ color: '#f3a213' }} />
+                </button>
+
+                {/* Wishlist button in pill */}
+                <Link href="/wishlist" className="relative p-2 rounded-full" style={{ background: 'rgba(243,162,19,0.1)' }}>
+                  <Heart size={13} style={{ color: '#f3a213' }} className={wishlistSlugs.length > 0 ? 'fill-[#f3a213]' : ''} />
+                  {wishlistSlugs.length > 0 && (
+                    <motion.span
+                      key={wishlistSlugs.length}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center font-body font-bold text-[9px] text-white"
+                      style={{ background: '#f3a213' }}
+                    >
+                      {wishlistSlugs.length > 9 ? '9+' : wishlistSlugs.length}
+                    </motion.span>
+                  )}
+                </Link>
+
                 {/* Cart button in pill */}
                 <button onClick={openCart} className="relative p-2 rounded-full" style={{ background: 'rgba(243,162,19,0.1)' }}>
                   <ShoppingBag size={13} style={{ color: '#f3a213' }} />
@@ -656,6 +706,12 @@ export default function Navbar() {
 
               {/* Bottom CTA */}
               <div className="px-6 pb-10">
+                <Link href="/wishlist" onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full text-center font-body font-bold text-sm py-3.5 rounded-full tracking-widest uppercase mb-3"
+                  style={{ background: 'rgba(243,162,19,0.08)', color: '#f3a213', border: '1px solid rgba(243,162,19,0.18)' }}>
+                  <Heart size={14} className={wishlistSlugs.length > 0 ? 'fill-[#f3a213]' : ''} />
+                  Wishlist {wishlistSlugs.length > 0 && `(${wishlistSlugs.length})`}
+                </Link>
                 <Link href="/products" onClick={() => setMobileOpen(false)}
                   className="block w-full text-center font-body font-bold text-sm py-4 rounded-full tracking-widest uppercase"
                   style={{ background: '#f3a213', color: '#050100' }}>
