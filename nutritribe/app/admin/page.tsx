@@ -44,11 +44,17 @@ export default async function AdminDashboard() {
   return (
     <div className="p-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="font-display font-bold text-3xl text-[#7d3627]">Dashboard</h1>
-        <p className="font-body text-sm text-[#7d3627]/50 mt-1">
-          {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-        </p>
+      <div className="mb-8 flex items-start justify-between">
+        <div>
+          <h1 className="font-display font-bold text-3xl text-[#7d3627]">Dashboard</h1>
+          <p className="font-body text-sm text-[#7d3627]/50 mt-1">
+            {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+          </p>
+        </div>
+        <Link href="/admin/analytics"
+          className="font-body text-xs font-semibold text-[#f3a213] hover:underline whitespace-nowrap">
+          View Sales Analytics →
+        </Link>
       </div>
 
       {/* Stats */}
