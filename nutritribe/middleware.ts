@@ -1,9 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
-
-function getSecret() {
-  return new TextEncoder().encode(process.env.JWT_SECRET ?? 'fallback-dev-secret-change-me');
-}
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -27,38 +22,10 @@ export async function middleware(req: NextRequest) {
     needsRewrite = true;
   }
 
-  // ── Auth guard ────────────────────────────────────────────────────────────
-  const isAdminPage = effectivePath.startsWith('/admin') && effectivePath !== '/admin/login';
-  const isAdminApi  = effectivePath.startsWith('/api/admin') && effectivePath !== '/api/admin/login';
-
-  if (!isAdminPage && !isAdminApi) {
-    return needsRewrite
-      ? NextResponse.rewrite(new URL(effectivePath, req.url))
-      : NextResponse.next();
-  }
-
-  const token = req.cookies.get('nt-admin-session')?.value;
-
-  const loginRedirect = isAdminSubdomain
-    ? new URL('/login', req.url)       // admin.domain.com/login rewrites → /admin/login
-    : new URL('/admin/login', req.url);
-
-  if (!token) {
-    if (isAdminApi) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    return NextResponse.redirect(loginRedirect);
-  }
-
-  try {
-    await jwtVerify(token, getSecret());
-    return needsRewrite
-      ? NextResponse.rewrite(new URL(effectivePath, req.url))
-      : NextResponse.next();
-  } catch {
-    if (isAdminApi) return NextResponse.json({ error: 'Session expired' }, { status: 401 });
-    const res = NextResponse.redirect(loginRedirect);
-    res.cookies.delete('nt-admin-session');
-    return res;
-  }
+  // Auth guard disabled — admin is open access for now
+  return needsRewrite
+    ? NextResponse.rewrite(new URL(effectivePath, req.url))
+    : NextResponse.next();
 }
 
 export const config = {
