@@ -4,6 +4,8 @@ import { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { ArrowRight, Newspaper } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 const ACCENT = '#f3a213';
 
 export const metadata: Metadata = {

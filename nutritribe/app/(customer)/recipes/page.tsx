@@ -4,6 +4,8 @@ import { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { ArrowRight, ChefHat, Clock, Users } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 const ACCENT = '#009846';
 
 export const metadata: Metadata = {
