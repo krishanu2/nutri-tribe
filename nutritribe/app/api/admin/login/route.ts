@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
 import { signAdminToken, SESSION_COOKIE } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
@@ -7,9 +6,7 @@ export async function POST(req: NextRequest) {
     const { username, password } = await req.json();
 
     const validUser = username === process.env.ADMIN_USERNAME;
-    // Always run bcrypt compare to avoid timing attacks even when username is wrong
-    const hashToCheck = process.env.ADMIN_PASSWORD_HASH ?? '$2b$10$invalidhashpadding000000000000000000000000000000000000';
-    const validPass = await bcrypt.compare(String(password), hashToCheck);
+    const validPass = String(password) === process.env.ADMIN_PASSWORD;
 
     if (!validUser || !validPass) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
