@@ -120,10 +120,10 @@ export default function Footer() {
 
       {/* ── MAIN LINKS GRID ─────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
 
           {/* Brand col */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-2 lg:col-span-1">
             {/* Mini logo */}
             <div className="relative mb-5" style={{ width: 140, height: 44 }}>
               <Image
@@ -226,6 +226,36 @@ export default function Footer() {
                         Soon
                       </span>
                     )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="font-body font-bold text-sm tracking-[0.28em] uppercase mb-5 flex items-center gap-2"
+              style={{ color: '#f3a213' }}>
+              <span className="w-3 h-px inline-block" style={{ background: '#f3a213' }} />
+              Legal
+            </h4>
+            <ul className="space-y-3">
+              {[
+                { label: 'Terms & Conditions', href: '/terms-and-conditions' },
+                { label: 'Privacy Policy',     href: '/privacy-policy' },
+                { label: 'Shipping Policy',    href: '/shipping-policy' },
+                { label: 'Refund Policy',      href: '/refund-policy' },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="font-body text-sm text-white/60 hover:text-sun-harvest transition-colors duration-200 flex items-center gap-2 group"
+                  >
+                    <span
+                      className="w-0 h-px group-hover:w-4 transition-all duration-300 inline-block"
+                      style={{ background: '#f3a213' }}
+                    />
+                    {link.label}
                   </Link>
                 </li>
               ))}
