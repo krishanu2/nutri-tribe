@@ -63,7 +63,7 @@ export default function LeadForm({ leadType, accent, detailFields }: LeadFormPro
       if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
     } catch {
-      setError('Something went wrong. Please try again or email us at sales@nutritribe.com.');
+      setError('Something went wrong. Please try again or email us at sales@nutritribe.shop.');
     } finally {
       setSubmitting(false);
     }

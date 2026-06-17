@@ -131,7 +131,7 @@ export default function InstagramTeaser() {
           {tiles.map((tile, i) => (
             <motion.a
               key={i}
-              href="https://instagram.com/NutriTribe"
+              href="https://www.instagram.com/nutritribe.shop"
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, scale: 0.85, y: 20 }}
@@ -194,7 +194,7 @@ export default function InstagramTeaser() {
           className="flex flex-col items-center gap-3"
         >
           <motion.a
-            href="https://instagram.com/NutriTribe"
+            href="https://www.instagram.com/nutritribe.shop"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.04 }}

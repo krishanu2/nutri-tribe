@@ -259,7 +259,7 @@ export default function ContactPage() {
                   Quick Connect
                 </p>
                 <motion.a
-                  href="mailto:sales@nutritribe.com"
+                  href="mailto:sales@nutritribe.shop"
                   whileHover={{ x: 4 }}
                   className="flex items-center gap-4 p-4 rounded-2xl group"
                   style={{ background: 'rgba(243,162,19,0.06)', border: '1px solid rgba(243,162,19,0.12)' }}
@@ -269,7 +269,7 @@ export default function ContactPage() {
                     <Mail size={16} style={{ color: '#f3a213' }} />
                   </div>
                   <div>
-                    <p className="font-body font-bold text-xs" style={{ color: 'rgba(253,251,247,0.8)' }}>sales@nutritribe.com</p>
+                    <p className="font-body font-bold text-xs" style={{ color: 'rgba(253,251,247,0.8)' }}>sales@nutritribe.shop</p>
                     <p className="font-body text-[10px]" style={{ color: 'rgba(253,251,247,0.3)' }}>We reply within 24 hours</p>
                   </div>
                   <ArrowRight size={14} style={{ color: 'rgba(243,162,19,0.4)', marginLeft: 'auto' }} />
@@ -278,9 +278,9 @@ export default function ContactPage() {
                 {/* Socials */}
                 <div className="flex gap-3 pt-2">
                   {[
-                    { href: 'https://instagram.com/NutriTribe', Icon: InstagramIcon, color: '#E1306C' },
-                    { href: 'https://linkedin.com/company/nutritribe', Icon: LinkedinIcon, color: '#0A66C2' },
-                    { href: 'https://facebook.com/NutriTribe', Icon: FacebookIcon, color: '#1877F2' },
+                    { href: 'https://www.instagram.com/nutritribe.shop', Icon: InstagramIcon, color: '#E1306C' },
+                    { href: 'https://www.linkedin.com/company/nutritribe/', Icon: LinkedinIcon, color: '#0A66C2' },
+                    { href: 'https://www.facebook.com/share/1EBUbE3tSf/', Icon: FacebookIcon, color: '#1877F2' },
                   ].map(({ href, Icon, color }) => (
                     <motion.a
                       key={href}
@@ -303,7 +303,7 @@ export default function ContactPage() {
                     🤝 Wholesale & B2B
                   </p>
                   <p className="font-body text-xs leading-relaxed" style={{ color: 'rgba(253,251,247,0.35)' }}>
-                    Retailers, cafés, corporate gifting — we offer bulk pricing and custom branding. Reach us at <a href="mailto:sales@nutritribe.com" style={{ color: '#f3a213' }}>sales@nutritribe.com</a>
+                    Retailers, cafés, corporate gifting — we offer bulk pricing and custom branding. Reach us at <a href="mailto:sales@nutritribe.shop" style={{ color: '#f3a213' }}>sales@nutritribe.shop</a>
                   </p>
                 </div>
               </div>
@@ -508,7 +508,7 @@ export default function ContactPage() {
           Patna, Bihar, India
         </p>
         <p className="font-body text-sm" style={{ color: 'rgba(253,251,247,0.25)' }}>
-          🌿 The Heartland of Makhana · sales@nutritribe.com
+          🌿 The Heartland of Makhana · sales@nutritribe.shop
         </p>
       </section>
     </>

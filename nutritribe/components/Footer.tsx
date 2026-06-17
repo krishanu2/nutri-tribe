@@ -139,9 +139,9 @@ export default function Footer() {
             </p>
             <div className="flex gap-3">
               {[
-                { href: 'https://instagram.com/NutriTribe', Icon: InstagramIcon },
-                { href: 'https://linkedin.com/company/nutritribe', Icon: LinkedinIcon },
-                { href: 'https://facebook.com/NutriTribe', Icon: FacebookIcon },
+                { href: 'https://www.instagram.com/nutritribe.shop', Icon: InstagramIcon },
+                { href: 'https://www.linkedin.com/company/nutritribe/', Icon: LinkedinIcon },
+                { href: 'https://www.facebook.com/share/1EBUbE3tSf/', Icon: FacebookIcon },
               ].map(({ href, Icon }) => (
                 <motion.a
                   key={href}
@@ -272,16 +272,16 @@ export default function Footer() {
             <ul className="space-y-4 mb-8">
               <li>
                 <a
-                  href="mailto:sales@nutritribe.com"
+                  href="mailto:sales@nutritribe.shop"
                   className="flex items-center gap-3 font-body text-sm text-white/60 hover:text-sun-harvest transition-colors"
                 >
                   <Mail size={15} style={{ color: '#f3a213', flexShrink: 0 }} />
-                  sales@nutritribe.com
+                  sales@nutritribe.shop
                 </a>
               </li>
               <li>
                 <a
-                  href="https://instagram.com/NutriTribe"
+                  href="https://www.instagram.com/nutritribe.shop"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 font-body text-sm text-white/60 hover:text-sun-harvest transition-colors"

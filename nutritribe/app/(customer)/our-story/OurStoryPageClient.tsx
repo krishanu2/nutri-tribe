@@ -366,19 +366,14 @@ const timeline = [
   { year: '2025', title: "India's Most Loved Makhana Brand", body: "The movement grows. The tribe expands. And Bihar's finest superfood finally takes its rightful place.", color: '#7a4dff' },
 ];
 
-/* ── Meet the Founders — placeholder roster (replace with real names/bios/photos) ── */
 const FOUNDERS = [
   {
-    name: '[Founder Name]',
-    role: 'Co-Founder & CEO',
-    bio: '[Placeholder bio — replace with a short founder story: background, why NutriTribe was started, and what drives the mission.]',
-    photo: 'https://picsum.photos/seed/nutritribe-founder-1/320/320',
+    name: 'Vishwajeet Kumar',
+    quote: "Healthy snacking isn't a trend—it's a lifestyle. Our mission is to make nutrition simple, delicious, and accessible for everyone.",
   },
   {
-    name: '[Founder Name]',
-    role: 'Co-Founder & Operations',
-    bio: '[Placeholder bio — replace with a short founder story: background, why NutriTribe was started, and what drives the mission.]',
-    photo: 'https://picsum.photos/seed/nutritribe-founder-2/320/320',
+    name: 'Rishabh Kumar',
+    quote: 'From farm to snack bowl, we ensure every bite delivers quality, nutrition, and trust.',
   },
 ];
 
@@ -973,7 +968,7 @@ export default function OurStoryPage() {
               <motion.div key={f.name + i}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.12 }}
-                className="relative rounded-2xl p-8 overflow-hidden text-center"
+                className="relative rounded-2xl p-10 overflow-hidden"
                 style={{ background: 'linear-gradient(135deg, rgba(243,162,19,0.10), rgba(243,162,19,0.03))', border: '1px solid rgba(243,162,19,0.22)' }}
               >
                 <motion.div className="absolute top-0 left-0 right-0 h-0.5"
@@ -981,21 +976,16 @@ export default function OurStoryPage() {
                   initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.12 + 0.2 }} />
 
-                <div className="relative w-28 h-28 rounded-full overflow-hidden mx-auto mb-5"
-                  style={{ border: '2px solid rgba(243,162,19,0.35)' }}>
-                  <Image src={f.photo} alt={f.name} fill sizes="112px" className="object-cover" />
-                </div>
-
-                <p className="font-display font-bold text-xl mb-1" style={{ color: '#fdfbf7' }}>{f.name}</p>
-                <p className="font-body text-[10px] tracking-[0.3em] uppercase mb-4" style={{ color: '#f3a213' }}>{f.role}</p>
-                <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(253,251,247,0.5)' }}>{f.bio}</p>
+                <p className="font-body font-bold text-[10px] tracking-[0.45em] uppercase mb-5" style={{ color: 'rgba(243,162,19,0.5)' }}>
+                  Co-Founder
+                </p>
+                <p className="font-display text-xl md:text-2xl leading-relaxed mb-6" style={{ color: 'rgba(253,251,247,0.85)', fontStyle: 'italic' }}>
+                  &ldquo;{f.quote}&rdquo;
+                </p>
+                <p className="font-display font-bold text-lg" style={{ color: '#f3a213' }}>— {f.name}</p>
               </motion.div>
             ))}
           </div>
-
-          <p className="text-center mt-10 font-body text-[10px] tracking-[0.2em] uppercase" style={{ color: 'rgba(253,251,247,0.25)' }}>
-            [Placeholder content — to be replaced with real founder names, roles, bios and photos]
-          </p>
         </div>
       </section>
 
