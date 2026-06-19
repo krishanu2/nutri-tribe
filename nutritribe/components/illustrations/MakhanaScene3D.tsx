@@ -59,6 +59,11 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
     centerGlow.position.set(0, 0.3, 0);
     scene.add(centerGlow);
 
+    // Violet accent rim — second brand color breaking the all-gold/brass palette
+    const violetRim = new THREE.PointLight(0x7a4dff, 9, 0, 2);
+    violetRim.position.set(4, 1.2, -2.8);
+    scene.add(violetRim);
+
     /* ── BOWL — wide shallow katori, ~2.5:1 width:height ── */
     const katoriProfile = [
       // Wider, shallower profile — walls flare out quickly like a katori
@@ -186,10 +191,14 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
       [-0.26, -0.14, -0.18, 0.94],
     ];
 
+    // Track seeds + their resting position for the cursor-repulsion effect
+    const seedGroups: { group: THREE.Group; base: THREE.Vector3 }[] = [];
+
     insideDefs.forEach(([x, y, z, s]) => {
       const b = makeBall(s);
       b.position.set(x, y, z);
       scene.add(b);
+      seedGroups.push({ group: b, base: new THREE.Vector3(x, y, z) });
     });
 
     /* Seeds SPILLING — 3 seeds, RIGHT NEXT TO bowl edge, max 1.35 units from center.
@@ -203,6 +212,7 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
       const b = makeBall(s);
       b.position.set(x, y, z);
       scene.add(b);
+      seedGroups.push({ group: b, base: new THREE.Vector3(x, y, z) });
     });
 
     /* ── ORBIT RING — Saturn-style: flat tilted ellipse, gold, thin stroke ── */
@@ -223,6 +233,14 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
     let isHovered = false;
     const mouse = { x: 0, y: 0 };
     let floatT = 0;
+
+    /* ── Cursor-reactive seeds: raycast to a plane at seed height, push nearby seeds away ── */
+    const raycaster = new THREE.Raycaster();
+    const seedPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.04);
+    const ndc = new THREE.Vector2();
+    const planeHit = new THREE.Vector3();
+    const REPEL_RADIUS = 0.85;
+    const REPEL_STRENGTH = 0.34;
 
     const onMouseMove = (e: MouseEvent) => {
       const r = mount.getBoundingClientRect();
@@ -259,6 +277,30 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
 
       camera.position.set(camX + orbitX, camY, orbitZ);
       camera.lookAt(0, 0, 0);
+
+      /* Violet accent rim — slow breathing glow, independent phase from the hover-driven gold glow */
+      violetRim.intensity = 7 + Math.sin(elapsed * 0.55) * 2.5;
+
+      /* Cursor-reactive seeds — repel away from where the cursor projects onto the seed plane */
+      ndc.set(mouse.x, -mouse.y);
+      raycaster.setFromCamera(ndc, camera);
+      const hit = raycaster.ray.intersectPlane(seedPlane, planeHit);
+      seedGroups.forEach(({ group, base }) => {
+        let targetX = base.x;
+        let targetZ = base.z;
+        if (hit) {
+          const dx = base.x - hit.x;
+          const dz = base.z - hit.z;
+          const dist = Math.sqrt(dx * dx + dz * dz);
+          if (dist < REPEL_RADIUS && dist > 0.0001) {
+            const push = (1 - dist / REPEL_RADIUS) * REPEL_STRENGTH;
+            targetX = base.x + (dx / dist) * push;
+            targetZ = base.z + (dz / dist) * push;
+          }
+        }
+        group.position.x += (targetX - group.position.x) * 0.12;
+        group.position.z += (targetZ - group.position.z) * 0.12;
+      });
 
       /* Float animation */
       floatT += delta;
