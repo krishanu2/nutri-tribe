@@ -176,7 +176,7 @@ export default function CheckoutPage() {
             </h1>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field label="Full Name" name="name" placeholder="Arjun Kumar" />
                 <Field label="Email Address" name="email" type="email" placeholder="arjun@email.com" />
                 <Field label="Mobile Number" name="phone" type="tel" placeholder="9876543210" />

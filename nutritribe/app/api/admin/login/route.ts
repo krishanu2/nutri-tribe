@@ -5,8 +5,12 @@ export async function POST(req: NextRequest) {
   try {
     const { username, password } = await req.json();
 
-    const validUser = username === (process.env.ADMIN_USERNAME || 'nutritribe_admin');
-    const validPass = String(password) === (process.env.ADMIN_PASSWORD || 'ilovemakhana');
+    if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {
+      return NextResponse.json({ error: 'Admin login is not configured' }, { status: 503 });
+    }
+
+    const validUser = username === process.env.ADMIN_USERNAME;
+    const validPass = String(password) === process.env.ADMIN_PASSWORD;
 
     if (!validUser || !validPass) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });

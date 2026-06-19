@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminToken, SESSION_COOKIE } from '@/lib/auth';
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -22,7 +23,17 @@ export async function middleware(req: NextRequest) {
     needsRewrite = true;
   }
 
-  // Auth guard disabled — admin is open access for now
+  const isAdminArea = effectivePath.startsWith('/admin') && effectivePath !== '/admin/login';
+
+  if (isAdminArea) {
+    const token = req.cookies.get(SESSION_COOKIE.name)?.value;
+    const valid = token ? await verifyAdminToken(token) : false;
+    if (!valid) {
+      const loginUrl = new URL(isAdminSubdomain ? '/login' : '/admin/login', req.url);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   return needsRewrite
     ? NextResponse.rewrite(new URL(effectivePath, req.url))
     : NextResponse.next();

@@ -72,7 +72,7 @@ function ComingSoonContent() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.15, type: 'spring', stiffness: 300, damping: 20 }}
-          className="text-6xl mb-4"
+          className="text-5xl sm:text-6xl mb-4"
         >
           {info.icon}
         </motion.div>

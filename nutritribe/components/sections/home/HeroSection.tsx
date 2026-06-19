@@ -376,8 +376,8 @@ export default function HeroSection() {
             </motion.div>
 
             {/* Brand watermark ring */}
-            <div className="absolute bottom-0 right-8 opacity-[0.06] pointer-events-none select-none">
-              <p className="font-display font-bold text-8xl italic tracking-tighter" style={{ color:'#f3a213' }}>NT</p>
+            <div className="absolute bottom-0 right-4 sm:right-8 opacity-[0.06] pointer-events-none select-none">
+              <p className="font-display font-bold text-5xl sm:text-8xl italic tracking-tighter" style={{ color:'#f3a213' }}>NT</p>
             </div>
           </motion.div>
         </div>

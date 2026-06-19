@@ -229,7 +229,7 @@ function ValuePanel({ v, index }: { v: typeof VALUES[0]; index: number }) {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -40 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="flex flex-col justify-center h-full px-12 lg:px-16 max-w-xl"
+      className="flex flex-col justify-center h-full px-6 sm:px-10 lg:px-16 max-w-xl"
     >
       {/* Step indicator */}
       <div className="flex items-center gap-3 mb-8">
@@ -293,8 +293,8 @@ function ValuePanel({ v, index }: { v: typeof VALUES[0]; index: number }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.35 }}
-        className="mt-10 font-display font-bold text-8xl select-none pointer-events-none absolute right-8 bottom-12"
-        style={{ color: v.color + '12', fontSize: 'clamp(80px, 12vw, 140px)', lineHeight: 1 }}
+        className="mt-10 font-display font-bold select-none pointer-events-none absolute right-4 sm:right-8 bottom-6 sm:bottom-12"
+        style={{ color: v.color + '12', fontSize: 'clamp(56px, 12vw, 140px)', lineHeight: 1 }}
       >
         0{index + 1}
       </motion.div>
@@ -324,22 +324,22 @@ export default function ValuesSection() {
       className="relative"
       style={{ height: '550vh' }}
     >
-      {/* Sticky split panel */}
+      {/* Sticky split panel — stacked on mobile, side-by-side from lg up */}
       <div
-        className="sticky top-0 h-screen overflow-hidden flex"
+        className="sticky top-0 h-screen overflow-hidden flex flex-col lg:flex-row"
         style={{ background: '#0a0200' }}
       >
         {/* Left — Chakra */}
         <div
-          className="relative flex flex-col items-center justify-center"
-          style={{ width: '52%', background: 'radial-gradient(ellipse 80% 80% at 50% 50%, #1a0802 0%, #0a0200 70%)' }}
+          className="relative flex flex-col items-center justify-center w-full lg:w-[52%] h-[52%] lg:h-full shrink-0"
+          style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, #1a0802 0%, #0a0200 70%)' }}
         >
           {/* Section heading lives here on dark bg so it's always readable */}
-          <div className="text-center mb-4 px-4">
+          <div className="text-center mb-2 sm:mb-4 px-4">
             <p className="font-body font-bold text-[10px] tracking-[0.35em] uppercase mb-1.5" style={{ color: '#f3a213' }}>
               What We Stand For
             </p>
-            <h2 className="font-display font-bold text-white" style={{ fontSize: 'clamp(22px, 3vw, 36px)' }}>
+            <h2 className="font-display font-bold text-white" style={{ fontSize: 'clamp(20px, 3vw, 36px)' }}>
               Our Core <em className="not-italic" style={{ color: '#f3a213' }}>Values</em>
             </h2>
           </div>
@@ -348,7 +348,7 @@ export default function ValuesSection() {
             style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(243,162,19,0.5) 2px, rgba(243,162,19,0.5) 3px)' }}
           />
 
-          <div className="relative w-full max-w-[500px] aspect-square px-8">
+          <div className="relative w-full max-w-[220px] sm:max-w-[320px] lg:max-w-[500px] aspect-square px-4 sm:px-8">
             <motion.div
               key={`chakra-${activeValue}`}
               className="w-full h-full"
@@ -359,8 +359,8 @@ export default function ValuesSection() {
               <AshokChakraSVG active={activeValue} />
             </motion.div>
 
-            {/* Scroll hint */}
-            <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-40">
+            {/* Scroll hint — desktop only, no room for it in the mobile stacked layout */}
+            <div className="hidden lg:flex absolute -bottom-12 left-1/2 -translate-x-1/2 flex-col items-center gap-1.5 opacity-40">
               <p className="font-body text-[10px] tracking-widest uppercase text-amber-400">scroll</p>
               <motion.div className="w-px h-6 bg-amber-400/60" animate={{ scaleY: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
             </div>
@@ -368,7 +368,7 @@ export default function ValuesSection() {
         </div>
 
         {/* Right — Value detail */}
-        <div className="relative flex items-center" style={{ width: '48%', background: '#fdfbf7' }}>
+        <div className="relative flex items-center w-full lg:w-[48%] h-[48%] lg:h-full" style={{ background: '#fdfbf7' }}>
           {/* Decorative left edge */}
           <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${cv.color}60, transparent)` }} />
 

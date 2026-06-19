@@ -38,6 +38,8 @@ model Order {
   couponCode     String?
 
   status         OrderStatus @default(PENDING)
+  paymentMethod  String      @default("COD")
+  paymentId      String?
   trackingNumber String?
   adminNote      String?
   shippedAt      DateTime?

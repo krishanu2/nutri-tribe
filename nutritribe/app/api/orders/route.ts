@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
       orderId, name, email, phone,
       address, city, state, pincode,
       items, subtotal, delivery, discount, couponCode, total,
+      paymentMethod, paymentId,
     } = body;
 
     const orderItems = items as IncomingItem[];
@@ -67,6 +68,8 @@ export async function POST(req: NextRequest) {
           discount: discount || 0,
           couponCode: coupon ? coupon.code : null,
           total,
+          paymentMethod: paymentMethod === 'ONLINE' ? 'ONLINE' : 'COD',
+          paymentId: paymentId ?? null,
           items: {
             create: orderItems.map(i => ({
               productId: i.productId,

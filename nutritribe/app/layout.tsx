@@ -19,7 +19,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.nutritribe.com"),
+  metadataBase: new URL("https://www.nutritribe.shop"),
   title: {
     default: "NutriTribe — Premium Roasted Makhana & Healthy Fox Nuts",
     template: "%s",
