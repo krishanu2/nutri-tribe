@@ -7,6 +7,34 @@ import Link from 'next/link';
 import { CheckCircle, Package, MapPin, ArrowRight, Home } from 'lucide-react';
 import { useCart } from '@/lib/cartContext';
 
+/* ── Makhana orb (local, matches the site-wide inline-orb convention) ── */
+function MkOrb({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 30 30" fill="none">
+      <defs>
+        <radialGradient id="oc-mk" cx="33%" cy="28%" r="70%">
+          <stop offset="0%" stopColor="#fdfbf7" />
+          <stop offset="60%" stopColor="#e8d4a8" />
+          <stop offset="100%" stopColor="#b8916a" />
+        </radialGradient>
+      </defs>
+      <circle cx="15" cy="15" r="13" fill="url(#oc-mk)" />
+      <circle cx="10" cy="10" r="2.5" fill="#7a5c30" opacity="0.4" />
+      <ellipse cx="10" cy="10" rx="4" ry="2.5" fill="white" opacity="0.3" transform="rotate(-20 10 10)" />
+    </svg>
+  );
+}
+
+/* One-shot settling burst — scatters from center and fades, doesn't loop */
+const BURST_ORBS = [
+  { x: -90, y: -50, size: 14, delay: 0.15 },
+  { x: 90, y: -60, size: 11, delay: 0.22 },
+  { x: -110, y: 20, size: 9, delay: 0.18 },
+  { x: 110, y: 30, size: 13, delay: 0.28 },
+  { x: -50, y: -100, size: 10, delay: 0.32 },
+  { x: 60, y: -95, size: 8, delay: 0.2 },
+];
+
 interface ConfirmedOrder {
   orderId: string;
   date: string;
@@ -58,21 +86,31 @@ export default function OrderConfirmationPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          {/* Animated checkmark */}
-          <motion.div
-            className="w-24 h-24 rounded-full bg-sacred-leaf/10 border-2 border-sacred-leaf/30 flex items-center justify-center mx-auto mb-6"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.2 }}
-          >
+          {/* Animated checkmark + one-shot makhana burst */}
+          <div className="relative inline-block mb-6">
+            {BURST_ORBS.map((o, i) => (
+              <motion.div key={i} className="absolute left-1/2 top-1/2 pointer-events-none"
+                initial={{ x: 0, y: 0, opacity: 0, scale: 0.4 }}
+                animate={{ x: o.x, y: o.y, opacity: [0, 1, 0], scale: [0.4, 1, 0.7] }}
+                transition={{ duration: 1.1, delay: o.delay, ease: [0.22, 1, 0.36, 1] }}>
+                <MkOrb size={o.size} />
+              </motion.div>
+            ))}
             <motion.div
+              className="relative w-24 h-24 rounded-full bg-sacred-leaf/10 border-2 border-sacred-leaf/30 flex items-center justify-center mx-auto"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.5, type: 'spring', stiffness: 400, damping: 15 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.2 }}
             >
-              <CheckCircle size={44} className="text-sacred-leaf" />
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.5, type: 'spring', stiffness: 400, damping: 15 }}
+              >
+                <CheckCircle size={44} className="text-sacred-leaf" />
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
 
           <motion.h1
             className="font-display font-bold text-4xl md:text-5xl text-earthen-rust mb-3"
@@ -238,15 +276,21 @@ export default function OrderConfirmationPage() {
           </Link>
         </motion.div>
 
-        {/* Fun note */}
-        <motion.p
+        {/* Fun note — bracketed by a thin animated rule, echoing the brand-voice quote treatment used elsewhere */}
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.1 }}
-          className="text-center font-body italic text-sm text-earthen-rust/35 mt-10"
+          className="flex items-center gap-3 mt-10 max-w-md mx-auto"
         >
-          &ldquo;Snack Bold. Live Rooted. Your makhana is packed with love from Mithila.&rdquo;
-        </motion.p>
+          <motion.div className="flex-1 h-px origin-right" style={{ background: 'linear-gradient(to left, rgba(125,54,39,0.18), transparent)' }}
+            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.6, delay: 1.2 }} />
+          <p className="text-center font-body italic text-sm text-earthen-rust/40 shrink-0 px-1">
+            &ldquo;Snack Bold. Live Rooted.&rdquo;
+          </p>
+          <motion.div className="flex-1 h-px origin-left" style={{ background: 'linear-gradient(to right, rgba(125,54,39,0.18), transparent)' }}
+            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.6, delay: 1.2 }} />
+        </motion.div>
       </div>
     </div>
   );

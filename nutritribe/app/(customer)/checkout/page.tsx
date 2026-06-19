@@ -133,6 +133,8 @@ export default function CheckoutPage() {
             ? 'border-red-400 focus:border-red-400'
             : 'border-earthen-rust/15 focus:border-sun-harvest'
         }`}
+        onFocus={e => { if (!errors[name]) e.target.style.boxShadow = '0 0 0 3px rgba(243,162,19,0.18)'; }}
+        onBlur={e => { e.target.style.boxShadow = 'none'; }}
       />
       {errors[name] && (
         <p className="font-body text-xs text-red-500 mt-1">{errors[name]}</p>
@@ -154,17 +156,22 @@ export default function CheckoutPage() {
         {/* Step indicator */}
         <div className="flex items-center gap-3 mb-10">
           {['Cart', 'Shipping', 'Payment', 'Confirm'].map((step, i) => (
-            <div key={step} className="flex items-center gap-3">
+            <motion.div key={step} className="flex items-center gap-3"
+              initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.06 }}>
               <div className="flex items-center gap-2">
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center font-body font-bold text-xs ${
-                  i === 1 ? 'bg-sun-harvest text-white' : i < 1 ? 'bg-earthen-rust text-white' : 'bg-earthen-rust/10 text-earthen-rust/40'
-                }`}>{i + 1}</div>
+                <motion.div
+                  className={`w-7 h-7 rounded-full flex items-center justify-center font-body font-bold text-xs ${
+                    i === 1 ? 'bg-sun-harvest text-white' : i < 1 ? 'bg-earthen-rust text-white' : 'bg-earthen-rust/10 text-earthen-rust/40'
+                  }`}
+                  animate={i === 1 ? { boxShadow: ['0 0 0px rgba(243,162,19,0)', '0 0 10px rgba(243,162,19,0.5)', '0 0 0px rgba(243,162,19,0)'] } : {}}
+                  transition={i === 1 ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' } : {}}
+                >{i + 1}</motion.div>
                 <span className={`font-body text-xs font-semibold hidden sm:block ${
                   i === 1 ? 'text-sun-harvest' : i < 1 ? 'text-earthen-rust' : 'text-earthen-rust/35'
                 }`}>{step}</span>
               </div>
               {i < 3 && <div className="w-8 h-px bg-earthen-rust/15" />}
-            </div>
+            </motion.div>
           ))}
         </div>
 

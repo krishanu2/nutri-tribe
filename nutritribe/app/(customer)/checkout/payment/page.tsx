@@ -182,17 +182,22 @@ export default function PaymentPage() {
           {/* Step indicator */}
           <div className="flex items-center gap-3 mb-10">
             {['Cart', 'Shipping', 'Payment', 'Confirm'].map((step, i) => (
-              <div key={step} className="flex items-center gap-3">
+              <motion.div key={step} className="flex items-center gap-3"
+                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.06 }}>
                 <div className="flex items-center gap-2">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center font-body font-bold text-xs ${
-                    i === 2 ? 'bg-sun-harvest text-white' : i < 2 ? 'bg-earthen-rust text-white' : 'bg-earthen-rust/10 text-earthen-rust/40'
-                  }`}>{i + 1}</div>
+                  <motion.div
+                    className={`w-7 h-7 rounded-full flex items-center justify-center font-body font-bold text-xs ${
+                      i === 2 ? 'bg-sun-harvest text-white' : i < 2 ? 'bg-earthen-rust text-white' : 'bg-earthen-rust/10 text-earthen-rust/40'
+                    }`}
+                    animate={i === 2 ? { boxShadow: ['0 0 0px rgba(243,162,19,0)', '0 0 10px rgba(243,162,19,0.5)', '0 0 0px rgba(243,162,19,0)'] } : {}}
+                    transition={i === 2 ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' } : {}}
+                  >{i + 1}</motion.div>
                   <span className={`font-body text-xs font-semibold hidden sm:block ${
                     i === 2 ? 'text-sun-harvest' : i < 2 ? 'text-earthen-rust' : 'text-earthen-rust/35'
                   }`}>{step}</span>
                 </div>
                 {i < 3 && <div className="w-8 h-px bg-earthen-rust/15" />}
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -205,8 +210,10 @@ export default function PaymentPage() {
               <div className="space-y-4 mb-8">
                 {/* Online payment */}
                 {razorpayEnabled && (
-                  <button
+                  <motion.button
                     onClick={() => setMethod('online')}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.99 }}
                     className={`w-full text-left p-5 rounded-2xl border-2 transition-all ${
                       method === 'online'
                         ? 'border-sun-harvest bg-sun-harvest/5'
@@ -231,12 +238,14 @@ export default function PaymentPage() {
                         {method === 'online' && <div className="w-2.5 h-2.5 rounded-full bg-sun-harvest" />}
                       </div>
                     </div>
-                  </button>
+                  </motion.button>
                 )}
 
                 {/* COD */}
-                <button
+                <motion.button
                   onClick={() => setMethod('cod')}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.99 }}
                   className={`w-full text-left p-5 rounded-2xl border-2 transition-all ${
                     method === 'cod'
                       ? 'border-sun-harvest bg-sun-harvest/5'
@@ -261,7 +270,7 @@ export default function PaymentPage() {
                       {method === 'cod' && <div className="w-2.5 h-2.5 rounded-full bg-sun-harvest" />}
                     </div>
                   </div>
-                </button>
+                </motion.button>
               </div>
 
               {/* Trust badges */}
@@ -321,7 +330,7 @@ export default function PaymentPage() {
             </div>
 
             {/* Right — order summary */}
-            <div className="lg:col-span-1">
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="lg:col-span-1">
               <div className="sticky top-32 bg-white rounded-3xl border border-earthen-rust/10 shadow-card overflow-hidden">
                 <div className="px-6 py-5 border-b border-earthen-rust/8">
                   <h2 className="font-display font-bold text-lg text-earthen-rust">Order Summary</h2>
@@ -365,7 +374,7 @@ export default function PaymentPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

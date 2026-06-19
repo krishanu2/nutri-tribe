@@ -964,27 +964,60 @@ export default function OurStoryPage() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {FOUNDERS.map((f, i) => (
-              <motion.div key={f.name + i}
-                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.12 }}
-                className="relative rounded-2xl p-10 overflow-hidden"
-                style={{ background: 'linear-gradient(135deg, rgba(243,162,19,0.10), rgba(243,162,19,0.03))', border: '1px solid rgba(243,162,19,0.22)' }}
-              >
-                <motion.div className="absolute top-0 left-0 right-0 h-0.5"
-                  style={{ background: 'linear-gradient(to right, #f3a213, transparent)' }}
-                  initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.12 + 0.2 }} />
+            {FOUNDERS.map((f, i) => {
+              const accent = i % 2 === 0 ? '#f3a213' : '#7a4dff';
+              const initials = f.name.split(' ').map(w => w[0]).join('').toUpperCase();
+              return (
+                <motion.div key={f.name + i}
+                  initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.12 }}
+                  className="relative rounded-2xl p-10 overflow-hidden"
+                  style={{ background: `linear-gradient(135deg, ${accent}1a, ${accent}06)`, border: `1px solid ${accent}38` }}
+                >
+                  {/* Giant decorative quote mark watermark */}
+                  <p className="absolute -top-4 -left-2 font-display font-bold italic pointer-events-none select-none"
+                    style={{ fontSize: 'clamp(80px, 12vw, 160px)', color: `${accent}10`, lineHeight: 1 }} aria-hidden>
+                    &ldquo;
+                  </p>
 
-                <p className="font-body font-bold text-[10px] tracking-[0.45em] uppercase mb-5" style={{ color: 'rgba(243,162,19,0.5)' }}>
-                  Co-Founder
-                </p>
-                <p className="font-display text-xl md:text-2xl leading-relaxed mb-6" style={{ color: 'rgba(253,251,247,0.85)', fontStyle: 'italic' }}>
-                  &ldquo;{f.quote}&rdquo;
-                </p>
-                <p className="font-display font-bold text-lg" style={{ color: '#f3a213' }}>— {f.name}</p>
-              </motion.div>
-            ))}
+                  {/* Monogram badge — stamps in after the card fades in */}
+                  <motion.div
+                    initial={{ scale: 0, rotate: -8 }}
+                    whileInView={{ scale: 1, rotate: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 18, delay: i * 0.12 + 0.25 }}
+                    className="relative w-16 h-16 rounded-full flex items-center justify-center mb-6"
+                    style={{
+                      background: `radial-gradient(circle at 35% 28%, ${accent}45, ${accent}15 60%, transparent 100%)`,
+                      border: `1.5px solid ${accent}55`,
+                      boxShadow: `0 0 24px ${accent}25`,
+                    }}
+                  >
+                    <span className="font-display font-bold italic text-xl" style={{ color: accent }}>{initials}</span>
+                  </motion.div>
+
+                  <p className="relative font-display text-xl md:text-2xl leading-relaxed mb-6" style={{ color: 'rgba(253,251,247,0.88)', fontStyle: 'italic' }}>
+                    &ldquo;{f.quote}&rdquo;
+                  </p>
+
+                  {/* Ornamental divider — distinct from the Voices cards above */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex-1 h-px" style={{ background: `linear-gradient(to right, ${accent}50, transparent)` }} />
+                    <motion.div
+                      animate={{ rotate: [0, 45, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                      className="w-2 h-2 shrink-0"
+                      style={{ background: accent, opacity: 0.6 }}
+                    />
+                  </div>
+
+                  <p className="font-display font-bold text-lg" style={{ color: accent }}>{f.name}</p>
+                  <p className="font-body font-bold text-[10px] tracking-[0.45em] uppercase mt-1" style={{ color: `${accent}80` }}>
+                    Co-Founder
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
