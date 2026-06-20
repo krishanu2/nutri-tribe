@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
+import { upload } from '@vercel/blob/client';
 import { Loader2, ImagePlus, X } from 'lucide-react';
 
 interface Props {
@@ -12,23 +13,33 @@ interface Props {
   className?: string;
 }
 
+const MAX_FILE_BYTES = 20 * 1024 * 1024;
+
 export default function ImageUploadField({ value, onChange, label, hint, className = '' }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
   const handleFile = async (file: File) => {
+    if (file.size > MAX_FILE_BYTES) {
+      setError(`That photo is too large (${(file.size / 1024 / 1024).toFixed(1)}MB) — please use one under 20MB.`);
+      return;
+    }
     setUploading(true);
     setError('');
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || 'Upload failed');
-      onChange(data.url);
+      // Uploads go directly from the browser to Blob storage (not through our
+      // server), so there's no ~4.5MB request-body ceiling — large product
+      // photos straight from a phone camera work fine.
+      const ext = file.name.includes('.') ? file.name.split('.').pop() : 'jpg';
+      const pathname = `products/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const blob = await upload(pathname, file, {
+        access: 'public',
+        handleUploadUrl: '/api/admin/upload',
+      });
+      onChange(blob.url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed');
+      setError(err instanceof Error ? err.message : 'Upload failed. Please try again.');
     } finally {
       setUploading(false);
     }
