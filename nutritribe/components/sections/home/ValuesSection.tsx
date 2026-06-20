@@ -368,7 +368,7 @@ export default function ValuesSection() {
         </div>
 
         {/* Right — Value detail */}
-        <div className="relative flex items-center w-full lg:w-[48%] h-[48%] lg:h-full" style={{ background: '#fdfbf7' }}>
+        <div className="relative flex items-center w-full lg:w-[48%] h-[48%] lg:h-full overflow-y-auto" style={{ background: '#fdfbf7' }}>
           {/* Decorative left edge */}
           <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${cv.color}60, transparent)` }} />
 

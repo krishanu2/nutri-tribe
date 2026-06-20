@@ -28,6 +28,39 @@ interface FormData {
   pincode: string;
 }
 
+function Field({
+  label, name, type = 'text', placeholder, half = false, value, error, onChange,
+}: {
+  label: string; name: keyof FormData; type?: string; placeholder?: string; half?: boolean;
+  value: string; error?: string; onChange: (value: string) => void;
+}) {
+  return (
+    <div className={half ? 'col-span-1' : 'col-span-2'}>
+      <label className="block font-body font-semibold text-xs tracking-widest uppercase text-earthen-rust/60 mb-2">
+        {label}
+      </label>
+      <input
+        type={type}
+        name={name}
+        id={name}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className={`w-full font-body text-sm text-earthen-rust bg-white border-2 rounded-xl px-4 py-3 outline-none transition-all placeholder-earthen-rust/25 ${
+          error
+            ? 'border-red-400 focus:border-red-400'
+            : 'border-earthen-rust/15 focus:border-sun-harvest'
+        }`}
+        onFocus={e => { if (!error) e.target.style.boxShadow = '0 0 0 3px rgba(243,162,19,0.18)'; }}
+        onBlur={e => { e.target.style.boxShadow = 'none'; }}
+      />
+      {error && (
+        <p className="font-body text-xs text-red-500 mt-1">{error}</p>
+      )}
+    </div>
+  );
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, totalPrice, totalItems } = useCart();
@@ -114,34 +147,6 @@ export default function CheckoutPage() {
     setCouponError('');
   };
 
-  const Field = ({
-    label, name, type = 'text', placeholder, half = false,
-  }: {
-    label: string; name: keyof FormData; type?: string; placeholder?: string; half?: boolean;
-  }) => (
-    <div className={half ? 'col-span-1' : 'col-span-2'}>
-      <label className="block font-body font-semibold text-xs tracking-widest uppercase text-earthen-rust/60 mb-2">
-        {label}
-      </label>
-      <input
-        type={type}
-        value={form[name]}
-        onChange={e => setForm(f => ({ ...f, [name]: e.target.value }))}
-        placeholder={placeholder}
-        className={`w-full font-body text-sm text-earthen-rust bg-white border-2 rounded-xl px-4 py-3 outline-none transition-all placeholder-earthen-rust/25 ${
-          errors[name]
-            ? 'border-red-400 focus:border-red-400'
-            : 'border-earthen-rust/15 focus:border-sun-harvest'
-        }`}
-        onFocus={e => { if (!errors[name]) e.target.style.boxShadow = '0 0 0 3px rgba(243,162,19,0.18)'; }}
-        onBlur={e => { e.target.style.boxShadow = 'none'; }}
-      />
-      {errors[name] && (
-        <p className="font-body text-xs text-red-500 mt-1">{errors[name]}</p>
-      )}
-    </div>
-  );
-
   if (totalItems === 0) return null;
 
   return (
@@ -184,11 +189,16 @@ export default function CheckoutPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Full Name" name="name" placeholder="Arjun Kumar" />
-                <Field label="Email Address" name="email" type="email" placeholder="arjun@email.com" />
-                <Field label="Mobile Number" name="phone" type="tel" placeholder="9876543210" />
-                <Field label="Full Address" name="address" placeholder="House no., Street, Area" />
-                <Field label="City" name="city" placeholder="Patna" half />
+                <Field label="Full Name" name="name" placeholder="Arjun Kumar"
+                  value={form.name} error={errors.name} onChange={v => setForm(f => ({ ...f, name: v }))} />
+                <Field label="Email Address" name="email" type="email" placeholder="arjun@email.com"
+                  value={form.email} error={errors.email} onChange={v => setForm(f => ({ ...f, email: v }))} />
+                <Field label="Mobile Number" name="phone" type="tel" placeholder="9876543210"
+                  value={form.phone} error={errors.phone} onChange={v => setForm(f => ({ ...f, phone: v }))} />
+                <Field label="Full Address" name="address" placeholder="House no., Street, Area"
+                  value={form.address} error={errors.address} onChange={v => setForm(f => ({ ...f, address: v }))} />
+                <Field label="City" name="city" placeholder="Patna" half
+                  value={form.city} error={errors.city} onChange={v => setForm(f => ({ ...f, city: v }))} />
                 <div className="col-span-1">
                   <label className="block font-body font-semibold text-xs tracking-widest uppercase text-earthen-rust/60 mb-2">
                     State
@@ -207,7 +217,8 @@ export default function CheckoutPage() {
                   </select>
                   {errors.state && <p className="font-body text-xs text-red-500 mt-1">{errors.state}</p>}
                 </div>
-                <Field label="Pincode" name="pincode" placeholder="800001" half />
+                <Field label="Pincode" name="pincode" placeholder="800001" half
+                  value={form.pincode} error={errors.pincode} onChange={v => setForm(f => ({ ...f, pincode: v }))} />
               </div>
 
               {/* Delivery note */}

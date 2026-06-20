@@ -9,8 +9,11 @@ export default function FloatingCTA() {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
 
-  // Hide on products page (user is already there)
+  // Hide on products page (user is already there) and the homepage (its own
+  // scroll-driven sections, e.g. the Values section, run full-height and this
+  // floating pill ends up sitting on top of their text on mobile)
   const isProductsPage = pathname === '/products' || pathname?.startsWith('/products/');
+  const isHomePage = pathname === '/';
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > window.innerHeight * 0.85);
@@ -20,7 +23,7 @@ export default function FloatingCTA() {
 
   return (
     <AnimatePresence>
-      {visible && !isProductsPage && (
+      {visible && !isProductsPage && !isHomePage && (
         <motion.div
           className="fixed bottom-20 md:bottom-6 right-6 z-[9970]"
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
