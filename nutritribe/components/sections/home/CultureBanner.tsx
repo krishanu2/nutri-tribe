@@ -7,6 +7,7 @@ import {
   type MotionValue,
 } from 'framer-motion';
 import Link from 'next/link';
+import FarmerCharacter from '@/components/illustrations/FarmerCharacter';
 
 /* ══════════════════════════════════════════════════
    MADHUBANI CORNER
@@ -99,37 +100,7 @@ function WaderFarmer({ inView }: { inView: boolean }) {
   if (!inView) return null;
   return (
     <g>
-      {/* Water entry ripple */}
-      <motion.ellipse cx="0" cy="0" rx="14" ry="5" fill="none"
-        stroke="rgba(120,190,230,0.35)" strokeWidth="1.2"
-        animate={{ rx: [12, 32], ry: [4, 10], opacity: [0.5, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, delay: 0 }} />
-      {/* Lower body (fades into water — just a hint) */}
-      <rect x="-7" y="0" width="14" height="8" fill="#0e2440" fillOpacity="0.55" rx="2" />
-      {/* Dhoti */}
-      <path d="M -8 -5 C -10 -12 -9 -18 -8 -22 Q 0 -20 8 -22 C 9 -18 10 -12 8 -5 Q 4 -3 0 -3 Q -4 -3 -8 -5 Z"
-        fill="#fffdf5" fillOpacity="0.92" />
-      {/* Kurta (dark green) */}
-      <path d="M -8 -22 Q -9 -30 -8 -38 L 8 -38 Q 9 -30 8 -22 Q 4 -20 0 -20 Q -4 -20 -8 -22 Z"
-        fill="#2d5a1e" />
-      {/* Right arm — plunging into water */}
-      <motion.path d="M 8 -34 C 16 -22 18 -10 16 2"
-        stroke="#2d5a1e" strokeWidth="6" strokeLinecap="round" fill="none"
-        animate={{ d: ['M 8 -34 C 16 -22 18 -10 16 2', 'M 8 -34 C 14 -20 15 -8 13 4'] }}
-        transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
-      {/* Left arm — plunging (opposite phase) */}
-      <motion.path d="M -8 -34 C -16 -22 -18 -10 -16 2"
-        stroke="#2d5a1e" strokeWidth="6" strokeLinecap="round" fill="none"
-        animate={{ d: ['M -8 -34 C -16 -22 -18 -10 -16 2', 'M -8 -34 C -14 -18 -12 -6 -10 5'] }}
-        transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut', delay: 1 }} />
-      {/* Head */}
-      <circle cx="0" cy="-46" r="10" fill="#6a3a18" />
-      <ellipse cx="-9.5" cy="-45" rx="2.5" ry="3" fill="#5a2e14" />
-      {/* Turban — saffron/orange */}
-      <ellipse cx="0" cy="-53" rx="12.5" ry="5.5" fill="#e07010" />
-      <ellipse cx="0" cy="-55.5" rx="9" ry="4" fill="#f08a20" />
-      <path d="M -8 -53 Q 0 -59 8 -53" stroke="#c86010" strokeWidth="1.2" fill="none" opacity="0.45" strokeLinecap="round" />
-      <circle cx="10" cy="-52" r="3" fill="#e07010" />
+      <FarmerCharacter pose="wading" animate={inView} />
       {/* Sweat drop on forehead (working hard) */}
       <motion.ellipse cx="-3" cy="-42" rx="1.5" ry="2.5" fill="#93c5fd" fillOpacity="0.6"
         animate={{ opacity: [0, 0.7, 0] }} transition={{ duration: 3, repeat: Infinity, delay: 1 }} />
@@ -142,45 +113,9 @@ function WaderFarmer({ inView }: { inView: boolean }) {
 ══════════════════════════════════════════════════ */
 function ElderFarmer({ inView }: { inView: boolean }) {
   if (!inView) return null;
-  return (
-    <g>
-      {/* Small wooden stool */}
-      <rect x="-12" y="0" width="24" height="5" fill="#5c3010" rx="1.5" />
-      <rect x="-10" y="5" width="4" height="8" fill="#4a2808" />
-      <rect x="6" y="5" width="4" height="8" fill="#4a2808" />
-      {/* Flat kulo (bamboo sorting tray) in lap */}
-      <ellipse cx="8" cy="-10" rx="14" ry="5" fill="#8B6914" fillOpacity="0.85" />
-      <ellipse cx="8" cy="-10" rx="12" ry="3.5" fill="#a07820" fillOpacity="0.5" />
-      {/* Makhana seeds on tray */}
-      {[[-2,-12],[4,-12],[10,-11],[0,-10],[6,-10]].map(([sx,sy],i) => (
-        <circle key={i} cx={sx+8} cy={sy} r="2.2" fill="#ecdfc4" opacity="0.88" />
-      ))}
-      {/* Legs (seated, knees slightly raised) */}
-      <path d="M -8 -2 Q -12 8 -8 14" stroke="#e8d0a4" strokeWidth="7" strokeLinecap="round" fill="none" />
-      <path d="M 4 -2 Q 8 8 6 14" stroke="#e8d0a4" strokeWidth="7" strokeLinecap="round" fill="none" />
-      {/* Dhoti */}
-      <path d="M -9 -2 C -11 4 -10 10 -8 14 Q 0 12 6 14 C 8 10 9 4 7 -2 Q 3 0 0 0 Q -3 0 -9 -2 Z"
-        fill="#fdfbf7" fillOpacity="0.88" />
-      {/* Torso */}
-      <path d="M -8 -2 Q -9 -10 -8 -20 L 8 -20 Q 9 -10 8 -2 Q 4 0 0 0 Q -4 0 -8 -2 Z"
-        fill="#f0f0f0" />
-      {/* Right arm — sorting motion */}
-      <motion.path d="M 8 -16 C 18 -12 22 -8 20 -4"
-        stroke="#f0f0f0" strokeWidth="5.5" strokeLinecap="round" fill="none"
-        animate={{ d: ['M 8 -16 C 18 -12 22 -8 20 -4', 'M 8 -16 C 16 -10 18 -4 16 0'] }}
-        transition={{ duration: 2.5, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
-      {/* Left arm — resting on tray edge */}
-      <path d="M -8 -16 C -16 -10 -16 -6 -14 -4" stroke="#f0f0f0" strokeWidth="5.5" strokeLinecap="round" fill="none" />
-      {/* Head */}
-      <circle cx="0" cy="-30" r="10" fill="#6a3a18" />
-      <ellipse cx="-9.5" cy="-29" rx="2.5" ry="3" fill="#5a2e14" />
-      {/* Turban — grey (elder) */}
-      <ellipse cx="0" cy="-37" rx="12.5" ry="5.5" fill="#888888" />
-      <ellipse cx="0" cy="-39.5" rx="9" ry="4" fill="#999999" />
-      <path d="M -8 -37 Q 0 -43 8 -37" stroke="#777" strokeWidth="1.2" fill="none" opacity="0.4" strokeLinecap="round" />
-      <circle cx="10" cy="-36" r="3" fill="#888888" />
-    </g>
-  );
+  /* Grey turban is a deliberate narrative choice (signals "the elder"), not
+     an inconsistency — everything else stays on the locked brand palette */
+  return <FarmerCharacter pose="seated-sorting" animate={inView} turbanColor="#888888" turbanColorDark="#999999" />;
 }
 
 /* ══════════════════════════════════════════════════
@@ -541,77 +476,22 @@ function CinematicFarmerScene({ inView }: { inView: boolean }) {
                 <ellipse cx="0" cy="2" rx="12" ry="3.5" fill="rgba(0,0,0,0.25)" />
                 <AnimatePresence>
                   {!atPond && (
-                    <motion.g initial={{ opacity:1 }} exit={{ opacity:0 }} transition={{ duration:0.4 }}>
-                      <motion.div className="absolute"/>
+                    <motion.g initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
                       {/* Ground light from lantern */}
                       <motion.ellipse cx="22" cy="0" rx="16" ry="6" fill="rgba(243,162,19,0.12)"
-                        animate={{ rx:[14,18,14], opacity:[0.7,1,0.7] }} transition={{ duration:1.5, repeat:Infinity }} />
-                      {/* Dhoti */}
-                      <path d="M -9 -28 C -11 -20 -11 -14 -9 -8 Q -4 -6 0 -6 Q 4 -6 9 -8 C 11 -14 11 -20 9 -28 Q 5 -26 0 -26 Q -5 -26 -9 -28 Z" fill="#e8d0a4" />
-                      {/* Legs */}
-                      <motion.path d="M -4 -8 C -7 -4 -7 -1 -6 2" stroke="#e8d0a4" strokeWidth="7" strokeLinecap="round" fill="none"
-                        animate={{ d:['M -4 -8 C -7 -4 -7 -1 -6 2','M -4 -8 C -2 -4 -2 -1 -3 2'] }}
-                        transition={{ duration:0.48, repeat:Infinity, repeatType:'reverse' }} />
-                      <motion.path d="M 4 -8 C 2 -4 2 -1 3 2" stroke="#e8d0a4" strokeWidth="7" strokeLinecap="round" fill="none"
-                        animate={{ d:['M 4 -8 C 2 -4 2 -1 3 2','M 4 -8 C 7 -4 7 -1 6 2'] }}
-                        transition={{ duration:0.48, repeat:Infinity, repeatType:'reverse', delay:0.24 }} />
-                      {/* Kurta */}
-                      <path d="M -9 -28 Q -10 -36 -9 -44 L 9 -44 Q 10 -36 9 -28 Q 5 -26 0 -26 Q -5 -26 -9 -28 Z" fill="#5c3010" />
-                      {/* Left arm */}
-                      <motion.path d="M -9 -40 C -18 -32 -20 -20 -20 -8" stroke="#5c3010" strokeWidth="6" strokeLinecap="round" fill="none"
-                        animate={{ d:['M -9 -40 C -18 -32 -20 -20 -20 -8','M -9 -40 C -14 -28 -14 -16 -12 -4'] }}
-                        transition={{ duration:0.48, repeat:Infinity, repeatType:'reverse' }} />
-                      <motion.circle cx="-20" cy="-8" r="3.5" fill="#6a3a18"
-                        animate={{ cx:[-20,-12], cy:[-8,-4] }} transition={{ duration:0.48, repeat:Infinity, repeatType:'reverse' }} />
-                      {/* Right arm with lantern */}
-                      <motion.path d="M 9 -40 C 18 -32 20 -22 20 -10" stroke="#5c3010" strokeWidth="6" strokeLinecap="round" fill="none"
-                        animate={{ d:['M 9 -40 C 18 -32 20 -22 20 -10','M 9 -40 C 14 -28 15 -16 13 -4'] }}
-                        transition={{ duration:0.48, repeat:Infinity, repeatType:'reverse', delay:0.24 }} />
-                      <motion.circle cx="20" cy="-10" r="11" fill="url(#fc-lantern)"
-                        animate={{ opacity:[0.55,1,0.55], r:[10,14,10] }} transition={{ duration:1.4, repeat:Infinity }} />
-                      <motion.rect x="17" y="-14" width="7" height="8" rx="1.8" fill="#f3a213"
-                        animate={{ opacity:[0.7,1,0.75,0.95,0.7] }} transition={{ duration:1.8, repeat:Infinity }} />
-                      {/* Head with bounce */}
-                      <motion.g animate={{ y:[0,-2.5,0] }} transition={{ duration:0.48, repeat:Infinity }}>
-                        <circle cx="0" cy="-58" r="10.5" fill="#6a3a18" />
-                        <ellipse cx="-10" cy="-57" rx="2.5" ry="3.2" fill="#5a2e14" />
-                        {/* RED turban */}
-                        <ellipse cx="0" cy="-65" rx="13" ry="5.8" fill="#8B1a10" />
-                        <ellipse cx="0" cy="-67.5" rx="9.5" ry="4" fill="#a02015" />
-                        <path d="M -8 -65 Q 0 -71 8 -65" stroke="#c03020" strokeWidth="1.2" fill="none" opacity="0.45" strokeLinecap="round" />
-                        <circle cx="10" cy="-64" r="3.2" fill="#8B1a10" />
-                        <motion.path d="M 10 -64 Q 15 -56 13 -48 Q 11 -42 14 -35"
-                          stroke="#8B1a10" strokeWidth="2.8" fill="none" strokeLinecap="round"
-                          animate={{ d:['M 10 -64 Q 15 -56 13 -48 Q 11 -42 14 -35','M 10 -64 Q 17 -56 15 -48 Q 13 -42 16 -35'] }}
-                          transition={{ duration:1.2, repeat:Infinity, repeatType:'reverse', ease:'easeInOut' }} />
-                        {/* Basket */}
-                        <ellipse cx="0" cy="-73" rx="8.5" ry="3.8" fill="#8B6914" opacity="0.92" />
-                        <path d="M -6 -73 Q 0 -79 6 -73" stroke="#a07820" strokeWidth="2.8" fill="none" />
-                        {[[-3,-76],[0,-77],[3,-76]].map(([sx,sy],i)=>(
-                          <circle key={i} cx={sx} cy={sy} r="2.5" fill="#ecdfc4" opacity="0.88" />
-                        ))}
-                      </motion.g>
+                        animate={{ rx: [14, 18, 14], opacity: [0.7, 1, 0.7] }} transition={{ duration: 1.5, repeat: Infinity }} />
+                      <g transform="scale(0.7)">
+                        <FarmerCharacter pose="walking" accessory="basket-head" animate />
+                      </g>
                     </motion.g>
                   )}
                 </AnimatePresence>
                 {/* Harvesting pose */}
                 <AnimatePresence>
                   {atPond && (
-                    <motion.g initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ duration:0.6 }}>
-                      <path d="M -5 0 L -7 -26" stroke="#e8d0a4" strokeWidth="7.5" strokeLinecap="round" fill="none" />
-                      <path d="M 5 0 L 8 -26" stroke="#e8d0a4" strokeWidth="7.5" strokeLinecap="round" fill="none" />
-                      <path d="M -9 -26 C -11 -20 -10 -14 -8 -8 Q -4 -6 0 -6 Q 4 -6 8 -8 C 10 -14 11 -20 9 -26 Q 5 -24 0 -24 Q -5 -24 -9 -26 Z" fill="#e8d0a4" />
-                      <g transform="rotate(38, 0, -26)">
-                        <path d="M -9 -26 Q -10 -34 -9 -44 L 9 -44 Q 10 -34 9 -26 Q 5 -24 0 -24 Q -5 -24 -9 -26 Z" fill="#5c3010" />
-                        <motion.path d="M 9 -38 Q 18 -22 24 -5 Q 26 4 28 14"
-                          stroke="#5c3010" strokeWidth="6" strokeLinecap="round" fill="none"
-                          animate={{ d:['M 9 -38 Q 18 -22 24 -5 Q 26 4 28 14','M 9 -38 Q 16 -20 22 -3 Q 23 6 25 16'] }}
-                          transition={{ duration:1.6, repeat:Infinity, repeatType:'reverse' }} />
-                        <path d="M -9 -38 L -22 -30" stroke="#5c3010" strokeWidth="5.5" strokeLinecap="round" fill="none" />
-                        <circle cx="0" cy="-56" r="10.5" fill="#6a3a18" />
-                        <ellipse cx="0" cy="-63" rx="13" ry="5.5" fill="#8B1a10" />
-                        <ellipse cx="0" cy="-65.5" rx="9.5" ry="3.8" fill="#a02015" />
-                        <circle cx="10" cy="-62" r="3.2" fill="#8B1a10" />
+                    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+                      <g transform="translate(0, 26) scale(0.55)">
+                        <FarmerCharacter pose="bending" animate />
                       </g>
                     </motion.g>
                   )}
@@ -619,50 +499,17 @@ function CinematicFarmerScene({ inView }: { inView: boolean }) {
               </motion.g>
             )}
 
-            {/* FARMER 3 "The Carrier" — blue kurta, walks from right */}
+            {/* FARMER 3 "The Carrier" — walks from right, brings the overflowing basket home */}
             {inView && farmer3Walking && (
               <motion.g
-                initial={{ x:685, y:232 }}
-                animate={farmer3Arrived ? { x:335, y:248 } : { x:[685,335], y:[232,248] }}
-                transition={!farmer3Arrived ? { duration:3.8, ease:'linear' } : { duration:0 }}
+                initial={{ x: 685, y: 232 }}
+                animate={farmer3Arrived ? { x: 335, y: 248 } : { x: [685, 335], y: [232, 248] }}
+                transition={!farmer3Arrived ? { duration: 3.8, ease: 'linear' } : { duration: 0 }}
               >
                 <ellipse cx="0" cy="2" rx="11" ry="3" fill="rgba(0,0,0,0.22)" />
-                {/* Dhoti */}
-                <path d="M -8 -26 C -10 -18 -10 -12 -8 -6 Q -4 -4 0 -4 Q 4 -4 8 -6 C 10 -12 10 -18 8 -26 Q 5 -24 0 -24 Q -5 -24 -8 -26 Z" fill="#fdfbf7" fillOpacity="0.9" />
-                {/* Legs walking */}
-                <motion.path d="M -4 -6 C -7 -2 -7 1 -6 4" stroke="#e8d0a4" strokeWidth="7" strokeLinecap="round" fill="none"
-                  animate={{ d:['M -4 -6 C -7 -2 -7 1 -6 4','M -4 -6 C -2 -2 -2 1 -3 4'] }}
-                  transition={{ duration:0.48, repeat:Infinity, repeatType:'reverse', delay:0.12 }} />
-                <motion.path d="M 4 -6 C 2 -2 2 1 3 4" stroke="#e8d0a4" strokeWidth="7" strokeLinecap="round" fill="none"
-                  animate={{ d:['M 4 -6 C 2 -2 2 1 3 4','M 4 -6 C 7 -2 7 1 6 4'] }}
-                  transition={{ duration:0.48, repeat:Infinity, repeatType:'reverse', delay:0.36 }} />
-                {/* Blue kurta */}
-                <path d="M -8 -26 Q -9 -34 -8 -42 L 8 -42 Q 9 -34 8 -26 Q 5 -24 0 -24 Q -5 -24 -8 -26 Z" fill="#1e3a6e" />
-                {/* Arms (balance) */}
-                <motion.path d="M -8 -38 C -16 -30 -18 -20 -16 -8" stroke="#1e3a6e" strokeWidth="6" strokeLinecap="round" fill="none"
-                  animate={{ d:['M -8 -38 C -16 -30 -18 -20 -16 -8','M -8 -38 C -13 -26 -13 -14 -10 -4'] }}
-                  transition={{ duration:0.48, repeat:Infinity, repeatType:'reverse', delay:0.12 }} />
-                <motion.path d="M 8 -38 C 16 -30 18 -20 16 -8" stroke="#1e3a6e" strokeWidth="6" strokeLinecap="round" fill="none"
-                  animate={{ d:['M 8 -38 C 16 -30 18 -20 16 -8','M 8 -38 C 13 -26 13 -14 10 -4'] }}
-                  transition={{ duration:0.48, repeat:Infinity, repeatType:'reverse', delay:0.36 }} />
-                {/* Head with bounce */}
-                <motion.g animate={{ y:[0,-2.5,0] }} transition={{ duration:0.48, repeat:Infinity }}>
-                  <circle cx="0" cy="-52" r="10" fill="#6a3a18" />
-                  <ellipse cx="-9.5" cy="-51" rx="2.5" ry="3" fill="#5a2e14" />
-                  {/* WHITE turban */}
-                  <ellipse cx="0" cy="-59" rx="12.5" ry="5.5" fill="#ddd8cc" />
-                  <ellipse cx="0" cy="-61.5" rx="9" ry="4" fill="#f0ece4" />
-                  <circle cx="9.5" cy="-58" r="3" fill="#ddd8cc" />
-                  {/* Large basket (overflowing with makhana) */}
-                  <ellipse cx="0" cy="-68" rx="11" ry="5" fill="#8B6914" opacity="0.9" />
-                  {/* Basket sides */}
-                  <path d="M -8 -68 Q -10 -78 -8 -82 Q 0 -84 8 -82 Q 10 -78 8 -68" fill="#7a5a12" fillOpacity="0.8" />
-                  <path d="M -9 -68 Q 0 -75 9 -68" stroke="#a07820" strokeWidth="2.5" fill="none" />
-                  {/* Overflowing makhana balls */}
-                  {[[-4,-80],[-1,-83],[3,-80],[6,-78],[-6,-76],[0,-77],[5,-75]].map(([sx,sy],i)=>(
-                    <circle key={i} cx={sx} cy={sy} r="2.8" fill="#ecdfc4" opacity="0.90" />
-                  ))}
-                </motion.g>
+                <g transform="scale(0.62)">
+                  <FarmerCharacter pose="walking" accessory="basket-head" animate />
+                </g>
               </motion.g>
             )}
           </ParallaxLayer>

@@ -1,28 +1,34 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import FarmerCharacter from './FarmerCharacter';
 
 interface HarvestStorySceneProps {
   inView?: boolean;
   className?: string;
 }
 
-/* ── Reusable: a simple lotus flower centred at (cx, cy) with given scale ── */
+/* ── Reusable: a lotus flower centred at (cx, cy) with given scale.
+   Petals are no longer perfectly even — each gets a small random-ish
+   offset in angle/length so the flower reads as grown, not stamped. ── */
 function Lotus({ cx, cy, s = 1, color = '#e8a0c0' }: { cx: number; cy: number; s?: number; color?: string }) {
-  const petals = [0, 51, 102, 153, 204, 255, 306];
+  const petals = [
+    { a: 2,   len: 10.4 }, { a: 50,  len: 9.6 }, { a: 99,  len: 10.7 }, { a: 151, len: 9.3 },
+    { a: 207, len: 10.2 }, { a: 257, len: 9.8 },  { a: 309, len: 10.5 },
+  ];
   return (
     <g transform={`translate(${cx},${cy}) scale(${s})`}>
-      {petals.map((a, i) => {
+      {petals.map(({ a, len }, i) => {
         const rad = (a * Math.PI) / 180;
         return (
           <ellipse
             key={i}
             cx={12 * Math.cos(rad)}
             cy={12 * Math.sin(rad)}
-            rx={5}
-            ry={10}
+            rx={4.6 + (i % 2) * 0.6}
+            ry={len}
             fill={color}
-            opacity={0.88}
+            opacity={0.84 + (i % 3) * 0.04}
             transform={`rotate(${a} ${12 * Math.cos(rad)} ${12 * Math.sin(rad)})`}
           />
         );
@@ -33,12 +39,14 @@ function Lotus({ cx, cy, s = 1, color = '#e8a0c0' }: { cx: number; cy: number; s
   );
 }
 
-/* ── A makhana seed (small sphere look) ── */
-function MkSeed({ cx, cy, r = 6 }: { cx: number; cy: number; r?: number }) {
+/* ── Footprints — the connective thread carrying the farmer's journey from frame to frame ── */
+function Footprints({ points, opacity = 0.18 }: { points: [number, number, number][]; opacity?: number }) {
   return (
     <g>
-      <circle cx={cx} cy={cy} r={r} fill="#f0e4c8" />
-      <circle cx={cx - r * 0.28} cy={cy - r * 0.28} r={r * 0.35} fill="rgba(255,255,255,0.55)" />
+      {points.map(([x, y, rot], i) => (
+        <ellipse key={i} cx={x} cy={y} rx={3} ry={5} fill="#0a1408" opacity={opacity}
+          transform={`rotate(${rot} ${x} ${y})`} />
+      ))}
     </g>
   );
 }
@@ -183,49 +191,15 @@ export default function HarvestStoryScene({ inView = true, className = '' }: Har
         {/* Soft moon glow */}
         <circle cx="178" cy="85" r="26" fill="#b0c8e0" opacity="0.07" />
 
-        {/* ── FARMER WALKING — proper proportions ── */}
-        {/* The farmer is a warm silhouette, not pure black */}
-        <motion.g
-          animate={anim ? { x: [0, 55, 0] } : {}}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          {/* Shadow */}
-          <ellipse cx="70" cy="263" rx="10" ry="3" fill="rgba(0,0,0,0.35)" />
-          {/* Legs — alternating walk cycle */}
-          <motion.path d="M67 262 Q64 255 62 248" stroke="#1a2a0a" strokeWidth="6" strokeLinecap="round" fill="none"
-            animate={anim ? { d: ['M67 262 Q64 255 62 248', 'M67 262 Q70 255 72 248'] } : {}}
-            transition={{ duration: 0.52, repeat: Infinity, repeatType: 'reverse' }} />
-          <motion.path d="M73 262 Q76 254 78 247" stroke="#1a2a0a" strokeWidth="6" strokeLinecap="round" fill="none"
-            animate={anim ? { d: ['M73 262 Q76 254 78 247', 'M73 262 Q70 254 68 247'] } : {}}
-            transition={{ duration: 0.52, repeat: Infinity, repeatType: 'reverse', delay: 0.26 }} />
-          {/* Dhoti / lower body */}
-          <path d="M62 248 Q70 252 78 248 L76 234 Q70 238 64 234 Z" fill="#2a3a1a" />
-          {/* Torso / kurta */}
-          <rect x="62" y="220" width="16" height="16" rx="3" fill="#3a2808" />
-          {/* Arms swinging */}
-          <motion.path d="M62 225 Q55 230 52 236" stroke="#3a2808" strokeWidth="5" strokeLinecap="round" fill="none"
-            animate={anim ? { d: ['M62 225 Q55 230 52 236', 'M62 225 Q57 232 56 238'] } : {}}
-            transition={{ duration: 0.52, repeat: Infinity, repeatType: 'reverse' }} />
-          <motion.path d="M78 225 Q85 230 88 236" stroke="#3a2808" strokeWidth="5" strokeLinecap="round" fill="none"
-            animate={anim ? { d: ['M78 225 Q85 230 88 236', 'M78 225 Q83 232 84 238'] } : {}}
-            transition={{ duration: 0.52, repeat: Infinity, repeatType: 'reverse', delay: 0.26 }} />
-          {/* Head */}
-          <circle cx="70" cy="213" r="9" fill="#5a3018" />
-          {/* Turban */}
-          <ellipse cx="70" cy="207" rx="11" ry="4" fill="#8B1a10" />
-          <ellipse cx="70" cy="205" rx="8" ry="3" fill="#a02018" />
-          {/* Basket on back */}
-          <path d="M78 218 Q85 214 88 218 Q86 228 82 230 Q78 228 78 218 Z" fill="#8B5a14" opacity="0.88" />
-          <ellipse cx="83" cy="218" rx="5" ry="2" fill="#a07020" opacity="0.9" />
-        </motion.g>
+        {/* Footprints behind the farmer, fading toward the pond — the journey's first thread */}
+        <Footprints points={[[58, 263, -8], [66, 263.5, -4], [74, 264, 0], [82, 263.5, 4], [90, 263, 8]]} opacity={0.14} />
 
-        {/* Lantern glow ahead of farmer — guiding light */}
-        <motion.circle cx="118" cy="258" r="10" fill="#f3a213" opacity="0"
-          animate={anim ? { opacity: [0, 0.12, 0.06, 0.14, 0] } : {}}
-          transition={{ duration: 4, repeat: Infinity, delay: 1 }} />
-        <motion.circle cx="118" cy="258" r="4" fill="#ffe08a" opacity="0"
-          animate={anim ? { opacity: [0, 0.6, 0.4, 0.7, 0] } : {}}
-          transition={{ duration: 4, repeat: Infinity, delay: 1 }} />
+        {/* ── FARMER WALKING — shared character, lantern lighting the way ── */}
+        <motion.g animate={anim ? { x: [0, 55, 0] } : {}} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}>
+          <g transform="translate(70, 262) scale(0.92)">
+            <FarmerCharacter pose="walking" accessory="lantern" animate={anim} />
+          </g>
+        </motion.g>
 
         {/* Frame label */}
         <rect x="20" y="298" width="110" height="34" rx="3" fill="rgba(0,0,0,0.55)" />
@@ -251,15 +225,23 @@ export default function HarvestStoryScene({ inView = true, className = '' }: Har
         <path d="M250 195 Q280 182 305 190 Q325 178 348 188 Q365 180 390 192 Q410 182 430 192 L460 192 L460 205 L250 205 Z"
           fill="#0a1e10" opacity="0.55" />
 
+        {/* Faint footprints at the shoreline edge, continuing the thread from Frame 1 */}
+        <Footprints points={[[262, 222, 4], [270, 221.5, 0]]} opacity={0.1} />
+
+        {/* The farmer's lantern, set down at the water's edge — echoes Frame 1's light, signals same journey */}
+        <motion.circle cx="266" cy="218" r="8" fill="#f3a213" opacity="0"
+          animate={anim ? { opacity: [0, 0.1, 0.05, 0.12, 0] } : {}}
+          transition={{ duration: 4, repeat: Infinity, delay: 1.5 }} />
+
         {/* Water surface — waist level at y=225 */}
         <rect x="250" y="225" width="210" height="110" fill="url(#f2-water)" />
-        {/* Animated water surface */}
+        {/* Animated water surface — same cadence as the ripple rings below for cohesion */}
         <motion.path
           d="M250 225 Q275 221 300 225 Q325 229 355 224 Q385 219 410 224 Q435 229 460 225"
           stroke="#2a6a4a" strokeWidth="1.5" fill="none" opacity="0.7"
           animate={anim ? { d: ['M250 225 Q275 221 300 225 Q325 229 355 224 Q385 219 410 224 Q435 229 460 225',
             'M250 226 Q275 229 300 224 Q325 220 355 225 Q385 230 410 225 Q435 220 460 226'] } : {}}
-          transition={{ duration: 3, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
+          transition={{ duration: 2.5, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
         {/* Water shimmer lines */}
         {[232, 240, 250].map((y, i) => (
           <motion.line key={i} x1={265 + i * 15} y1={y} x2={310 + i * 20} y2={y}
@@ -278,29 +260,11 @@ export default function HarvestStoryScene({ inView = true, className = '' }: Har
         <Lotus cx={348} cy={210} s={1.1} color="#9b59b6" />
         <Lotus cx={418} cy={215} s={0.85} color="#e89ab8" />
 
-        {/* ── FARMER WAIST DEEP — proper warm figure ── */}
-        {/* Below-water legs (just faint shapes in water) */}
-        <path d="M351 225 L347 280 Q355 285 363 280 L359 225 Z" fill="#1a3a28" opacity="0.4" />
-        {/* Kurta / torso */}
-        <rect x="342" y="178" width="26" height="50" rx="5" fill="#7a3a14" />
-        {/* Dhoti draped — at waterline */}
-        <path d="M340 225 Q355 232 370 225 Q368 218 355 215 Q342 218 340 225 Z" fill="#5a2a0a" opacity="0.9" />
-        {/* Arms spread wide, like they're feeling for seeds */}
-        <path d="M342 192 Q328 196 318 202" stroke="#7a3a14" strokeWidth="8" strokeLinecap="round" fill="none" />
-        <path d="M368 192 Q382 196 392 202" stroke="#7a3a14" strokeWidth="8" strokeLinecap="round" fill="none" />
-        {/* Hands */}
-        <circle cx="317" cy="203" r="4.5" fill="#5a3010" />
-        <circle cx="393" cy="203" r="4.5" fill="#5a3010" />
-        {/* Neck + Head */}
-        <rect x="352" y="173" width="6" height="8" rx="2" fill="#6a3818" />
-        <circle cx="355" cy="166" r="12" fill="#6a3818" />
-        {/* Turban */}
-        <ellipse cx="355" cy="158" rx="14" ry="5.5" fill="#c82010" />
-        <ellipse cx="355" cy="156" rx="10" ry="4" fill="#e02818" />
-        {/* Face suggestion — eyes */}
-        <circle cx="351" cy="166" r="1.5" fill="#1a0800" />
-        <circle cx="359" cy="166" r="1.5" fill="#1a0800" />
-        {/* Water ripple around farmer */}
+        {/* ── FARMER WAIST DEEP — shared character, reaching for seeds ── */}
+        <g transform="translate(355, 225) scale(0.95)">
+          <FarmerCharacter pose="wading" accessory="basket-arms" animate={anim} />
+        </g>
+        {/* Water ripple around farmer — same 2.5s cadence used for the water-surface motion above */}
         {[0, 1, 2].map((i) => (
           <motion.ellipse key={i} cx="355" cy="225" fill="none"
             stroke="rgba(80,180,130,0.4)" strokeWidth="1"
@@ -370,42 +334,10 @@ export default function HarvestStoryScene({ inView = true, className = '' }: Har
           </motion.g>
         ))}
 
-        {/* ── DIVER — horizontal body swimming underwater ── */}
-        {/* The diver is swimming horizontally, body bent slightly forward */}
-        {/* Legs kicking behind (right side of frame) */}
-        <motion.path d="M640 188 Q650 180 658 175" stroke="#6a3818" strokeWidth="8" strokeLinecap="round" fill="none"
-          animate={anim ? { d: ['M640 188 Q650 180 658 175', 'M640 188 Q648 185 655 183'] } : {}}
-          transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }} />
-        <motion.path d="M640 196 Q652 194 660 197" stroke="#6a3818" strokeWidth="8" strokeLinecap="round" fill="none"
-          animate={anim ? { d: ['M640 196 Q652 194 660 197', 'M640 196 Q650 200 656 205'] } : {}}
-          transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse', delay: 0.3 }} />
-        {/* Dhoti fabric streaming back */}
-        <path d="M635 190 Q648 188 660 186 Q655 196 642 198 Z" fill="#e8d0a4" opacity="0.6" />
-        {/* Torso — horizontal */}
-        <rect x="590" y="180" width="52" height="20" rx="6" fill="#5a3010" transform="rotate(-8 616 190)" />
-        {/* Head */}
-        <circle cx="585" cy="186" r="13" fill="#6a3818" />
-        {/* Turban loose in water */}
-        <path d="M575 179 Q585 173 597 177 Q594 183 585 184 Q576 182 575 179 Z" fill="#c82010" opacity="0.85" />
-        {/* Arms reaching DOWN toward seeds */}
-        <path d="M592 198 Q585 218 580 238" stroke="#5a3010" strokeWidth="7" strokeLinecap="round" fill="none" />
-        <motion.path d="M600 200 Q598 222 596 244"
-          stroke="#5a3010" strokeWidth="7" strokeLinecap="round" fill="none"
-          animate={anim ? { d: ['M600 200 Q598 222 596 244', 'M600 200 Q603 222 606 240'] } : {}}
-          transition={{ duration: 1.8, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
-        {/* Hands near the seeds */}
-        <circle cx="579" cy="240" r="5" fill="#5a3010" />
-        <motion.circle cx="596" cy="244" r="5" fill="#5a3010"
-          animate={anim ? { cy: [244, 256, 244] } : {}}
-          transition={{ duration: 1.8, repeat: Infinity, repeatType: 'reverse' }} />
-
-        {/* Bubbles rising from diver */}
-        {[[584, 178, 0], [590, 175, 0.7], [578, 180, 1.4], [594, 172, 0.35]].map(([x, y, d], i) => (
-          <motion.circle key={i} cx={x} cy={y} r={2.5 + (i % 3)}
-            fill="none" stroke="rgba(120,210,180,0.6)" strokeWidth="1"
-            animate={anim ? { cy: [y, y - 60, y - 100], opacity: [0.7, 0.4, 0] } : {}}
-            transition={{ duration: 2.8, repeat: Infinity, delay: d, ease: 'easeOut' }} />
-        ))}
+        {/* ── DIVER — shared character, horizontal, reaching for seeds ── */}
+        <g transform="translate(560, 190) scale(0.92)">
+          <FarmerCharacter pose="diving" animate={anim} />
+        </g>
 
         {/* Frame label */}
         <rect x="484" y="298" width="100" height="34" rx="3" fill="rgba(0,0,0,0.55)" />
@@ -435,6 +367,9 @@ export default function HarvestStoryScene({ inView = true, className = '' }: Har
           animate={anim ? { opacity: [0.3, 0.7, 0.3] } : {}}
           transition={{ duration: 3, repeat: Infinity }} />
 
+        {/* Footprints arriving at the harvest spot — the journey's final thread */}
+        <Footprints points={[[760, 263, -6], [768, 263.5, -2], [776, 264, 2]]} opacity={0.16} />
+
         {/* Sun at horizon */}
         <motion.circle cx="819" cy="258" r={25}
           fill="#ffe040" opacity="0.95"
@@ -459,53 +394,10 @@ export default function HarvestStoryScene({ inView = true, className = '' }: Har
         <Lotus cx={738} cy={254} s={0.75} color="#e8a0c0" />
         <Lotus cx={770} cy={250} s={0.65} color="#9b59b6" />
 
-        {/* ── FARMER STANDING PROUD — holding basket ── */}
-        {/* Legs */}
-        <path d="M806 258 L802 240" stroke="#e8d0a4" strokeWidth="7" strokeLinecap="round" fill="none" />
-        <path d="M814 258 L818 240" stroke="#e8d0a4" strokeWidth="7" strokeLinecap="round" fill="none" />
-        {/* Dhoti */}
-        <path d="M798 240 Q808 248 820 240 Q817 228 808 226 Q799 228 798 240 Z" fill="#d4b870" opacity="0.9" />
-        {/* Torso */}
-        <rect x="798" y="200" width="20" height="28" rx="4" fill="#7a3a14" />
-        {/* Arms cradling the basket */}
-        <path d="M798 212 Q790 220 786 232" stroke="#7a3a14" strokeWidth="7" strokeLinecap="round" fill="none" />
-        <path d="M818 212 Q826 220 830 232" stroke="#7a3a14" strokeWidth="7" strokeLinecap="round" fill="none" />
-        {/* Hands at basket level */}
-        <circle cx="786" cy="234" r="4.5" fill="#6a3010" />
-        <circle cx="830" cy="234" r="4.5" fill="#6a3010" />
-
-        {/* BASKET — proper wicker basket with makhana inside */}
-        <path d="M784 232 Q808 244 832 232 Q835 250 808 256 Q781 250 784 232 Z" fill="#8B5a14" />
-        <ellipse cx="808" cy="232" rx="26" ry="8" fill="#a07020" />
-        {/* Basket weave lines */}
-        {[790, 800, 810, 820, 830].map((x, i) => (
-          <line key={i} x1={x} y1={232} x2={808 + (x - 808) * 0.3} y2={254}
-            stroke="#6a4010" strokeWidth="0.8" opacity="0.5" />
-        ))}
-        {/* Makhana seeds overflowing the basket — appear with delay */}
-        {[
-          [800, 228], [808, 225], [816, 227],
-          [804, 221], [812, 220], [808, 217],
-          [796, 225], [820, 224], [808, 232],
-          [802, 231], [814, 230],
-        ].map(([x, y], i) => (
-          <motion.g key={i}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={anim ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.4, delay: 1.2 + i * 0.08, type: 'spring', stiffness: 280 }}
-            style={{ originX: `${x}px`, originY: `${y}px` }}
-          >
-            <MkSeed cx={x} cy={y} r={i < 3 ? 5 : i < 6 ? 4.5 : 4} />
-          </motion.g>
-        ))}
-
-        {/* Head */}
-        <circle cx="808" cy="191" r="12" fill="#6a3818" />
-        {/* Turban */}
-        <ellipse cx="808" cy="183" rx="14" ry="5" fill="#c82010" />
-        <ellipse cx="808" cy="181" rx="10" ry="3.5" fill="#e02818" />
-        {/* Expression — slight smile */}
-        <path d="M804 193 Q808 197 812 193" stroke="#3a1008" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+        {/* ── FARMER STANDING PROUD — shared character, basket now overflowing ── */}
+        <g transform="translate(808, 258) scale(0.92)">
+          <FarmerCharacter pose="harvesting" animate={anim} />
+        </g>
 
         {/* Golden dust particles swirling */}
         {[[730, 120], [750, 95], [880, 110], [900, 140], [760, 140]].map(([x, y], i) => (
