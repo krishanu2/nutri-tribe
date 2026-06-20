@@ -7,21 +7,28 @@ interface MakhanaRoastSceneProps {
   className?: string;
 }
 
-// Flame path morphing keyframes
+// Flame path morphing keyframes — 3 unique shapes per flame, cycled rather
+// than flipped A-B-A, so the flicker reads as organic instead of mechanical
 const flamePath1 =
   'M 190 210 C 188 195 182 185 186 170 C 188 160 195 155 192 140 C 196 155 204 160 202 175 C 200 190 205 200 203 210 Z';
 const flamePath2 =
   'M 190 210 C 185 192 178 180 184 162 C 187 150 196 148 191 132 C 198 148 207 153 204 170 C 201 186 208 198 203 210 Z';
+const flamePath2b =
+  'M 190 210 C 187 198 184 187 188 173 C 191 163 191 152 187 142 C 194 152 201 162 199 178 C 197 192 203 199 203 210 Z';
 
 const flamePath3 =
   'M 248 210 C 246 194 240 184 244 168 C 246 158 253 153 250 138 C 254 153 262 157 260 173 C 257 189 262 200 260 210 Z';
 const flamePath4 =
   'M 248 210 C 243 191 236 179 242 160 C 245 148 254 145 249 128 C 256 145 265 150 262 168 C 259 184 266 197 260 210 Z';
+const flamePath4b =
+  'M 248 210 C 245 197 242 186 246 171 C 249 161 249 150 245 140 C 252 150 259 160 257 176 C 255 190 261 198 260 210 Z';
 
 const flamePath5 =
   'M 308 210 C 306 196 299 186 303 170 C 305 160 313 155 309 140 C 313 155 321 159 319 175 C 317 190 322 201 320 210 Z';
 const flamePath6 =
   'M 308 210 C 303 193 295 181 301 163 C 304 150 312 148 308 132 C 314 148 324 153 321 170 C 318 187 325 199 320 210 Z';
+const flamePath6b =
+  'M 308 210 C 305 199 301 188 305 174 C 308 164 307 153 304 143 C 310 153 318 163 316 178 C 314 192 319 199 320 210 Z';
 
 // Small side flame
 const sideFlame1 = 'M 160 210 C 158 200 153 193 156 182 C 158 175 164 172 161 162 C 164 172 170 175 168 183 C 167 192 171 200 169 210 Z';
@@ -212,10 +219,10 @@ export default function MakhanaRoastScene({ inView, className = '' }: MakhanaRoa
         fill="#f3a213"
         animate={
           shouldAnimate
-            ? { d: [flamePath1, flamePath2, flamePath1], opacity: [0.7, 1, 0.8, 1, 0.7] }
+            ? { d: [flamePath1, flamePath2, flamePath2b, flamePath1], opacity: [0.7, 1, 0.85, 0.9, 0.7] }
             : {}
         }
-        transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 1.3, repeat: Infinity, ease: 'easeInOut' }}
       />
       {/* Main flame 2 */}
       <motion.path
@@ -223,10 +230,10 @@ export default function MakhanaRoastScene({ inView, className = '' }: MakhanaRoa
         fill="#e06010"
         animate={
           shouldAnimate
-            ? { d: [flamePath3, flamePath4, flamePath3], opacity: [0.7, 1, 0.8, 1, 0.7] }
+            ? { d: [flamePath3, flamePath4, flamePath4b, flamePath3], opacity: [0.7, 1, 0.85, 0.9, 0.7] }
             : {}
         }
-        transition={{ duration: 0.75, repeat: Infinity, ease: 'easeInOut', delay: 0.15 }}
+        transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut', delay: 0.15 }}
       />
       {/* Main flame 3 */}
       <motion.path
@@ -234,10 +241,10 @@ export default function MakhanaRoastScene({ inView, className = '' }: MakhanaRoa
         fill="#f3a213"
         animate={
           shouldAnimate
-            ? { d: [flamePath5, flamePath6, flamePath5], opacity: [0.7, 1, 0.8, 1, 0.7] }
+            ? { d: [flamePath5, flamePath6, flamePath6b, flamePath5], opacity: [0.7, 1, 0.85, 0.9, 0.7] }
             : {}
         }
-        transition={{ duration: 0.85, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+        transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
       />
       {/* Bright core flame overlay */}
       <motion.path
@@ -245,7 +252,7 @@ export default function MakhanaRoastScene({ inView, className = '' }: MakhanaRoa
         fill="#ffe08a"
         animate={
           shouldAnimate
-            ? { d: [flamePath3, flamePath4, flamePath3], opacity: [0.3, 0.6, 0.3] }
+            ? { d: [flamePath3, flamePath4, flamePath4b, flamePath3], opacity: [0.3, 0.6, 0.45, 0.3] }
             : { opacity: 0.4 }
         }
         transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut', delay: 0.15 }}
@@ -532,11 +539,13 @@ export default function MakhanaRoastScene({ inView, className = '' }: MakhanaRoa
           fill="#c4a878"
           transform="rotate(-30 327 229)"
         />
-        {/* Ladle */}
+        {/* Ladle handle — gripped directly at the hand's actual position */}
+        <line x1="327" y1="229" x2="313" y2="233" stroke="#8a6030" strokeWidth="3" strokeLinecap="round" />
+        {/* Ladle bowl, attached at the handle's far end */}
         <path
-          d="M 318 224 Q 310 218 308 228 Q 306 236 314 236 Q 322 237 323 230"
+          d="M 313 233 Q 305 227 303 235 Q 301 243 309 243 Q 317 244 318 237 Q 318 234 313 233 Z"
           stroke="#8a6030"
-          strokeWidth="3"
+          strokeWidth="2"
           fill="#6b4820"
           strokeLinecap="round"
         />

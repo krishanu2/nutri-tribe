@@ -41,7 +41,7 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
     /* ── Lighting ── */
     scene.add(new THREE.AmbientLight(0xfff8e8, 0.58));
 
-    const keyLight = new THREE.PointLight(0xf3a213, 70, 0, 1.5);
+    const keyLight = new THREE.PointLight(0xf3a213, 105, 0, 1.5);
     keyLight.position.set(3.5, 6, 4);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.set(512, 512);
@@ -54,6 +54,13 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
     const rimLight = new THREE.PointLight(0xd0e8ff, 20, 0, 2);
     rimLight.position.set(-2, 0, -5);
     scene.add(rimLight);
+
+    // Second rim light, opposite the cool one above — defines the bowl's
+    // front-right silhouette so the brass reads as a real metal edge
+    // instead of fading flat into the background.
+    const rimLight2 = new THREE.PointLight(0xffd070, 32, 0, 2);
+    rimLight2.position.set(2, 0.8, 5);
+    scene.add(rimLight2);
 
     const centerGlow = new THREE.PointLight(0xf3a213, 4, 3, 2);
     centerGlow.position.set(0, 0.3, 0);
@@ -140,6 +147,23 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
       metalness: 0.00,
     });
     const ballGeo = new THREE.SphereGeometry(BALL_R, 22, 22);
+    // Wrinkle the sphere — real makhana are irregular, lumpy fox nuts, not
+    // glassy-perfect spheres. Cheap per-vertex displacement along the normal,
+    // no shader needed, done once at creation.
+    {
+      const posAttr = ballGeo.attributes.position;
+      const v = new THREE.Vector3();
+      for (let i = 0; i < posAttr.count; i++) {
+        v.fromBufferAttribute(posAttr, i);
+        const n = v.clone().normalize();
+        const bump =
+          0.11 * Math.sin(n.x * 9 + n.y * 6) * Math.cos(n.z * 8 + n.y * 5) +
+          0.07 * Math.sin(n.x * 17 - n.z * 13 + n.y * 4);
+        v.addScaledVector(n, bump * BALL_R);
+        posAttr.setXYZ(i, v.x, v.y, v.z);
+      }
+      ballGeo.computeVertexNormals();
+    }
     const hlMat   = new THREE.MeshStandardMaterial({
       color: 0xffffff, roughness: 1, metalness: 0, transparent: true, opacity: 0.48,
     });
@@ -152,6 +176,8 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
       const body = new THREE.Mesh(ballGeo, ballMat);
       body.scale.setScalar(scale);
       body.castShadow = true;
+      // Random rotation per seed so the shared wrinkle pattern doesn't repeat identically
+      body.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI * 2, Math.random() * Math.PI);
       g.add(body);
       // Specular highlight — positions scaled proportionally to BALL_R
       const hl = new THREE.Mesh(hlGeo, hlMat);
@@ -298,8 +324,8 @@ export default function MakhanaScene3D({ className = '' }: { className?: string 
             targetZ = base.z + (dz / dist) * push;
           }
         }
-        group.position.x += (targetX - group.position.x) * 0.12;
-        group.position.z += (targetZ - group.position.z) * 0.12;
+        group.position.x += (targetX - group.position.x) * 0.22;
+        group.position.z += (targetZ - group.position.z) * 0.22;
       });
 
       /* Float animation */

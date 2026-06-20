@@ -49,27 +49,33 @@ export default function MakhanaScene({ className = '' }: { className?: string })
           <stop offset="0%" stopColor="#7d3627" stopOpacity="0.25" />
           <stop offset="100%" stopColor="#7d3627" stopOpacity="0" />
         </radialGradient>
+        {/* Soft blur for back-layer seeds — real depth instead of flat layering */}
+        <filter id="back-blur" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="1.6" />
+        </filter>
       </defs>
 
       {/* ── GROUND SHADOW ── */}
       <ellipse cx="250" cy="472" rx="160" ry="18" fill="url(#gnd-shadow)" />
 
-      {/* ── SCATTERED LOOSE MAKHANA (back layer) ── */}
-      <circle cx="38" cy="420" r="26" fill="url(#mk3)" opacity="0.75" />
-      <ellipse cx="30" cy="412" rx="5" ry="3.5" fill="#7a5c30" opacity="0.4" transform="rotate(-20 30 412)" />
-      <circle cx="44" cy="408" r="3" fill="#7a5c30" opacity="0.35" />
+      {/* ── SCATTERED LOOSE MAKHANA (back layer) — blurred + dimmer for depth ── */}
+      <g filter="url(#back-blur)" opacity="0.62">
+        <circle cx="38" cy="420" r="26" fill="url(#mk3)" />
+        <ellipse cx="30" cy="412" rx="5" ry="3.5" fill="#7a5c30" opacity="0.4" transform="rotate(-20 30 412)" />
+        <circle cx="44" cy="408" r="3" fill="#7a5c30" opacity="0.35" />
 
-      <circle cx="465" cy="410" r="30" fill="url(#mk3)" opacity="0.75" />
-      <ellipse cx="456" cy="402" rx="5.5" ry="3.5" fill="#7a5c30" opacity="0.4" transform="rotate(-15 456 402)" />
-      <circle cx="472" cy="398" r="3.5" fill="#7a5c30" opacity="0.35" />
+        <circle cx="465" cy="410" r="30" fill="url(#mk3)" />
+        <ellipse cx="456" cy="402" rx="5.5" ry="3.5" fill="#7a5c30" opacity="0.4" transform="rotate(-15 456 402)" />
+        <circle cx="472" cy="398" r="3.5" fill="#7a5c30" opacity="0.35" />
 
-      <circle cx="68" cy="370" r="22" fill="url(#mk2)" opacity="0.8" />
-      <circle cx="60" cy="363" r="4" fill="#7a5c30" opacity="0.4" />
-      <circle cx="75" cy="360" r="2.5" fill="#7a5c30" opacity="0.3" />
+        <circle cx="68" cy="370" r="22" fill="url(#mk2)" />
+        <circle cx="60" cy="363" r="4" fill="#7a5c30" opacity="0.4" />
+        <circle cx="75" cy="360" r="2.5" fill="#7a5c30" opacity="0.3" />
 
-      <circle cx="442" cy="365" r="24" fill="url(#mk2)" opacity="0.8" />
-      <circle cx="434" cy="357" r="4" fill="#7a5c30" opacity="0.4" />
-      <circle cx="450" cy="354" r="3" fill="#7a5c30" opacity="0.3" />
+        <circle cx="442" cy="365" r="24" fill="url(#mk2)" />
+        <circle cx="434" cy="357" r="4" fill="#7a5c30" opacity="0.4" />
+        <circle cx="450" cy="354" r="3" fill="#7a5c30" opacity="0.3" />
+      </g>
 
       {/* ── BOWL BODY ── */}
       <path
@@ -109,34 +115,34 @@ export default function MakhanaScene({ className = '' }: { className?: string })
       <ellipse cx="250" cy="258" rx="149" ry="29" stroke="#F2D57E" strokeWidth="1" fill="none" opacity="0.35" />
 
       {/* ── MAKHANA SPILLING OUT (foreground) ── */}
-      {/* Front left */}
+      {/* Front left — highlight sits high-left, closest to the key light */}
       <circle cx="100" cy="320" r="42" fill="url(#mk1)" />
       <ellipse cx="86" cy="305" rx="7" ry="5" fill="#7a5c30" opacity="0.5" transform="rotate(-20 86 305)" />
       <circle cx="108" cy="300" r="4.5" fill="#7a5c30" opacity="0.4" />
       <circle cx="118" cy="315" r="5.5" fill="#7a5c30" opacity="0.35" />
-      <ellipse cx="90" cy="306" rx="12" ry="8" fill="white" opacity="0.32" transform="rotate(-25 90 306)" />
+      <ellipse cx="88" cy="302" rx="12" ry="8" fill="white" opacity="0.34" transform="rotate(-25 88 302)" />
 
-      {/* Front center-left */}
+      {/* Front center-left — highlight shifted more upward/central, a different facing angle */}
       <circle cx="210" cy="340" r="44" fill="url(#mk1)" />
       <ellipse cx="195" cy="324" rx="7.5" ry="5" fill="#7a5c30" opacity="0.5" transform="rotate(-18 195 324)" />
       <circle cx="218" cy="318" r="5" fill="#7a5c30" opacity="0.4" />
       <circle cx="228" cy="333" r="6" fill="#7a5c30" opacity="0.35" />
       <circle cx="205" cy="342" r="4" fill="#7a5c30" opacity="0.3" />
-      <ellipse cx="198" cy="325" rx="13" ry="9" fill="white" opacity="0.32" transform="rotate(-22 198 325)" />
+      <ellipse cx="207" cy="318" rx="11" ry="10" fill="white" opacity="0.3" transform="rotate(-8 207 318)" />
 
-      {/* Front center-right */}
+      {/* Front center-right — highlight nudged toward upper-right, this seed faces the light differently */}
       <circle cx="300" cy="338" r="42" fill="url(#mk1)" />
       <ellipse cx="286" cy="323" rx="7" ry="4.5" fill="#7a5c30" opacity="0.5" transform="rotate(-20 286 323)" />
       <circle cx="308" cy="317" r="4.5" fill="#7a5c30" opacity="0.4" />
       <circle cx="318" cy="331" r="5.5" fill="#7a5c30" opacity="0.35" />
-      <ellipse cx="289" cy="324" rx="12" ry="8" fill="white" opacity="0.32" transform="rotate(-22 289 324)" />
+      <ellipse cx="304" cy="319" rx="11" ry="7" fill="white" opacity="0.3" transform="rotate(12 304 319)" />
 
-      {/* Front right */}
+      {/* Front right — highlight lower than the others, a third distinct facing */}
       <circle cx="400" cy="322" r="40" fill="url(#mk1)" />
       <ellipse cx="387" cy="308" rx="6.5" ry="4.5" fill="#7a5c30" opacity="0.5" transform="rotate(-18 387 308)" />
       <circle cx="408" cy="303" r="4" fill="#7a5c30" opacity="0.4" />
       <circle cx="416" cy="318" r="5" fill="#7a5c30" opacity="0.35" />
-      <ellipse cx="390" cy="309" rx="11" ry="7.5" fill="white" opacity="0.32" transform="rotate(-24 390 309)" />
+      <ellipse cx="392" cy="314" rx="10" ry="7" fill="white" opacity="0.32" transform="rotate(-32 392 314)" />
 
       {/* ── LOTUS FLOWER DECORATION ── */}
       <path d="M 472 468 Q 478 400 462 335" stroke="#009846" strokeWidth="5" strokeLinecap="round" fill="none" />
