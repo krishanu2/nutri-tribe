@@ -284,9 +284,11 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
         <div className="flex items-center justify-between mt-auto">
           <div>
             <span className="font-display font-bold text-2xl text-earthen-rust">₹{product.price}</span>
-            <span className="font-body text-xs text-earthen-rust/35 ml-1.5 line-through">
-              ₹{Math.round(product.price * 1.2)}
-            </span>
+            {!!product.mrp && product.mrp > product.price && (
+              <span className="font-body text-xs text-earthen-rust/35 ml-1.5 line-through">
+                ₹{product.mrp}
+              </span>
+            )}
           </div>
           <div className="flex gap-2">
             <motion.button

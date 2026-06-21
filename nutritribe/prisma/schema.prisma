@@ -185,6 +185,7 @@ model Product {
   mainCategory      String
   color             String
   price             Int
+  mrp               Int?
   weights           String[]
   description       String
   features          String[]

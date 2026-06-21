@@ -9,6 +9,7 @@ export interface Product {
   mainCategory: string;
   color: string;
   price: number;
+  mrp?: number | null;
   weights: string[];
   description: string;
   features: string[];

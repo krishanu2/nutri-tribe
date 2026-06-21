@@ -85,6 +85,9 @@ function FeaturedProduct({ product }: { product: Product; accent?: string }) {
               </motion.div>
             </Link>
             <span className="font-display font-bold text-3xl" style={{ color: '#1a0e0a' }}>₹{product.price}</span>
+            {!!product.mrp && product.mrp > product.price && (
+              <span className="font-body text-sm ml-2 line-through" style={{ color: 'rgba(26,14,10,0.35)' }}>₹{product.mrp}</span>
+            )}
           </div>
         </div>
         {/* Right: illustration */}

@@ -473,8 +473,14 @@ export default function ProductDetailPage({ product, relatedProducts }: PageProp
               {/* Price */}
               <div className="flex items-baseline gap-3">
                 <span className="font-display font-bold text-5xl text-earthen-rust">₹{product.price}</span>
-                <span className="font-body text-sm text-earthen-rust/40 line-through">₹{Math.round(product.price * 1.2)}</span>
-                <span className="font-body text-sm font-bold text-sacred-leaf bg-sacred-leaf/10 px-2 py-0.5 rounded">17% OFF</span>
+                {!!product.mrp && product.mrp > product.price && (
+                  <>
+                    <span className="font-body text-sm text-earthen-rust/40 line-through">₹{product.mrp}</span>
+                    <span className="font-body text-sm font-bold text-sacred-leaf bg-sacred-leaf/10 px-2 py-0.5 rounded">
+                      {Math.round((1 - product.price / product.mrp) * 100)}% OFF
+                    </span>
+                  </>
+                )}
               </div>
 
               {/* Weight selector */}
@@ -602,7 +608,7 @@ export default function ProductDetailPage({ product, relatedProducts }: PageProp
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { icon: Leaf, title: 'Hand-Roasted', desc: 'Small-batch roasting preserves every bit of nutrition and crunch.' },
-              { icon: Award, title: 'Ethically Sourced', desc: 'Directly from Mallah farmers of the Mithila wetlands in Bihar.' },
+              { icon: Award, title: 'Ethically Sourced', desc: 'Directly from Sahni farmers of the Mithila wetlands in Bihar.' },
               { icon: Shield, title: 'No Preservatives', desc: '100% natural. What you see is what you get — nothing hidden.' },
             ].map(({ icon: Icon, title, desc }, i) => (
               <motion.div

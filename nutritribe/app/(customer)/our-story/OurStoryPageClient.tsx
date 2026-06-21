@@ -281,10 +281,10 @@ function TimelineBeat({ year, title, body, color, index, isLast }: {
 
 /* ── Auto-advancing Harvest Act Cards ── */
 const HARVEST_ACTS = [
-  { num: '01', title: 'Before Dawn',    body: 'The Mallah Community of Mithila wakes at 4 AM. No alarm needed — the traditional ponds do not wait.', color: '#f3a213' },
+  { num: '01', title: 'Before Dawn',    body: 'The Sahni Community of Mithila wakes at 4 AM. No alarm needed — the traditional ponds do not wait.', color: '#f3a213' },
   { num: '02', title: 'Into the Water', body: 'Men wade waist-deep into traditional lily ponds. The cold water. The stems. The ancient ritual begins.', color: '#009846' },
   { num: '03', title: 'The Dive',       body: 'Skilled divers hold their breath and sink to the pond floor, collecting seeds by feel alone.', color: '#7a4dff' },
-  { num: '04', title: 'The Harvest',    body: 'At sunrise, baskets overflow. The Mallah Community emerges with the seeds that will become your makhana.', color: '#f3a213' },
+  { num: '04', title: 'The Harvest',    body: 'At sunrise, baskets overflow. The Sahni Community emerges with the seeds that will become your makhana.', color: '#f3a213' },
 ];
 
 function HarvestActCards() {
@@ -360,7 +360,7 @@ function HarvestActCards() {
 const timeline = [
   { year: '2020', title: 'The Seed is Planted', body: 'NutriTribe founded in a home kitchen in Patna — a dream to bring makhana to the world, without compromise.', color: '#f3a213' },
   { year: '2021', title: 'First Batch. First Love.', body: 'Our first plain makhana launch sold out in 3 days. The tribe had spoken — and we knew this was real.', color: '#009846' },
-  { year: '2022', title: 'Bold Flavours. Real Partnerships.', body: 'Expanded to 3 flavours. Signed direct-trade agreements with 250+ Mallah families — fair wages, guaranteed.', color: '#7a4dff' },
+  { year: '2022', title: 'Bold Flavours. Real Partnerships.', body: 'Expanded to 3 flavours. Signed direct-trade agreements with 250+ Sahni families — fair wages, guaranteed.', color: '#7a4dff' },
   { year: '2023', title: '10,000 Happy Customers', body: 'Launched our D2C platform. Crossed 10,000 customers across India — all without a single distributor middleman.', color: '#f3a213' },
   { year: '2024', title: 'Premium Cookies Launch', body: 'Introduced our makhana cookie range. Pan-India shipping activated. The superfood goes mainstream.', color: '#009846' },
   { year: '2025', title: "India's Most Loved Makhana Brand", body: "The movement grows. The tribe expands. And Bihar's finest superfood finally takes its rightful place.", color: '#7a4dff' },
@@ -537,7 +537,7 @@ export default function OurStoryPage() {
           {/* Typewriter-style narrative */}
           {[
             "The alarm does not ring. It never needs to.",
-            "A Mallah family of the Mithila Community in Darbhanga has woken before 4 AM for four hundred years — before electric light, before roads, before anyone in the city had heard the word makhana.",
+            "A Sahni family of the Mithila Community in Darbhanga has woken before 4 AM for four hundred years — before electric light, before roads, before anyone in the city had heard the word makhana.",
             "They wade into the traditional ponds, cold water rising to the waist. Their hands know the pond floor by feel alone.",
             "By 9 AM, they have harvested enough to feed a nation.",
           ].map((para, i) => (
@@ -696,7 +696,7 @@ export default function OurStoryPage() {
       <section style={{ background: 'linear-gradient(155deg, #0d0703 0%, #12080a 100%)' }}>
         <PullQuote
           quote="They wake before the sun. They enter water before it is warm. They do it because their fathers did, and their fathers' fathers did — and because the seed is worth it."
-          author="The Mallah Community of Mithila"
+          author="The Sahni Community of Mithila"
           accentColor="#f3a213"
         />
       </section>
@@ -728,7 +728,7 @@ export default function OurStoryPage() {
               <em className="not-italic" style={{ color: '#009846' }}>to Your Hands</em>
             </h2>
             <p className="font-body text-base mt-4 max-w-lg mx-auto" style={{ color: 'rgba(253,251,247,0.35)' }}>
-              Every seed you eat was handpicked by a diver from the Mallah Community of Mithila. This is their story, in four acts.
+              Every seed you eat was handpicked by a diver from the Sahni Community of Mithila. This is their story, in four acts.
             </p>
           </motion.div>
 
@@ -752,7 +752,7 @@ export default function OurStoryPage() {
             viewport={{ once:true }} transition={{ duration:0.7 }}
             className="text-center mb-14">
             <p className="font-body font-bold text-[10px] tracking-[0.4em] uppercase mb-3" style={{ color:'rgba(0,152,70,0.7)' }}>
-              A Mallah&apos;s Day
+              A Sahni&apos;s Day
             </p>
             <h2 className="font-display font-bold leading-tight" style={{ fontSize:'clamp(28px,4vw,52px)', color:'#fdfbf7' }}>
               From Midnight to Dusk
@@ -803,8 +803,8 @@ export default function OurStoryPage() {
         headline={<>The Hands That<br /><em className="not-italic" style={{ color: '#009846' }}>Hold the Story.</em></>}
         quote="No machine can replicate it. No algorithm can copy the instinct."
         body={[
-          "The Mallah Community of Mithila has harvested makhana from these traditional ponds for generations. This is not a job — it is an identity. The fathers teach the sons to read the water. The mothers teach the daughters to read the heat of the pan.",
-          "When you open a pack of NutriTribe, the hands of a Mallah farmer are in it. Not metaphorically — literally. Every seed was touched, sorted, and inspected by human hands before it reached your bag.",
+          "The Sahni Community of Mithila has harvested makhana from these traditional ponds for generations. This is not a job — it is an identity. The fathers teach the sons to read the water. The mothers teach the daughters to read the heat of the pan.",
+          "When you open a pack of NutriTribe, the hands of a Sahni farmer are in it. Not metaphorically — literally. Every seed was touched, sorted, and inspected by human hands before it reached your bag.",
           "We pay fair wages. We skip the middleman. Every product you buy directly improves the livelihood of a Mithila farming family. That is the NutriTribe promise — and it will never change.",
         ]}
         accentColor="#009846"
@@ -816,7 +816,7 @@ export default function OurStoryPage() {
             {/* Community stats */}
             <div className="grid grid-cols-2 gap-3 mb-4">
               {[
-                { v: '250+', l: 'Mallah Families', c: '#009846' },
+                { v: '250+', l: 'Sahni Families', c: '#009846' },
                 { v: '100%', l: 'Direct Trade', c: '#f3a213' },
                 { v: '₹Fair', l: 'Guaranteed Wage', c: '#009846' },
                 { v: '3rd Gen', l: 'Knowledge Keepers', c: '#f3a213' },
@@ -834,7 +834,7 @@ export default function OurStoryPage() {
                 &ldquo;When NutriTribe came to us, they did not bargain. They asked what we needed. That is different.&rdquo;
               </p>
               <p className="font-body text-[10px] mt-3 tracking-widest uppercase" style={{ color: '#009846' }}>
-                — Ramesh Mallah, Darbhanga Farmer
+                — Ramesh Sahni, Darbhanga Farmer
               </p>
             </div>
           </div>
@@ -864,7 +864,7 @@ export default function OurStoryPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                name: 'Ramesh Mallah', village: 'Darbhanga', gen: '4th Generation',
+                name: 'Ramesh Sahni', village: 'Darbhanga', gen: '4th Generation',
                 color: '#f3a213',
                 quote: 'When NutriTribe came, they paid us double the mandi rate. My daughter goes to school now. The makhana paid for it.',
               },
@@ -1032,7 +1032,7 @@ export default function OurStoryPage() {
         body={[
           "NutriTribe was born from a single question: why is India's most nutritious traditional food still unknown to most of the world?",
           "We set out to change that. Not by compromising on what makes makhana special — but by giving it the branding, the storytelling, and the quality control it always deserved.",
-          "We work directly with the Mallah community, pay wages above market rate, reinvest in sustainable pond management, and refuse every shortcut that would make our product cheaper but less honest.",
+          "We work directly with the Sahni community, pay wages above market rate, reinvest in sustainable pond management, and refuse every shortcut that would make our product cheaper but less honest.",
         ]}
         accentColor="#7a4dff"
         side="left"
@@ -1076,7 +1076,7 @@ export default function OurStoryPage() {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            <StatCard value="250+" label="Farming Families Supported" sub="Mallah community of Mithila — direct beneficiaries of every sale." color="#f3a213" index={0} />
+            <StatCard value="250+" label="Farming Families Supported" sub="Sahni community of Mithila — direct beneficiaries of every sale." color="#f3a213" index={0} />
             <StatCard value="₹0" label="Middlemen in Our Supply Chain" sub="Farmer to factory to you. No distributor tax. More money where it belongs." color="#009846" index={1} />
             <StatCard value="2,500 yr" label="Tradition Preserved" sub="Ancient harvesting techniques kept alive and fairly compensated." color="#7a4dff" index={2} />
             <StatCard value="90%" label="of India's Makhana" sub="Comes from Bihar. We work exclusively with premium Mithila-grade." color="#f3a213" index={3} />

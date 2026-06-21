@@ -27,7 +27,7 @@ function AnimatedCounter({ value, suffix = '' }: { value: string; suffix?: strin
 }
 
 const stats = [
-  { value: '250', suffix: '+', label: 'Farmer Supporters', desc: 'Mallah community of Bihar' },
+  { value: '250', suffix: '+', label: 'Farmer Supporters', desc: 'Sahni community of Bihar' },
   { value: '8', suffix: '+', label: 'Different Products', desc: 'Always crafting more' },
   { value: '100', suffix: '%', label: 'Natural Ingredients', desc: 'No compromises. Ever.' },
   { value: '∞', suffix: '', label: 'Love in Every Pack', desc: 'Snack Bold. Live Rooted.' },

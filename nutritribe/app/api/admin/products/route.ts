@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const {
-      name, slug, tagline, category, mainCategory, color, price,
+      name, slug, tagline, category, mainCategory, color, price, mrp,
       weights, description, features, badge, image, images,
       stockQuantity, lowStockThreshold, sortOrder, status,
     } = body;
@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
       data: {
         name, slug, tagline, category, mainCategory, color,
         price: Number(price) || 0,
+        mrp: mrp ? Number(mrp) : null,
         weights: Array.isArray(weights) ? weights : [],
         description,
         features: Array.isArray(features) ? features : [],

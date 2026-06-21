@@ -329,8 +329,10 @@ export default function TestimonialsSection() {
               <ChevronLeft size={18} />
             </motion.button>
 
-            {/* Circular progress ring indicators */}
-            <div className="flex items-center gap-3">
+            {/* Circular progress ring indicators — hidden on mobile once the
+                list grows past a handful of entries; the numeric counter
+                below already scales to any count, so nothing is lost */}
+            <div className="hidden sm:flex items-center gap-2 sm:gap-3 overflow-x-auto max-w-[280px] sm:max-w-none">
               {testimonials.map((_, i) => {
                 const isActive = i === current;
                 const r = 10;

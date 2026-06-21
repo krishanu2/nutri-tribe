@@ -44,9 +44,17 @@ const NAV: NavLink[] = [
       {
         heading: 'More from NutriTribe',
         items: [
-          { label: 'Premium Cookies',   href: '/products?category=Premium%20Cookies', desc: 'Guilt-free indulgence' },
-          { label: 'Seeds & Nuts',       href: '/coming-soon?cat=seeds-nuts',          desc: 'Coming soon', soon: true },
-          { label: 'Healthy Beverages',  href: '/coming-soon?cat=healthy-beverages',   desc: 'Coming soon', soon: true },
+          { label: 'Premium Cookies', href: '/products?category=Premium%20Cookies', desc: 'Guilt-free indulgence' },
+        ],
+      },
+      {
+        heading: 'Coming Soon',
+        items: [
+          { label: 'The Bengaluru Brew',  href: '/coming-soon?cat=bengaluru-brew',  desc: 'Coming soon', soon: true },
+          { label: 'The Kashmiri Krown',  href: '/coming-soon?cat=kashmiri-krown',  desc: 'Coming soon', soon: true },
+          { label: 'The Thanjavur Silk',  href: '/coming-soon?cat=thanjavur-silk',  desc: 'Coming soon', soon: true },
+          { label: 'The Konkan Crown',    href: '/coming-soon?cat=konkan-crown',    desc: 'Coming soon', soon: true },
+          { label: 'The Malabar Velvet',  href: '/coming-soon?cat=malabar-velvet',  desc: 'Coming soon', soon: true },
         ],
       },
     ],

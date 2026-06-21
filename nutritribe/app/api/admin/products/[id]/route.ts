@@ -23,7 +23,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
     const body = await req.json();
     const {
-      name, slug, tagline, category, mainCategory, color, price,
+      name, slug, tagline, category, mainCategory, color, price, mrp,
       weights, description, features, badge, image, images,
       stockQuantity, lowStockThreshold, sortOrder, status,
     } = body;
@@ -39,6 +39,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     if (mainCategory !== undefined) data.mainCategory = mainCategory;
     if (color !== undefined) data.color = color;
     if (price !== undefined) data.price = Number(price) || 0;
+    if (mrp !== undefined) data.mrp = mrp ? Number(mrp) : null;
     if (weights !== undefined) data.weights = Array.isArray(weights) ? weights : [];
     if (description !== undefined) data.description = description;
     if (features !== undefined) data.features = Array.isArray(features) ? features : [];

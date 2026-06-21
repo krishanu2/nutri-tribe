@@ -7,17 +7,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
+const COMING_SOON_DESC =
+  "A new premium addition to the NutriTribe lineup, prepared with the same small-batch care as our makhana — clean ingredients, no shortcuts, and unmistakably NutriTribe.";
+
 const CATEGORY_INFO: Record<string, { title: string; desc: string; icon: string }> = {
-  'seeds-nuts': {
-    title: 'Seeds & Nuts',
-    desc: 'A new lineup of roasted seeds and nuts, prepared with the same small-batch care as our makhana — high in protein, free from preservatives, and unmistakably NutriTribe.',
-    icon: '🌰',
-  },
-  'healthy-beverages': {
-    title: 'Healthy Beverages',
-    desc: 'Clean, functional drinks rooted in the same Mithila ingredients we love — no refined sugar, no artificial additives, just nourishment in a bottle.',
-    icon: '🥤',
-  },
+  'bengaluru-brew':  { title: 'The Bengaluru Brew',  desc: COMING_SOON_DESC, icon: '☕' },
+  'kashmiri-krown':  { title: 'The Kashmiri Krown',  desc: COMING_SOON_DESC, icon: '👑' },
+  'thanjavur-silk':  { title: 'The Thanjavur Silk',  desc: COMING_SOON_DESC, icon: '🧵' },
+  'konkan-crown':    { title: 'The Konkan Crown',    desc: COMING_SOON_DESC, icon: '🌴' },
+  'malabar-velvet':  { title: 'The Malabar Velvet',  desc: COMING_SOON_DESC, icon: '🌶️' },
 };
 
 const DEFAULT_INFO = {

@@ -35,6 +35,7 @@ export default function ProductForm({ product }: Props) {
   const [mainCategory, setMainCategory] = useState(product?.mainCategory ?? '');
   const [color, setColor] = useState(product?.color ?? '#7a4dff');
   const [price, setPrice] = useState(product?.price ?? 0);
+  const [mrp, setMrp] = useState(product?.mrp ?? 0);
   const [weights, setWeights] = useState<string[]>(product?.weights ?? []);
   const [description, setDescription] = useState(product?.description ?? '');
   const [features, setFeatures] = useState<string[]>(product?.features ?? []);
@@ -75,7 +76,7 @@ export default function ProductForm({ product }: Props) {
 
     const body = {
       name, slug, tagline, category, mainCategory, color,
-      price: Number(price), weights, description, features,
+      price: Number(price), mrp: mrp ? Number(mrp) : null, weights, description, features,
       badge: badge.trim() || null,
       image, images,
       stockQuantity: Number(stockQuantity),
@@ -192,16 +193,28 @@ export default function ProductForm({ product }: Props) {
             </div>
           </Field>
 
-          <Field label="Price (₹)" required hint="Shown to customers as the selling price">
-            <input
-              type="number"
-              required
-              min={0}
-              value={price}
-              onChange={e => setPrice(Number(e.target.value))}
-              className="w-full font-body text-sm text-[#7d3627] bg-[#fdfbf7] border-2 border-[#7d3627]/15 rounded-xl px-4 py-2.5 outline-none focus:border-[#f3a213] transition-all"
-            />
-          </Field>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Price (₹)" required hint="Shown to customers as the selling price">
+              <input
+                type="number"
+                required
+                min={0}
+                value={price}
+                onChange={e => setPrice(Number(e.target.value))}
+                className="w-full font-body text-sm text-[#7d3627] bg-[#fdfbf7] border-2 border-[#7d3627]/15 rounded-xl px-4 py-2.5 outline-none focus:border-[#f3a213] transition-all"
+              />
+            </Field>
+
+            <Field label="MRP (₹)" hint="Optional — shown struck through next to the price to highlight a discount. Leave at 0 to hide it.">
+              <input
+                type="number"
+                min={0}
+                value={mrp}
+                onChange={e => setMrp(Number(e.target.value))}
+                className="w-full font-body text-sm text-[#7d3627] bg-[#fdfbf7] border-2 border-[#7d3627]/15 rounded-xl px-4 py-2.5 outline-none focus:border-[#f3a213] transition-all"
+              />
+            </Field>
+          </div>
 
           <TagListField
             label="Available Pack Sizes"

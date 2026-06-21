@@ -344,7 +344,7 @@ export default function Footer() {
             </p>
           </div>
           <p className="font-body text-xs text-white/35 flex items-center gap-1.5">
-            Made with <Heart size={12} className="text-sun-harvest fill-sun-harvest" /> in India
+            Made with <Heart size={12} className="text-sun-harvest fill-sun-harvest" /> in Mithila, India
           </p>
         </div>
       </div>
