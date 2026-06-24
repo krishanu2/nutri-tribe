@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, ShoppingBag, Leaf, Loader2, Tag } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ShoppingBag, Leaf, Loader2, Tag, Gift } from 'lucide-react';
 import { useCart } from '@/lib/cartContext';
+
+const GIFT_NOTE_MAX = 200;
 
 const FREE_DELIVERY = 499;
 
@@ -71,6 +73,9 @@ export default function CheckoutPage() {
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
 
+  const [isGift, setIsGift] = useState(false);
+  const [giftNote, setGiftNote] = useState('');
+
   const [couponInput, setCouponInput] = useState('');
   const [couponStatus, setCouponStatus] = useState<'idle' | 'checking' | 'applied' | 'error'>('idle');
   const [couponError, setCouponError] = useState('');
@@ -109,6 +114,7 @@ export default function CheckoutPage() {
       discount,
       couponCode: appliedCoupon?.code ?? null,
       total: grandTotal,
+      giftNote: isGift && giftNote.trim() ? giftNote.trim() : null,
     };
     sessionStorage.setItem('nt-pending-order', JSON.stringify(pendingOrder));
     router.push('/checkout/payment');
@@ -230,6 +236,50 @@ export default function CheckoutPage() {
                     ? 'Free delivery applied!'
                     : `Add ₹${FREE_DELIVERY - totalPrice} more to unlock free delivery.`}
                 </p>
+              </div>
+
+              {/* Gift note toggle */}
+              <div className="rounded-xl border border-sun-harvest/20 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setIsGift(v => !v)}
+                  className="w-full flex items-center justify-between gap-3 p-4 bg-sun-harvest/5 hover:bg-sun-harvest/8 transition-colors"
+                >
+                  <span className="flex items-center gap-3">
+                    <Gift size={15} className="text-sun-harvest shrink-0" />
+                    <span className="font-body text-sm font-semibold text-earthen-rust">This is a gift 🎁</span>
+                  </span>
+                  <motion.div
+                    className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0"
+                    style={{ borderColor: isGift ? '#f3a213' : 'rgba(125,54,39,0.25)' }}
+                  >
+                    {isGift && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-2.5 h-2.5 rounded-full bg-sun-harvest" />}
+                  </motion.div>
+                </button>
+                <AnimatePresence initial={false}>
+                  {isGift && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-4 pt-0">
+                        <textarea
+                          value={giftNote}
+                          onChange={e => setGiftNote(e.target.value.slice(0, GIFT_NOTE_MAX))}
+                          placeholder="Add a personal message for the recipient (optional)…"
+                          rows={3}
+                          className="w-full font-body text-sm text-earthen-rust bg-white border-2 border-earthen-rust/15 rounded-xl px-4 py-3 outline-none focus:border-sun-harvest transition-all resize-none"
+                        />
+                        <p className="font-body text-[11px] text-earthen-rust/40 mt-1 text-right">
+                          {giftNote.length}/{GIFT_NOTE_MAX}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <motion.button

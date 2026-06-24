@@ -175,6 +175,7 @@ export default function Footer() {
                 { label: 'Recipes', href: '/recipes' },
                 { label: 'B2B & Bulk Orders', href: '/b2b' },
                 { label: 'Corporate Gifting', href: '/corporate-gifting' },
+                { label: 'Track Order', href: '/track-order' },
                 { label: 'Contact', href: '/contact' },
               ].map((link) => (
                 <li key={link.href}>

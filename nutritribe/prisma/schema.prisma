@@ -36,6 +36,7 @@ model Order {
   discount       Int         @default(0)
   total          Int
   couponCode     String?
+  giftNote       String?
 
   status         OrderStatus @default(PENDING)
   paymentMethod  String      @default("COD")

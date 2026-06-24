@@ -21,6 +21,7 @@ interface PendingOrder {
   discount: number;
   couponCode: string | null;
   total: number;
+  giftNote: string | null;
 }
 
 type PayMethod = 'online' | 'cod';

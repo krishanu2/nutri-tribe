@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { CheckCircle, Package, MapPin, ArrowRight, Home } from 'lucide-react';
+import { CheckCircle, Package, MapPin, ArrowRight, Home, Gift, Search } from 'lucide-react';
 import { useCart } from '@/lib/cartContext';
 
 /* ── Makhana orb (local, matches the site-wide inline-orb convention) ── */
@@ -51,6 +51,7 @@ interface ConfirmedOrder {
   discount: number;
   couponCode: string | null;
   total: number;
+  giftNote: string | null;
 }
 
 export default function OrderConfirmationPage() {
@@ -207,6 +208,22 @@ export default function OrderConfirmationPage() {
           </div>
         </motion.div>
 
+        {/* Gift message */}
+        {order.giftNote && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-white rounded-2xl border border-sun-harvest/25 p-5 mb-6 flex items-start gap-3"
+          >
+            <Gift size={18} className="text-sun-harvest shrink-0 mt-0.5" />
+            <div>
+              <p className="font-body font-semibold text-xs tracking-widest uppercase text-sun-harvest mb-1.5">Gift Message</p>
+              <p className="font-body text-sm text-earthen-rust/70 italic leading-relaxed">&ldquo;{order.giftNote}&rdquo;</p>
+            </div>
+          </motion.div>
+        )}
+
         {/* Delivery info */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -273,6 +290,19 @@ export default function OrderConfirmationPage() {
               <Home size={15} />
               Back to Home
             </motion.div>
+          </Link>
+        </motion.div>
+
+        {/* Save Order ID for later tracking */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.0 }}
+          className="text-center mt-8"
+        >
+          <Link href="/track-order" className="inline-flex items-center gap-1.5 font-body text-xs text-earthen-rust/45 hover:text-sun-harvest transition-colors">
+            <Search size={12} />
+            Save your Order ID — track this order anytime at /track-order
           </Link>
         </motion.div>
 

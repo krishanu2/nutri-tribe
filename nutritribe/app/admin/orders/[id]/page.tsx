@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { OrderStatus } from '@prisma/client';
-import { ArrowLeft, MapPin, Phone, Mail, Package, Calendar, Hash } from 'lucide-react';
+import { ArrowLeft, MapPin, Phone, Mail, Package, Calendar, Hash, Gift, Printer } from 'lucide-react';
 import StatusBadge from '../../_components/StatusBadge';
 import StatusUpdatePanel from '../../_components/StatusUpdatePanel';
 
@@ -39,7 +39,24 @@ export default async function OrderDetailPage({ params }: { params: { id: string
             })}
           </p>
         </div>
+        <Link
+          href={`/admin/orders/${order.id}/packing-slip`}
+          className="inline-flex items-center gap-2 font-body font-semibold text-sm px-4 py-2.5 rounded-xl bg-white border border-[#7d3627]/12 text-[#7d3627]/70 hover:border-[#f3a213]/40 transition-all"
+        >
+          <Printer size={15} />
+          Print Packing Slip
+        </Link>
       </div>
+
+      {order.giftNote && (
+        <div className="mb-6 bg-[#fff8ec] border border-[#f3a213]/30 rounded-2xl p-5 flex items-start gap-3">
+          <Gift size={18} className="text-[#f3a213] shrink-0 mt-0.5" />
+          <div>
+            <p className="font-body font-bold text-xs tracking-widest uppercase text-[#f3a213] mb-1.5">🎁 This is a Gift Order</p>
+            <p className="font-body text-sm text-[#7d3627]/75 italic leading-relaxed">&ldquo;{order.giftNote}&rdquo;</p>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* LEFT — order details */}

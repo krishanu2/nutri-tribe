@@ -30,7 +30,7 @@ export default function AdminSidebar() {
 
   return (
     <aside
-      className="w-56 shrink-0 flex flex-col min-h-screen"
+      className="w-56 shrink-0 flex flex-col min-h-screen print:hidden"
       style={{
         background: 'linear-gradient(160deg, #120601, #0a0200)',
         borderRight: '1px solid rgba(243,162,19,0.1)',
