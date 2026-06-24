@@ -25,12 +25,19 @@ export async function POST(req: NextRequest) {
     if (!Object.values(DiscountType).includes(type)) {
       return NextResponse.json({ error: 'Invalid discount type' }, { status: 400 });
     }
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue) || numericValue <= 0) {
+      return NextResponse.json({ error: 'Discount value must be a positive number' }, { status: 400 });
+    }
+    if (type === 'PERCENT' && numericValue > 100) {
+      return NextResponse.json({ error: 'A percentage discount cannot exceed 100' }, { status: 400 });
+    }
 
     const coupon = await db.coupon.create({
       data: {
         code: String(code).trim().toUpperCase(),
         type,
-        value: Number(value),
+        value: numericValue,
         minOrderValue: Number(minOrderValue) || 0,
         maxUses: maxUses != null ? Number(maxUses) : null,
         expiresAt: expiresAt ? new Date(expiresAt) : null,

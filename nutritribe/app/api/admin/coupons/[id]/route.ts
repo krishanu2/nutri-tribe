@@ -29,7 +29,17 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       }
       data.type = type;
     }
-    if (value !== undefined) data.value = Number(value);
+    if (value !== undefined) {
+      const numericValue = Number(value);
+      if (!Number.isFinite(numericValue) || numericValue <= 0) {
+        return NextResponse.json({ error: 'Discount value must be a positive number' }, { status: 400 });
+      }
+      const effectiveType = type !== undefined ? type : existing.type;
+      if (effectiveType === 'PERCENT' && numericValue > 100) {
+        return NextResponse.json({ error: 'A percentage discount cannot exceed 100' }, { status: 400 });
+      }
+      data.value = numericValue;
+    }
     if (minOrderValue !== undefined) data.minOrderValue = Number(minOrderValue) || 0;
     if (maxUses !== undefined) data.maxUses = maxUses != null ? Number(maxUses) : null;
     if (expiresAt !== undefined) data.expiresAt = expiresAt ? new Date(expiresAt) : null;

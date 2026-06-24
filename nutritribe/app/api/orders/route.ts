@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
           total,
           paymentMethod: paymentMethod === 'ONLINE' ? 'ONLINE' : 'COD',
           paymentId: paymentId ?? null,
-          giftNote: giftNote ? String(giftNote).slice(0, 200) : null,
+          giftNote: typeof giftNote === 'string' && giftNote.trim() ? giftNote.trim().slice(0, 200) : null,
           items: {
             create: orderItems.map(i => ({
               productId: i.productId,

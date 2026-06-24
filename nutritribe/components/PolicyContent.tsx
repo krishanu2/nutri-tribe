@@ -47,35 +47,63 @@ function renderLines(lines: string[]): ReactNode[] {
   ));
 }
 
+/* Line-by-line state machine instead of blank-line block splitting — a
+   heading/bullet/address prefix always flushes & switches the current
+   block on its own, so a missing blank line between e.g. a bullet list
+   and the next heading can never silently swallow content or leak a
+   literal "## " into the page. */
 export function PolicyContent({ content }: { content: string }) {
-  const blocks = content.split(/\n\s*\n/).filter(Boolean);
+  const elements: ReactNode[] = [];
+  let mode: 'none' | 'p' | 'ul' | 'address' = 'none';
+  let buffer: string[] = [];
+  let key = 0;
 
-  return (
-    <div className="prose-legal">
-      {blocks.map((block, i) => {
-        const lines = block.split('\n');
-        const first = lines[0];
+  const flush = () => {
+    if (buffer.length > 0) {
+      if (mode === 'ul') {
+        elements.push(<ul key={key++}>{buffer.map((l, j) => <li key={j}>{renderInline(l)}</li>)}</ul>);
+      } else if (mode === 'address') {
+        elements.push(<address key={key++}>{renderLines(buffer)}</address>);
+      } else if (mode === 'p') {
+        elements.push(<p key={key++}>{renderLines(buffer)}</p>);
+      }
+    }
+    buffer = [];
+    mode = 'none';
+  };
 
-        if (first.startsWith('## ')) {
-          return <h2 key={i}>{renderInline(first.slice(3))}</h2>;
-        }
-        if (first.startsWith('### ')) {
-          return <h3 key={i}>{renderInline(first.slice(4))}</h3>;
-        }
-        if (lines.every(l => l.startsWith('- '))) {
-          return (
-            <ul key={i}>
-              {lines.map((l, j) => <li key={j}>{renderInline(l.slice(2))}</li>)}
-            </ul>
-          );
-        }
-        if (lines.every(l => l.startsWith('> '))) {
-          return <address key={i}>{renderLines(lines.map(l => l.slice(2)))}</address>;
-        }
-        return <p key={i}>{renderLines(lines)}</p>;
-      })}
-    </div>
-  );
+  for (const line of content.split('\n')) {
+    if (line.trim() === '') { flush(); continue; }
+
+    if (line.startsWith('## ')) {
+      flush();
+      elements.push(<h2 key={key++}>{renderInline(line.slice(3))}</h2>);
+      continue;
+    }
+    if (line.startsWith('### ')) {
+      flush();
+      elements.push(<h3 key={key++}>{renderInline(line.slice(4))}</h3>);
+      continue;
+    }
+    if (line.startsWith('- ')) {
+      if (mode !== 'ul') flush();
+      mode = 'ul';
+      buffer.push(line.slice(2));
+      continue;
+    }
+    if (line.startsWith('> ')) {
+      if (mode !== 'address') flush();
+      mode = 'address';
+      buffer.push(line.slice(2));
+      continue;
+    }
+    if (mode !== 'p') flush();
+    mode = 'p';
+    buffer.push(line);
+  }
+  flush();
+
+  return <div className="prose-legal">{elements}</div>;
 }
 
 export default PolicyContent;

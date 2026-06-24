@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     const headers = [
       'Order ID', 'Date', 'Status', 'Customer Name', 'Email', 'Phone',
       'Address', 'City', 'State', 'Pincode', 'Items',
-      'Subtotal', 'Delivery', 'Discount', 'Coupon Code', 'Total', 'Tracking Number',
+      'Subtotal', 'Delivery', 'Discount', 'Coupon Code', 'Total', 'Tracking Number', 'Gift Note',
     ];
 
     const rows = orders.map(o => [
@@ -48,6 +48,7 @@ export async function GET(req: NextRequest) {
       o.couponCode ?? '',
       o.total,
       o.trackingNumber ?? '',
+      o.giftNote ?? '',
     ]);
 
     const csv = [headers, ...rows]

@@ -28,6 +28,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       if (!Object.values(OrderStatus).includes(status)) {
         return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
       }
+      if (status === 'SHIPPED') {
+        const incomingTracking = typeof trackingNumber === 'string' ? trackingNumber.trim() : '';
+        const existing = await db.order.findUnique({ where: { id: params.id }, select: { trackingNumber: true } });
+        if (!incomingTracking && !existing?.trackingNumber) {
+          return NextResponse.json({ error: 'A tracking number is required before marking an order as Shipped' }, { status: 400 });
+        }
+      }
       data.status = status;
       if (status === 'SHIPPED')    data.shippedAt   = new Date();
       if (status === 'DELIVERED')  data.deliveredAt = new Date();
