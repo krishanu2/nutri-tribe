@@ -23,12 +23,19 @@ export async function middleware(req: NextRequest) {
     needsRewrite = true;
   }
 
-  const isAdminArea = effectivePath.startsWith('/admin') && effectivePath !== '/admin/login';
+  const isAdminPage = effectivePath.startsWith('/admin') && effectivePath !== '/admin/login';
+  // /api/admin/* was previously NOT covered here — only the admin UI pages were
+  // gated, leaving every admin API route (products, orders, coupons, upload,
+  // policies, customers, etc.) callable by anyone with no login at all.
+  const isAdminApi = pathname.startsWith('/api/admin') && pathname !== '/api/admin/login' && pathname !== '/api/admin/logout';
 
-  if (isAdminArea) {
+  if (isAdminPage || isAdminApi) {
     const token = req.cookies.get(SESSION_COOKIE.name)?.value;
     const valid = token ? await verifyAdminToken(token) : false;
     if (!valid) {
+      if (isAdminApi) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
       const loginUrl = new URL(isAdminSubdomain ? '/login' : '/admin/login', req.url);
       return NextResponse.redirect(loginUrl);
     }
