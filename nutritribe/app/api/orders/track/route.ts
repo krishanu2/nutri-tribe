@@ -36,6 +36,8 @@ export async function POST(req: NextRequest) {
       shippedAt: order!.shippedAt,
       deliveredAt: order!.deliveredAt,
       customerName: order!.customerName,
+      email: order!.email,
+      phone: order!.phone,
       address: order!.address,
       city: order!.city,
       state: order!.state,

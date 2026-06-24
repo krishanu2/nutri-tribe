@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Package, Users2, LogOut, ChevronRight, Newspaper, ChefHat, Star, Box, BarChart3, Tag, UserCircle, FileText } from 'lucide-react';
+import { LayoutDashboard, Package, Users2, LogOut, ChevronRight, Newspaper, ChefHat, Star, Box, BarChart3, Tag, UserCircle, FileText, LifeBuoy } from 'lucide-react';
 
 const NAV = [
   { label: 'Dashboard',  href: '/admin',            icon: LayoutDashboard },
   { label: 'All Orders', href: '/admin/orders',     icon: Package },
+  { label: 'Tickets',    href: '/admin/tickets',    icon: LifeBuoy },
   { label: 'Products',   href: '/admin/products',   icon: Box },
   { label: 'Customers',  href: '/admin/customers',  icon: UserCircle },
   { label: 'Coupons',    href: '/admin/coupons',    icon: Tag },

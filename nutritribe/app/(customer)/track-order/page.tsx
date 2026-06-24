@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Search, Loader2, CheckCircle2, Package, MapPin, Truck, Gift, ArrowLeft } from 'lucide-react';
+import TicketForm from './TicketForm';
 
 interface TrackedOrder {
   orderId: string;
@@ -13,6 +14,8 @@ interface TrackedOrder {
   shippedAt: string | null;
   deliveredAt: string | null;
   customerName: string;
+  email: string;
+  phone: string;
   address: string;
   city: string;
   state: string;
@@ -273,6 +276,16 @@ export default function TrackOrderPage() {
                   {order.city}, {order.state} — {order.pincode}
                 </p>
               </div>
+
+              {/* Report an issue — only makes sense once the order has actually shipped/arrived */}
+              {(order.status === 'SHIPPED' || order.status === 'DELIVERED') && (
+                <TicketForm
+                  orderRef={order.orderId}
+                  customerName={order.customerName}
+                  email={order.email}
+                  phone={order.phone}
+                />
+              )}
             </motion.div>
           )}
         </AnimatePresence>
