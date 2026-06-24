@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Send, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
-import { InstagramIcon, LinkedinIcon, FacebookIcon } from '@/components/SocialIcons';
+import { InstagramIcon, LinkedinIcon, FacebookIcon, WhatsAppIcon } from '@/components/SocialIcons';
 import ContactScene from '@/components/illustrations/ContactScene';
 
 /* ── Who are you? intent types ─────────────────────────────── */
@@ -258,6 +258,25 @@ export default function ContactPage() {
                 <p className="font-body font-bold text-[10px] tracking-[0.35em] uppercase mb-4" style={{ color: 'rgba(243,162,19,0.5)' }}>
                   Quick Connect
                 </p>
+                <motion.a
+                  href="https://wa.me/918986048977"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ x: 4 }}
+                  className="flex items-center gap-4 p-4 rounded-2xl group"
+                  style={{ background: 'rgba(0,152,70,0.07)', border: '1px solid rgba(0,152,70,0.18)' }}
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ background: 'rgba(0,152,70,0.14)' }}>
+                    <WhatsAppIcon size={16} className="text-sacred-leaf" />
+                  </div>
+                  <div>
+                    <p className="font-body font-bold text-xs" style={{ color: 'rgba(253,251,247,0.8)' }}>+91 89860 48977</p>
+                    <p className="font-body text-[10px]" style={{ color: 'rgba(253,251,247,0.3)' }}>Chat with us on WhatsApp</p>
+                  </div>
+                  <ArrowRight size={14} style={{ color: 'rgba(0,152,70,0.5)', marginLeft: 'auto' }} />
+                </motion.a>
+
                 <motion.a
                   href="mailto:sales@nutritribe.shop"
                   whileHover={{ x: 4 }}

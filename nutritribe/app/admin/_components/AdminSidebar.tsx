@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Package, Users2, LogOut, ChevronRight, Newspaper, ChefHat, Star, Box, BarChart3, Tag, UserCircle } from 'lucide-react';
+import { LayoutDashboard, Package, Users2, LogOut, ChevronRight, Newspaper, ChefHat, Star, Box, BarChart3, Tag, UserCircle, FileText } from 'lucide-react';
 
 const NAV = [
   { label: 'Dashboard',  href: '/admin',            icon: LayoutDashboard },
@@ -16,6 +16,7 @@ const NAV = [
   { label: 'Reviews',    href: '/admin/reviews',    icon: Star },
   { label: 'Blog',       href: '/admin/blog',       icon: Newspaper },
   { label: 'Recipes',    href: '/admin/recipes',    icon: ChefHat },
+  { label: 'Policies',   href: '/admin/policies',   icon: FileText },
 ];
 
 export default function AdminSidebar() {

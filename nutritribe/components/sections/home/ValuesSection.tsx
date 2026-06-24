@@ -302,6 +302,37 @@ function ValuePanel({ v, index }: { v: typeof VALUES[0]; index: number }) {
   );
 }
 
+/* ─── Mobile value card — normal stacked flow, no scroll-jacking, no
+   550vh ghost-scroll zone. Each card is self-contained: its own small
+   chakra graphic fixed to its own value, no shared scroll-driven state. ─── */
+function MobileValueCard({ v, index }: { v: typeof VALUES[0]; index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.6, delay: index * 0.06 }}
+      className="relative rounded-3xl overflow-hidden p-6"
+      style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${v.color}30` }}
+    >
+      <div className="flex items-center gap-4 mb-4">
+        <div className="relative w-16 h-16 shrink-0">
+          <AshokChakraSVG active={index} />
+        </div>
+        <div
+          className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+          style={{ background: `linear-gradient(135deg, ${v.color}28, ${v.color}12)`, border: `1.5px solid ${v.color}40` }}
+        >
+          {v.icon}
+        </div>
+      </div>
+      <h3 className="font-display font-bold text-2xl mb-1" style={{ color: '#fdfbf7' }}>{v.title}</h3>
+      <div className="h-1 w-12 rounded-full mb-3" style={{ background: v.color }} />
+      <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(253,251,247,0.55)' }}>{v.desc}</p>
+    </motion.div>
+  );
+}
+
 /* ─── Main Section ─── */
 export default function ValuesSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -319,64 +350,80 @@ export default function ValuesSection() {
   const cv = VALUES[activeValue];
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative"
-      style={{ height: '550vh' }}
-    >
-      {/* Sticky split panel — stacked on mobile, side-by-side from lg up */}
-      <div
-        className="sticky top-0 h-screen overflow-hidden flex flex-col lg:flex-row"
-        style={{ background: '#0a0200' }}
+    <>
+      {/* Desktop — scroll-driven sticky chakra experience */}
+      <section
+        ref={sectionRef}
+        className="relative hidden lg:block"
+        style={{ height: '550vh' }}
       >
-        {/* Left — Chakra */}
         <div
-          className="relative flex flex-col items-center justify-center w-full lg:w-[52%] h-[52%] lg:h-full shrink-0"
-          style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, #1a0802 0%, #0a0200 70%)' }}
+          className="sticky top-0 h-screen overflow-hidden flex flex-row"
+          style={{ background: '#0a0200' }}
         >
-          {/* Section heading lives here on dark bg so it's always readable */}
-          <div className="text-center mb-2 sm:mb-4 px-4">
-            <p className="font-body font-bold text-[10px] tracking-[0.35em] uppercase mb-1.5" style={{ color: '#f3a213' }}>
-              What We Stand For
-            </p>
-            <h2 className="font-display font-bold text-white" style={{ fontSize: 'clamp(20px, 3vw, 36px)' }}>
-              Our Core <em className="not-italic" style={{ color: '#f3a213' }}>Values</em>
-            </h2>
-          </div>
-          {/* Subtle scanlines */}
-          <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
-            style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(243,162,19,0.5) 2px, rgba(243,162,19,0.5) 3px)' }}
-          />
+          {/* Left — Chakra */}
+          <div
+            className="relative flex flex-col items-center justify-center w-[52%] h-full shrink-0"
+            style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, #1a0802 0%, #0a0200 70%)' }}
+          >
+            <div className="text-center mb-4 px-4">
+              <p className="font-body font-bold text-[10px] tracking-[0.35em] uppercase mb-1.5" style={{ color: '#f3a213' }}>
+                What We Stand For
+              </p>
+              <h2 className="font-display font-bold text-white" style={{ fontSize: 'clamp(22px, 3vw, 36px)' }}>
+                Our Core <em className="not-italic" style={{ color: '#f3a213' }}>Values</em>
+              </h2>
+            </div>
+            {/* Subtle scanlines */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
+              style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(243,162,19,0.5) 2px, rgba(243,162,19,0.5) 3px)' }}
+            />
 
-          <div className="relative w-full max-w-[220px] sm:max-w-[320px] lg:max-w-[500px] aspect-square px-4 sm:px-8">
-            <motion.div
-              key={`chakra-${activeValue}`}
-              className="w-full h-full"
-              initial={{ rotate: -8, opacity: 0.7 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <AshokChakraSVG active={activeValue} />
-            </motion.div>
+            <div className="relative w-full max-w-[500px] aspect-square px-8">
+              <motion.div
+                key={`chakra-${activeValue}`}
+                className="w-full h-full"
+                initial={{ rotate: -8, opacity: 0.7 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <AshokChakraSVG active={activeValue} />
+              </motion.div>
 
-            {/* Scroll hint — desktop only, no room for it in the mobile stacked layout */}
-            <div className="hidden lg:flex absolute -bottom-12 left-1/2 -translate-x-1/2 flex-col items-center gap-1.5 opacity-40">
-              <p className="font-body text-[10px] tracking-widest uppercase text-amber-400">scroll</p>
-              <motion.div className="w-px h-6 bg-amber-400/60" animate={{ scaleY: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
+              <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-40">
+                <p className="font-body text-[10px] tracking-widest uppercase text-amber-400">scroll</p>
+                <motion.div className="w-px h-6 bg-amber-400/60" animate={{ scaleY: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Right — Value detail */}
-        <div className="relative flex items-center w-full lg:w-[48%] h-[48%] lg:h-full overflow-y-auto" style={{ background: '#fdfbf7' }}>
-          {/* Decorative left edge */}
-          <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${cv.color}60, transparent)` }} />
+          {/* Right — Value detail */}
+          <div className="relative flex items-center w-[48%] h-full" style={{ background: '#fdfbf7' }}>
+            <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${cv.color}60, transparent)` }} />
 
-          <AnimatePresence mode="wait">
-            <ValuePanel key={activeValue} v={cv} index={activeValue} />
-          </AnimatePresence>
+            <AnimatePresence mode="wait">
+              <ValuePanel key={activeValue} v={cv} index={activeValue} />
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Mobile / tablet — normal stacked cards, no scroll-jacking, no excessive scroll length */}
+      <section className="lg:hidden relative py-20 px-6" style={{ background: '#0a0200' }}>
+        <div className="text-center mb-10">
+          <p className="font-body font-bold text-[10px] tracking-[0.35em] uppercase mb-1.5" style={{ color: '#f3a213' }}>
+            What We Stand For
+          </p>
+          <h2 className="font-display font-bold text-white text-3xl">
+            Our Core <em className="not-italic" style={{ color: '#f3a213' }}>Values</em>
+          </h2>
+        </div>
+        <div className="space-y-5 max-w-lg mx-auto">
+          {VALUES.map((v, i) => (
+            <MobileValueCard key={v.title} v={v} index={i} />
+          ))}
+        </div>
+      </section>
+    </>
   );
 }

@@ -201,3 +201,18 @@ model Product {
 
   @@index([status])
 }
+
+enum PolicyType {
+  PRIVACY
+  TERMS
+  REFUND
+  SHIPPING
+}
+
+model Policy {
+  type        PolicyType @id
+  title       String
+  content     String
+  lastUpdated DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
