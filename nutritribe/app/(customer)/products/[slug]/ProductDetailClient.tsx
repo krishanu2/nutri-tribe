@@ -608,7 +608,7 @@ export default function ProductDetailPage({ product, relatedProducts }: PageProp
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { icon: Leaf, title: 'Hand-Roasted', desc: 'Small-batch roasting preserves every bit of nutrition and crunch.' },
-              { icon: Award, title: 'Ethically Sourced', desc: 'Directly from Sahni farmers of the Mithila wetlands in Bihar.' },
+              { icon: Award, title: 'Ethically Sourced', desc: 'Directly from Mallah farmers of the Mithila wetlands in Bihar.' },
               { icon: Shield, title: 'No Preservatives', desc: '100% natural. What you see is what you get — nothing hidden.' },
             ].map(({ icon: Icon, title, desc }, i) => (
               <motion.div

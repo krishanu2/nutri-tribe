@@ -543,7 +543,7 @@ function CinematicFarmerScene({ inView }: { inView: boolean }) {
       </svg>
 
       {/* Narrative text pills — appear by phase */}
-      <NarrativePill text="4:00 AM — Before the sun, the Sahnis are already moving." visible={isWalking} />
+      <NarrativePill text="4:00 AM — Before the sun, the Mallahs are already moving." visible={isWalking} />
       <NarrativePill text="Every seed is handpicked from the pond floor. No machines." visible={atPond && !harvesting} />
       <NarrativePill text="🌿 Harvesting makhana… Bihar, India" visible={harvesting} />
     </div>
@@ -581,7 +581,7 @@ export default function CultureBanner() {
               <div className="h-px w-6 bg-sun-harvest/30" />
             </div>
             <p className="font-body text-base text-ivory-grain/75 leading-[1.9] mb-10 max-w-lg">
-              Every pack of NutriTribe supports the Sahni community of Bihar &mdash;
+              Every pack of NutriTribe supports the Mallah community of Bihar &mdash;
               the custodians of the makhana lily ponds where India&apos;s finest superfood grows.
               We are not just a snack. We are a movement.
             </p>

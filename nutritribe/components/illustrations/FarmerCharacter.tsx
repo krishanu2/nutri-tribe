@@ -219,29 +219,48 @@ export default function FarmerCharacter({
     );
   }
 
-  /* ── DIVING ── horizontal swimming body ── */
+  /* ── DIVING ── horizontal swimming body, built as one continuous silhouette
+     from trailing legs -> hip -> torso -> head, so it reads as a complete
+     person rather than a disconnected torso floating above stray leg lines ── */
   if (pose === 'diving') {
     return (
       <g transform={flip ? 'scale(-1,1)' : undefined}>
-        <motion.path d="M -20 0 Q -10 -8 0 -13" stroke={skinColor} strokeWidth="8" strokeLinecap="round" fill="none"
-          animate={anim ? { d: ['M -20 0 Q -10 -8 0 -13', 'M -20 -8 Q -10 -5 0 -3'] } : {}}
-          transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }} />
-        <motion.path d="M -20 8 Q -8 6 0 9" stroke={skinColor} strokeWidth="8" strokeLinecap="round" fill="none"
-          animate={anim ? { d: ['M -20 8 Q -8 6 0 9', 'M -20 0 Q -8 4 0 15'] } : {}}
-          transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse', delay: 0.3 }} />
-        <path d="M -5 -2 Q 8 -4 20 -6 Q 15 6 2 8 Z" fill={dhotiColor} opacity="0.7" />
-        <rect x="26" y="-10" width="52" height="20" rx="6" fill={kurtaColor} transform="rotate(-8 52 0)" />
-        <circle cx="20" cy="-4" r="13" fill={skinColor} />
-        <path d="M 10 -11 Q 20 -17 32 -13 Q 29 -7 20 -6 Q 11 -8 10 -11 Z" fill={turbanColor} opacity="0.9" />
-        <motion.path d="M 27 8 Q 25 30 22 52" stroke={skinColor} strokeWidth="7" strokeLinecap="round" fill="none"
-          animate={anim ? { d: ['M 27 8 Q 25 30 22 52', 'M 27 8 Q 28 30 31 48'] } : {}}
-          transition={{ duration: 1.8, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
-        <motion.g animate={anim ? { cy: [52, 64, 52] } : {}} transition={{ duration: 1.8, repeat: Infinity, repeatType: 'reverse' }}>
-          <Hand cx={22} cy={52} r={5} color={skinColor} />
+        {/* Legs trail behind (left), kicking — filled tapered shapes, not thin strokes */}
+        <motion.g animate={anim ? { rotate: [-6, 6, -6] } : {}} style={{ originX: '22px', originY: '-3px' }}
+          transition={{ duration: 0.7, repeat: Infinity, ease: 'easeInOut' }}>
+          <TaperedLeg hipX={22} hipY={-3} ankleX={-32} ankleY={-10} hipW={12} ankleW={5} color={dhotiColor} />
         </motion.g>
-        {[[19, -10, 0], [25, -13, 0.7], [13, -8, 1.4]].map(([x, y, d], i) => (
+        <motion.g animate={anim ? { rotate: [6, -6, 6] } : {}} style={{ originX: '22px', originY: '9px' }}
+          transition={{ duration: 0.7, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}>
+          <TaperedLeg hipX={22} hipY={9} ankleX={-30} ankleY={16} hipW={12} ankleW={5} color={dhotiColor} />
+        </motion.g>
+
+        {/* Hip, bridging legs into the torso with no gap */}
+        <ellipse cx="26" cy="2" rx="15" ry="11" fill={dhotiColor} />
+
+        {/* Torso — one continuous shape from hip to neck */}
+        <path d="M 14 -8 Q 40 -16 64 -10 Q 70 -2 64 6 Q 40 12 14 12 Z" fill={kurtaColor} />
+
+        {/* Head leads the dive */}
+        <circle cx="74" cy="-6" r="12" fill={skinColor} />
+        <path d="M 64 -13 Q 74 -19 86 -14 Q 83 -8 74 -7 Q 65 -9 64 -13 Z" fill={turbanColor} opacity="0.9" />
+
+        {/* Arms reach down toward the seeds on the mud floor */}
+        <motion.path d="M 58 4 Q 52 24 48 44" stroke={kurtaColor} strokeWidth="7" strokeLinecap="round" fill="none"
+          animate={anim ? { d: ['M 58 4 Q 52 24 48 44', 'M 58 4 Q 55 24 53 42'] } : {}}
+          transition={{ duration: 1.8, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }} />
+        <Hand cx={48} cy={45} r={5} color={skinColor} />
+        <motion.path d="M 46 6 Q 42 26 40 48" stroke={kurtaColor} strokeWidth="7" strokeLinecap="round" fill="none"
+          animate={anim ? { d: ['M 46 6 Q 42 26 40 48', 'M 46 6 Q 45 26 46 50'] } : {}}
+          transition={{ duration: 1.8, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut', delay: 0.3 }} />
+        <motion.g animate={anim ? { cy: [50, 60, 50] } : {}} transition={{ duration: 1.8, repeat: Infinity, repeatType: 'reverse', delay: 0.3 }}>
+          <Hand cx={46} cy={50} r={5} color={skinColor} />
+        </motion.g>
+
+        {/* Bubbles trailing from the head */}
+        {[[74, -16, 0], [80, -19, 0.7], [68, -17, 1.4]].map(([x, y, d], i) => (
           <motion.circle key={i} cx={x} cy={y} r={2.5 + (i % 3)} fill="none" stroke="rgba(120,210,180,0.6)" strokeWidth="1"
-            animate={anim ? { cy: [y, y - 60, y - 100], opacity: [0.7, 0.4, 0] } : {}}
+            animate={anim ? { cy: [y, y - 50, y - 90], opacity: [0.7, 0.4, 0] } : {}}
             transition={{ duration: 2.8, repeat: Infinity, delay: d, ease: 'easeOut' }} />
         ))}
       </g>

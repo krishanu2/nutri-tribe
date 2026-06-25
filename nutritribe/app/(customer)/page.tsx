@@ -22,7 +22,7 @@ const faqJsonLd = {
       name: "Where does NutriTribe's makhana come from?",
       acceptedAnswer: {
         '@type': 'Answer',
-        text: "NutriTribe's makhana is sourced from the lily ponds of Mithila, Bihar — the region that produces almost all of India's makhana, hand-harvested by local Sahni families.",
+        text: "NutriTribe's makhana is sourced from the lily ponds of Mithila, Bihar — the region that produces almost all of India's makhana, hand-harvested by local Mallah families.",
       },
     },
     {
