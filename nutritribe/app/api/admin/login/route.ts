@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { signAdminToken, SESSION_COOKIE } from '@/lib/auth';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
   try {
+    const allowed = await rateLimit(`login:${getClientIp(req)}`, 8, 15 * 60);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many attempts. Please try again in 15 minutes.' }, { status: 429 });
+    }
+
     const { username, password } = await req.json();
 
     if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {

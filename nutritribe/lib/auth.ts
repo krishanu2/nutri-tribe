@@ -4,7 +4,8 @@ const COOKIE_NAME = 'nt-admin-session';
 const MAX_AGE_SECONDS = 60 * 60 * 8; // 8 hours
 
 function getSecret() {
-  const s = process.env.JWT_SECRET ?? 'nt-admin-fallback-secret-2025';
+  const s = process.env.JWT_SECRET;
+  if (!s) throw new Error('JWT_SECRET is not set — admin auth cannot run without it');
   return new TextEncoder().encode(s);
 }
 

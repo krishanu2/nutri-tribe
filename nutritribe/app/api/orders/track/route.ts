@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
   try {
+    const allowed = await rateLimit(`track:${getClientIp(req)}`, 10, 10 * 60);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many attempts. Please try again shortly.' }, { status: 429 });
+    }
+
     const { orderId, contact } = await req.json();
 
     if (!orderId || !contact) {

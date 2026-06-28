@@ -2,9 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { TicketIssueType } from '@prisma/client';
 import { sendTicketConfirmationEmail } from '@/lib/email';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
   try {
+    const allowed = await rateLimit(`ticket:${getClientIp(req)}`, 5, 10 * 60);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests. Please try again shortly.' }, { status: 429 });
+    }
+
     const body = await req.json();
     const {
       orderId, orderRef, issueType,

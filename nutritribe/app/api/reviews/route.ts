@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 export async function GET(req: NextRequest) {
   try {
@@ -25,6 +26,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const allowed = await rateLimit(`review:${getClientIp(req)}`, 5, 10 * 60);
+    if (!allowed) {
+      return NextResponse.json({ success: false, error: 'Too many requests. Please try again shortly.' }, { status: 429 });
+    }
+
     const body = await req.json();
     const { productSlug, customerName, rating, comment } = body;
 
