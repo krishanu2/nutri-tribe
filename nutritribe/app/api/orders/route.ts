@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { sendOrderStatusEmail } from '@/lib/email';
 
 interface IncomingItem {
   productId: number;
@@ -90,6 +91,12 @@ export async function POST(req: NextRequest) {
       ),
       ...(coupon ? [db.coupon.update({ where: { id: coupon.id }, data: { usedCount: { increment: 1 } } })] : []),
     ]);
+
+    try {
+      await sendOrderStatusEmail({ orderId, email, customerName: name, total }, 'PENDING');
+    } catch (emailErr) {
+      console.error('Order confirmation email failed:', emailErr);
+    }
 
     return NextResponse.json({ success: true, orderId });
   } catch (err) {
