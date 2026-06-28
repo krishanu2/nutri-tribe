@@ -43,7 +43,7 @@ export async function sendOrderStatusEmail(order: OrderForEmail, status: OrderSt
     return;
   }
 
-  const from = process.env.RESEND_FROM_EMAIL ?? 'orders@nutritribe.in';
+  const from = process.env.RESEND_FROM_EMAIL ?? 'orders@nutritribe.shop';
   const copy = STATUS_COPY[status];
 
   const resend = new Resend(apiKey);
@@ -82,7 +82,7 @@ export async function sendTicketConfirmationEmail(ticket: Ticket) {
     return;
   }
 
-  const from = process.env.RESEND_FROM_EMAIL ?? 'orders@nutritribe.in';
+  const from = process.env.RESEND_FROM_EMAIL ?? 'orders@nutritribe.shop';
 
   const resend = new Resend(apiKey);
   await resend.emails.send({
