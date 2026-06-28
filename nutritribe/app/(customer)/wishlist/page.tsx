@@ -55,7 +55,19 @@ export default function WishlistPage() {
 
       <section className="pt-10 pb-20 bg-ivory-grain min-h-screen">
         <div className="max-w-7xl mx-auto px-6">
-          {loaded && wishlisted.length === 0 ? (
+          {!loaded ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="rounded-3xl border border-earthen-rust/10 bg-white overflow-hidden animate-pulse">
+                  <div className="aspect-square bg-earthen-rust/5" />
+                  <div className="p-5 space-y-3">
+                    <div className="h-4 bg-earthen-rust/10 rounded-full w-3/4" />
+                    <div className="h-4 bg-earthen-rust/10 rounded-full w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : wishlisted.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

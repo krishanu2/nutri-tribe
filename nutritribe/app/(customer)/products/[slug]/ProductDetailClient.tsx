@@ -185,6 +185,18 @@ function ProductReviews({ productSlug, productColor }: { productSlug: string; pr
               )}
             </div>
 
+            {!loaded && (
+              <div className="space-y-4">
+                {[...Array(2)].map((_, i) => (
+                  <div key={i} className="p-5 rounded-2xl border border-earthen-rust/10 bg-white animate-pulse">
+                    <div className="h-4 bg-earthen-rust/10 rounded-full w-1/3 mb-3" />
+                    <div className="h-3 bg-earthen-rust/10 rounded-full w-full mb-2" />
+                    <div className="h-3 bg-earthen-rust/10 rounded-full w-2/3" />
+                  </div>
+                ))}
+              </div>
+            )}
+
             {loaded && reviews.length === 0 && (
               <div className="flex flex-col items-center text-center py-12 rounded-2xl border border-earthen-rust/10 bg-white">
                 <MessageSquare size={28} className="text-earthen-rust/25 mb-3" />

@@ -24,6 +24,7 @@ export default function SearchOverlay() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Results | null>(null);
   const [loading, setLoading] = useState(false);
+  const [searchError, setSearchError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -46,11 +47,12 @@ export default function SearchOverlay() {
       return;
     }
     setLoading(true);
+    setSearchError(false);
     const t = setTimeout(() => {
       fetch(`/api/search?q=${encodeURIComponent(query.trim())}`)
-        .then((r) => r.json())
+        .then((r) => { if (!r.ok) throw new Error('Search failed'); return r.json(); })
         .then((data) => setResults(data))
-        .catch(() => setResults({ products: [], posts: [], recipes: [] }))
+        .catch(() => { setResults(null); setSearchError(true); })
         .finally(() => setLoading(false));
     }, 300);
     return () => clearTimeout(t);
@@ -104,7 +106,13 @@ export default function SearchOverlay() {
                   </p>
                 )}
 
-                {showEmpty && (
+                {searchError && (
+                  <p className="font-body text-sm text-earthen-rust/40 text-center py-8">
+                    Something went wrong searching. Please try again.
+                  </p>
+                )}
+
+                {showEmpty && !searchError && (
                   <p className="font-body text-sm text-earthen-rust/40 text-center py-8">
                     No results for &ldquo;{query}&rdquo;. Try a different term.
                   </p>
