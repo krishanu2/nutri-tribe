@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { sendOrderStatusEmail } from '@/lib/email';
+import { computeOrderTotals, PricingError } from '@/lib/pricing';
 
 interface IncomingItem {
   productId: number;
   name: string;
   weight: string;
   quantity: number;
-  price: number;
 }
 
 export async function POST(req: NextRequest) {
@@ -16,41 +16,28 @@ export async function POST(req: NextRequest) {
     const {
       orderId, name, email, phone,
       address, city, state, pincode,
-      items, subtotal, delivery, discount, couponCode, total,
+      items, couponCode,
       paymentMethod, paymentId, giftNote,
     } = body;
 
     const orderItems = items as IncomingItem[];
 
-    const products = await db.product.findMany({
-      where: { id: { in: orderItems.map(i => i.productId) } },
-    });
-    const productsById = new Map(products.map(p => [p.id, p]));
-
-    for (const item of orderItems) {
-      const product = productsById.get(item.productId);
-      if (!product || item.quantity > product.stockQuantity) {
-        return NextResponse.json(
-          { success: false, error: `Insufficient stock for ${product?.name ?? item.name}` },
-          { status: 409 }
-        );
-      }
+    let totals;
+    try {
+      totals = await computeOrderTotals(
+        orderItems.map(i => ({ productId: i.productId, quantity: i.quantity })),
+        couponCode
+      );
+    } catch (e) {
+      const message = e instanceof PricingError ? e.message : 'One or more items are unavailable';
+      return NextResponse.json({ success: false, error: message }, { status: 409 });
     }
 
-    let coupon = null;
-    if (couponCode) {
-      coupon = await db.coupon.findUnique({ where: { code: String(couponCode).trim().toUpperCase() } });
-      const couponStillValid = !!coupon
-        && coupon.active
-        && (!coupon.expiresAt || new Date(coupon.expiresAt) >= new Date())
-        && (coupon.maxUses == null || coupon.usedCount < coupon.maxUses)
-        && subtotal >= coupon.minOrderValue;
-      if (!couponStillValid) {
-        return NextResponse.json(
-          { success: false, error: 'This coupon is no longer valid' },
-          { status: 409 }
-        );
-      }
+    if (couponCode && totals.couponWasRejected) {
+      return NextResponse.json(
+        { success: false, error: 'This coupon is no longer valid' },
+        { status: 409 }
+      );
     }
 
     await db.$transaction([
@@ -64,11 +51,11 @@ export async function POST(req: NextRequest) {
           city,
           state,
           pincode,
-          subtotal,
-          delivery,
-          discount: discount || 0,
-          couponCode: coupon ? coupon.code : null,
-          total,
+          subtotal: totals.subtotal,
+          delivery: totals.delivery,
+          discount: totals.discount,
+          couponCode: totals.coupon ? totals.coupon.code : null,
+          total: totals.total,
           paymentMethod: paymentMethod === 'ONLINE' ? 'ONLINE' : 'COD',
           paymentId: paymentId ?? null,
           giftNote: typeof giftNote === 'string' && giftNote.trim() ? giftNote.trim().slice(0, 200) : null,
@@ -78,7 +65,7 @@ export async function POST(req: NextRequest) {
               name:      i.name,
               weight:    i.weight,
               quantity:  i.quantity,
-              price:     i.price,
+              price:     totals!.productsById.get(i.productId)!.price,
             })),
           },
         },
@@ -89,11 +76,11 @@ export async function POST(req: NextRequest) {
           data: { stockQuantity: { decrement: i.quantity } },
         })
       ),
-      ...(coupon ? [db.coupon.update({ where: { id: coupon.id }, data: { usedCount: { increment: 1 } } })] : []),
+      ...(totals.coupon ? [db.coupon.update({ where: { id: totals.coupon.id }, data: { usedCount: { increment: 1 } } })] : []),
     ]);
 
     try {
-      await sendOrderStatusEmail({ orderId, email, customerName: name, total }, 'PENDING');
+      await sendOrderStatusEmail({ orderId, email, customerName: name, total: totals.total }, 'PENDING');
     } catch (emailErr) {
       console.error('Order confirmation email failed:', emailErr);
     }

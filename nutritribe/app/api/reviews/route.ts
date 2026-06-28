@@ -37,7 +37,12 @@ export async function POST(req: NextRequest) {
     }
 
     const review = await db.review.create({
-      data: { productSlug, customerName, rating: ratingNum, comment },
+      data: {
+        productSlug,
+        customerName: String(customerName).trim().slice(0, 100),
+        rating: ratingNum,
+        comment: String(comment).trim().slice(0, 1000),
+      },
     });
 
     return NextResponse.json({ success: true, id: review.id });

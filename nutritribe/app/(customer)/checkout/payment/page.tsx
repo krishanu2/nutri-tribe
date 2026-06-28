@@ -67,6 +67,9 @@ export default function PaymentPage() {
 
   const createOrder = async (orderId: string, paymentId?: string) => {
     const now = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+    const paidMsg = paymentId
+      ? `Your payment was successful (Payment ID: ${paymentId}) but we couldn't save your order. Please contact us with this Payment ID and we'll confirm it manually — you won't be charged again.`
+      : null;
     try {
       const res = await fetch('/api/orders', {
         method: 'POST',
@@ -78,13 +81,15 @@ export default function PaymentPage() {
         }),
       });
       const data = await res.json();
-      if (!data.success && res.status === 409) {
-        setErrorMsg(data.error ?? 'One or more items are out of stock.');
+      if (!res.ok || !data.success) {
+        setErrorMsg(paidMsg ?? data.error ?? 'Could not place your order. Please try again.');
         setStatus('error');
         return false;
       }
     } catch {
-      // proceed — don't block UX on DB error
+      setErrorMsg(paidMsg ?? 'Network error — could not place your order. Please try again.');
+      setStatus('error');
+      return false;
     }
     sessionStorage.setItem('nt-order-confirmed', JSON.stringify({ orderId, ...order, date: now }));
     sessionStorage.removeItem('nt-pending-order');
@@ -100,7 +105,10 @@ export default function PaymentPage() {
       const res = await fetch('/api/payment/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: order.total }),
+        body: JSON.stringify({
+          items: order.items.map(i => ({ productId: i.productId, quantity: i.quantity })),
+          couponCode: order.couponCode,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -142,8 +150,8 @@ export default function PaymentPage() {
 
       const rp = new window.Razorpay(options);
       rp.open();
-    } catch {
-      setErrorMsg('Could not initiate payment. Please try again.');
+    } catch (err) {
+      setErrorMsg(err instanceof Error && err.message ? err.message : 'Could not initiate payment. Please try again.');
       setStatus('error');
     }
   };
